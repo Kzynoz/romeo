@@ -1,39 +1,88 @@
 import pool from "../config/db.js";
 
 class Patient {
-  static async findPatient({ title, first_name, last_name }) {
+  static async findPatient({ title, firstname, lastname }) {
+    console.log("info sql entrant", title, firstname, lastname);
     const SELECT_PATIENT =
-      "SELECT id, title FROM patient WHERE title = ? AND first_name = ? AND last_name = ?";
-    return await pool.execute(SELECT_PATIENT, [title, first_name, last_name]);
+      "SELECT id FROM customer WHERE title = ? AND firstname = ? AND lastname = ? AND is_patient = '1'";
+    return await pool.execute(SELECT_PATIENT, [title, firstname, lastname]);
   }
 
-  static async getOneByID(id) {
-    const SELECT_PATIENT =
-      "SELECT patient.id, patient.title, patient.first_name, patient.last_name, patient.phone, patient.email, JSON_OBJECT('id', retirement_home.id, 'name', retirement_home.name) AS retirement_home, JSON_OBJECT('id', guardian.id, 'title', guardian.title, 'first_name', guardian.first_name, 'last_name', guardian.last_name, 'email', guardian.email) AS guardian FROM patient LEFT JOIN retirement_home ON retirement_home.id = patient.retirement_home_id LEFT JOIN guardian ON guardian.id = patient.guardian_id WHERE patient.id = ?";
+  static async getOne(id) {
+    // manques des infos par exemple l'ID du soin, à finaliser
+    const SELECT_PATIENT = `SELECT
+                              c.id,
+                              c.title,
+                              c.lastname,
+                              c.firstname,
+                              JSON_OBJECT(
+                                  'id', rh.id,
+                                  'name', rh.name
+                              ) AS retirement_home,
+                              JSON_OBJECT(
+                                  'id', gc.id,
+                                  'title', gc.title,
+                                  'firstname', gc.firstname,
+                                  'lastname', gc.lastname,
+                                  'relationship', g.relationship,
+                                  'phone', gc.phone,
+                                  'email', gc.email,
+                                  'company', g.company,
+                                  'address', JSON_OBJECT(
+                                      'street', g.street,
+                                      'city', g.city,
+                                      'zip_code', g.zip_code
+                                  )
+                              ) AS guardian,
+                            (
+                                SELECT JSON_ARRAYAGG(
+                                    JSON_OBJECT(
+                                        'id', sorted_care.id,
+                                        'performed_at', sorted_care.performed_at,
+                                        'invoice_paid', sorted_care.invoice_paid,
+                                        'invoice_send', sorted_care.invoice_send
+                                    )
+                                )
+                                FROM (
+                                    SELECT care.id, care.performed_at, care.invoice_paid, care.invoice_send
+                                    FROM care
+                                    WHERE care.customer_id = c.id
+                                    ORDER BY care.invoice_paid ASC, 
+                                             care.invoice_send ASC,
+                                             care.performed_at DESC
+                                ) AS sorted_care
+                            ) AS all_cares
+                            FROM customer c
+                            LEFT JOIN guardian g ON c.guardian_id = g.customer_id 
+                            LEFT JOIN retirement_home rh ON c.retirement_home_id = rh.id
+                            LEFT JOIN customer gc ON c.guardian_id = gc.id
+                            WHERE c.is_patient = 1 
+                            AND c.id = ?;
+`;
     return await pool.query(SELECT_PATIENT, [id]);
   }
 
-  static async findAllWithLatestCare() {
+  static async gettAllWithLatestCare() {
     const SELECT_ALL = `SELECT
                           c.id,
                           c.title,
                           c.lastname,
                           c.firstname,
                           JSON_OBJECT(
-                          'title',gc.title,
-                          'firstname',gc.firstname,
-                          'lastname',gc.lastname,
-                          'relationship',g.relationship,
-                          'company',g.company
+                              'title', gc.title,
+                              'firstname', gc.firstname,
+                              'lastname', gc.lastname,
+                              'relationship', g.relationship,
+                              'company', g.company
                           ) AS guardian,
-                          IFNULL(
-                              JSON_OBJECT(
+                          CASE 
+                              WHEN care.performed_at IS NOT NULL THEN JSON_OBJECT(
                                   'performed_at', care.performed_at,
                                   'invoice_paid', care.invoice_paid,
                                   'invoice_send', care.invoice_send
-                              ),
-                              NULL
-                          ) AS latest_care
+                              )
+                              ELSE NULL
+                          END AS latest_care
                         FROM customer c
                         LEFT JOIN guardian g ON c.guardian_id = g.customer_id 
                         LEFT JOIN customer gc ON c.guardian_id = gc.id
@@ -49,29 +98,28 @@ class Patient {
     return await pool.query(SELECT_ALL);
   }
 
-  static async insert(
-    connection,
-    {
-      title,
-      first_name,
-      last_name,
-      phone = null,
-      email = null,
-      user_id,
-      guardian_id,
-      retirement_home_id,
-    }
-  ) {
+  static async insert({
+    title,
+    firstname,
+    lastname,
+    phone = null,
+    email = null,
+    is_patient,
+    guardian_id = null,
+    practitioner_id,
+    retirement_home_id = null,
+  }) {
     const INSERT_PATIENT =
-      "INSERT INTO patient (title,first_name,last_name,phone,email,guardian_id,user_id,retirement_home_id) VALUES (?,?,?,?,?,?,?,?)";
-    return await connection.execute(INSERT_PATIENT, [
+      "INSERT INTO customer (title,firstname,lastname,phone,email,is_patient,guardian_id,practitioner_id,retirement_home_id) VALUES (?,?,?,?,?,?,?,?,?)";
+    return await pool.execute(INSERT_PATIENT, [
       title,
-      first_name,
-      last_name,
+      firstname,
+      lastname,
       phone,
       email,
+      is_patient,
       guardian_id,
-      user_id,
+      practitioner_id,
       retirement_home_id,
     ]);
   }

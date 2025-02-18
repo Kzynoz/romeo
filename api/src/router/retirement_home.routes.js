@@ -8,7 +8,10 @@ import {
   remove,
   update,
 } from "../controllers/retirement_home.controller.js";
-import { validatorCreateRH } from "../middlewares/validator.js";
+import {
+  validatorCreateRH,
+  validatorUpdateRH,
+} from "../middlewares/validator.js";
 
 const router = Router();
 
@@ -18,7 +21,7 @@ router.get("/", getAll);
 router.get("/search", getBySearch);
 router.get("/:id", getOne);
 
-router.patch("/:id", validatorCreateRH, update);
+router.patch("/:id", validatorUpdateRH, update);
 
 router.delete("/:id", isAdmin, remove);
 

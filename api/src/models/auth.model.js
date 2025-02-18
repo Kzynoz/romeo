@@ -3,7 +3,7 @@ import pool from "../config/db.js";
 class Auth {
   static async findPractitioner(email) {
     const SELECT_PRACTITIONER =
-      "SELECT alias, email, password, is_admin FROM practitioner WHERE email = ?";
+      "SELECT id, alias, email, password, is_admin FROM practitioner WHERE email = ?";
 
     return await pool.execute(SELECT_PRACTITIONER, [email]);
   }

@@ -40,9 +40,10 @@ class Customer {
     ]);
   }
 
-  static async delete(id) {
-    const DELETE_CUSTOMER = "DELETE FROM customer WHERE id = ?";
-    return await pool.execute(DELETE_CUSTOMER, [id]);
+  static async delete(id, isPatient) {
+    const DELETE_CUSTOMER =
+      "DELETE FROM customer WHERE id = ? AND is_patient= ?";
+    return await pool.execute(DELETE_CUSTOMER, [id, isPatient]);
   }
 
   static async updateIsGuardian(
@@ -56,8 +57,14 @@ class Customer {
     id,
     connection = pool
   ) {
-    const UPDATE_GUARDIAN =
-      "UPDATE customer SET title = COALESCE(?,title), firstname = COALESCE(?,firstname), lastname = COALESCE(?,lastname), phone = COALESCE(?,phone), email = COALESCE(?,email) WHERE id = ? AND is_patient = '0'";
+    const UPDATE_GUARDIAN = `UPDATE customer 
+                             SET title = IFNULL(?,title), 
+                             firstname = IFNULL(?,firstname), 
+                             lastname = IFNULL(?,lastname), 
+                             phone = IFNULL(?,phone), 
+                             email = IFNULL(?,email) 
+                             WHERE id = ? AND is_patient = '0'`;
+
     return await connection.execute(UPDATE_GUARDIAN, [
       title,
       firstname,
@@ -68,8 +75,48 @@ class Customer {
     ]);
   }
 
+  static async updateIsPatient({
+    id,
+    title = null,
+    firstname = null,
+    lastname = null,
+    phone = null,
+    email = null,
+    guardian_id = null,
+    practitioner_id = null,
+    retirement_home_id = null,
+  }) {
+    const UPDATE_PATIENT = `UPDATE customer 
+                            SET title = IFNULL(?, title), 
+                            firstname = IFNULL(?,firstname), 
+                            lastname = IFNULL(?,lastname), 
+                            phone = IFNULL(?,phone), 
+                            email = IFNULL(?,email), 
+                            guardian_id = IFNULL(?,guardian_id), 
+                            practitioner_id = IFNULL(?,practitioner_id), 
+                            retirement_home_id = IFNULL(?,retirement_home_id) 
+                            WHERE id = ? AND is_patient = '1'`;
+
+    return await pool.execute(UPDATE_PATIENT, [
+      title,
+      firstname,
+      lastname,
+      phone,
+      email,
+      guardian_id,
+      practitioner_id,
+      retirement_home_id,
+      id,
+    ]);
+  }
+
   static async findBySearch(search, isPatient = 0) {
-    const SELECT_ALL = `SELECT id, title, firstname, lastname FROM customer WHERE (CONCAT(firstname, '', lastname) LIKE ? AND is_patient= "${isPatient}")`;
+    console.log(search);
+    const SELECT_ALL = `SELECT id, title, firstname, lastname 
+                        FROM customer 
+                        WHERE CONCAT(firstname, ' ', lastname) LIKE ? 
+                        AND is_patient = ${isPatient}`;
+
     return await pool.execute(SELECT_ALL, [search]);
   }
 }

@@ -1,22 +1,28 @@
 import { Router } from "express";
-import { validatorCreateUser } from "../middlewares/validator.js";
+import {
+  validatorCreatePatient,
+  validatorUpdatePatient,
+} from "../middlewares/validator.js";
 import isAdmin from "../middlewares/isAdmin.js";
 import {
-  add,
+  create,
   getAll,
+  getBySearch,
   getOne,
   remove,
+  update,
 } from "../controllers/patient.controller.js";
 
 const router = Router();
 
-router.get("/", getAll); // En cours SQL bon
-router.get("/:id", getOne); // à refaire
-router.post("/", add); // à refaire
-router.delete("/:id", isAdmin, remove); // à refaire
+router.post("/", validatorCreatePatient, create);
 
-//router.patch("/:id", update);
+router.get("/", getAll);
+router.get("/search", getBySearch);
+router.get("/:id", getOne);
 
-//router.get("/:id/soin", getAll);
+router.patch("/:id", validatorUpdatePatient, update);
+
+router.delete("/:id", isAdmin, remove);
 
 export default router;
