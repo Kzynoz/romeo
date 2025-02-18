@@ -54,6 +54,7 @@ const login = async (req, res, next) => {
       res.json({
         message: "L'utilisateur est connecté.",
         user: {
+          id: response.id,
           alias: response.alias,
           is_admin: response.is_admin,
         },
@@ -83,7 +84,11 @@ const logout = async (req, res, next) => {
 const refreshLogin = async (req, res, next) => {
   res.json({
     message: "L'utilisateur est bien connecté.",
-    user: { alias: req.user.alias, is_admin: req.user.is_admin },
+    user: {
+      id: req.user.id,
+      alias: req.user.alias,
+      is_admin: req.user.is_admin,
+    },
   });
 };
 

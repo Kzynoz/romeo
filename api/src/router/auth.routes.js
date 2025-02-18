@@ -18,5 +18,7 @@ router.post("/refresh-login", authCheck, refreshLogin); // OK
 
 // connexion customer
 // deconnexion customer
+// register customer avec génération de TOKEN
+// regeration du token
 
 export default router;

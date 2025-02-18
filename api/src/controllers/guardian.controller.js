@@ -185,7 +185,7 @@ const update = async (req, res, next) => {
 const remove = async (req, res, next) => {
   const { id } = req.body;
   try {
-    const [response] = await Customer.delete(id);
+    const [response] = await Customer.delete(id, 0);
     if (response.affectedRows) {
       res.json({ message: "Tuteur supprimé." });
       return;

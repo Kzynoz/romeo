@@ -11,7 +11,7 @@ const base_url = "/api/v1";
 
 const app = express();
 
-app.use(morgan("dev"));
+app.use(morgan("dev")); // uniquement en phase de dev
 
 app.use(
   cors({
