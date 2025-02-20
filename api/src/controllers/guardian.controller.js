@@ -206,11 +206,11 @@ const getBySearch = async (req, res, next) => {
     const [response] = await Customer.findBySearch(formattedSearch, 0);
 
     if (response.length) {
-      res.status(200).json({ message: "Tuteur(s) récupéré(s).", response });
+      res.status(200).json({ message: "Tuteur(s) trouvé(s).", response });
       return;
     }
 
-    res.status(400).json({ message: "Aucuns tuteurs récupérés." });
+    res.status(400).json({ message: "Aucuns tuteurs trouvés." });
     return;
   } catch (error) {
     next(error);

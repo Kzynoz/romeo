@@ -56,7 +56,7 @@ GROUP BY rh.id;
 
   static async update({ id, name, contact, street, city, zip_code }) {
     const UPDATE_RH =
-      "UPDATE retirement_home SET name = COALESCE(?,name), contact = COALESCE(?,contact), street = COALESCE(?,street), city = COALESCE(?,city), zip_code = COALESCE(?,zip_code) WHERE id = ?";
+      "UPDATE retirement_home SET name = IFNULL(?,name), contact = IFNULL(?,contact), street = IFNULL(?,street), city = IFNULL(?,city), zip_code = IFNULL(?,zip_code) WHERE id = ?";
     return await pool.execute(UPDATE_RH, [
       name,
       contact,

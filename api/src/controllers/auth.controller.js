@@ -5,7 +5,6 @@ import createToken from "../utils/token.js";
 
 const SALT = 10;
 
-// OK
 const register = async (req, res, next) => {
   const { alias, email, password } = req.body;
   const errors = validationResult(req);
@@ -35,7 +34,6 @@ const register = async (req, res, next) => {
   }
 };
 
-// OK
 const login = async (req, res, next) => {
   const { email, password } = req.body;
   try {
@@ -63,14 +61,13 @@ const login = async (req, res, next) => {
     }
 
     res.status(400).json({
-      message: "Alias ou mot de passe incorrect.",
+      message: "Email ou mot de passe incorrect.",
     });
   } catch (error) {
     next(error);
   }
 };
 
-// OK
 const logout = async (req, res, next) => {
   res.clearCookie("jwt", {
     httpOnly: true,
@@ -80,7 +77,6 @@ const logout = async (req, res, next) => {
   res.json({ message: "L'utilisateur a été deconnecté." });
 };
 
-// OK
 const refreshLogin = async (req, res, next) => {
   res.json({
     message: "L'utilisateur est bien connecté.",

@@ -138,13 +138,11 @@ const getBySearch = async (req, res, next) => {
     if (response.length) {
       res
         .status(200)
-        .json({ message: "Maison(s) de retraite récupérée(s).", response });
+        .json({ message: "Maison(s) de retraite trouvée(s).", response });
       return;
     }
 
-    res
-      .status(400)
-      .json({ message: "Aucunes maisons de retaires récupérées." });
+    res.status(400).json({ message: "Aucunes maisons de retaires trouvées." });
     return;
   } catch (error) {
     next(error);
