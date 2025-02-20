@@ -1,7 +1,15 @@
 import { body, param } from "express-validator";
+import getEnumValues from "../utils/getEnumValue.js";
 
-const titleEnum = ["m.", "mme"];
-const relationshipEnum = ["parent", "légal", "famille", "société"];
+const enumValidator = (table, column) => {
+  return async (value) => {
+    const values = await getEnumValues(table, column);
+
+    if (!values.includes(value)) {
+      throw new Error(`Problème avec ${column}.`);
+    }
+  };
+};
 
 const validatorCreateUser = [
   body("alias")
@@ -133,8 +141,7 @@ const validatorCreateGuardian = [
   body("customer_detail.title")
     .notEmpty()
     .withMessage("Champ obligatoire.")
-    .isIn(titleEnum)
-    .withMessage("Problème avec la civilité."),
+    .custom(enumValidator("customer", "title")),
   body("customer_detail.firstname")
     .notEmpty()
     .withMessage("Champ obligatoire.")
@@ -174,8 +181,7 @@ const validatorCreateGuardian = [
   body("guardian_info.relationship")
     .notEmpty()
     .withMessage("Champ obligatoire.")
-    .isIn(relationshipEnum)
-    .withMessage("Problème avec la relation."),
+    .custom(enumValidator("guardian", "relationship")),
   body("guardian_info.company")
     .optional()
     .trim()
@@ -220,8 +226,7 @@ const validatorUpdateGuardian = [
     .withMessage("Une erreur est survenue, veuillez ressayer plus tard."),
   body("customer_detail.title")
     .optional()
-    .isIn(titleEnum)
-    .withMessage("Problème avec la civilité."),
+    .custom(enumValidator("customer", "title")),
   body("customer_detail.firstname")
     .optional()
     .trim()
@@ -256,8 +261,7 @@ const validatorUpdateGuardian = [
     .withMessage("Une erreur est survenue, veuillez ressayer plus tard."),
   body("guardian_info.relationship")
     .optional()
-    .isIn(relationshipEnum)
-    .withMessage("Problème avec la relation."),
+    .custom(enumValidator("guardian", "relationship")),
   body("guardian_info.company")
     .optional()
     .trim()
@@ -300,8 +304,7 @@ const validatorCreatePatient = [
   body("patient.title")
     .notEmpty()
     .withMessage("Champ obligatoire.")
-    .isIn(titleEnum)
-    .withMessage("Problème avec la civilité."),
+    .custom(enumValidator("customer", "title")),
   body("patient.firstname")
     .notEmpty()
     .withMessage("Champ obligatoire.")
@@ -350,10 +353,7 @@ const validatorUpdatePatient = [
     .optional()
     .isObject()
     .withMessage("Une erreur est survenue, veuillez ressayer plus tard."),
-  body("patient.title")
-    .optional()
-    .isIn(titleEnum)
-    .withMessage("Problème avec la civilité."),
+  body("patient.title").optional().custom(enumValidator("customer", "title")),
   body("patient.firstname")
     .optional()
     .trim()
@@ -395,6 +395,46 @@ const validatorUpdatePatient = [
     .withMessage("Une erreur est survenue, veuillez ressayer plus tard."),
 ];
 
+const validatorCreateCare = [
+  body("care")
+    .notEmpty()
+    .withMessage("Une erreur est survenue, veuillez ressayer plus tard.")
+    .isObject()
+    .withMessage("Une erreur est survenue, veuillez ressayer plus tard."),
+  param("id")
+    .optional()
+    .isInt()
+    .withMessage("Une erreur est survenue, veuillez ressayer plus tard."),
+  param("patient_id")
+    .optional()
+    .isInt()
+    .withMessage("Une erreur est survenue, veuillez ressayer plus tard."),
+  body("practitioner_id")
+    .isInt()
+    .withMessage("Une erreur est survenue, veuillez ressayer plus tard."),
+  body("care.performed_at")
+    .isISO8601()
+    .withMessage("La date doit être au format YYYY-MM-DD")
+    .toDate(),
+  body("care.complements")
+    .optional()
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage("Ne doit pas dépasser 255 caractères."),
+  body("care.price")
+    .notEmpty()
+    .withMessage("Champ obligatoire.")
+    .isDecimal()
+    .withMessage("Le prix doit être un nombre décimal.")
+    .isLength({ max: 7 })
+    .withMessage("Le prix ne peut pas dépasser 9999.99.")
+    .trim(),
+  body("care.type")
+    .notEmpty()
+    .withMessage("Champ obligatoire")
+    .custom(enumValidator("care", "type")),
+];
+
 export {
   validatorCreateUser,
   validatorCreateRH,
@@ -403,4 +443,5 @@ export {
   validatorUpdateGuardian,
   validatorCreatePatient,
   validatorUpdatePatient,
+  validatorCreateCare,
 };

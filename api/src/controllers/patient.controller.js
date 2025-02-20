@@ -139,11 +139,11 @@ const getBySearch = async (req, res, next) => {
     const [response] = await Customer.findBySearch(formattedSearch, 1);
 
     if (response.length) {
-      res.status(200).json({ message: "Patient(s) récupéré(s).", response });
+      res.status(200).json({ message: "Patient(s) trouvé(s).", response });
       return;
     }
 
-    res.status(404).json({ message: "Aucuns patients récupérés." });
+    res.status(404).json({ message: "Aucuns patients trouvés." });
     return;
   } catch (error) {
     next(error);
