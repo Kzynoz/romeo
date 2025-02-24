@@ -1,8 +1,7 @@
 import pool from "../config/db.js";
 
 class Care {
-  static async findCare(id, { performed_at }) {
-    console.log(id, performed_at);
+  static async findCare(id, performed_at) {
     const SELECT_CARE = `SELECT care.id, c.title, c.firstname, c.lastname, care.performed_at 
                          FROM care
                          LEFT JOIN customer c ON care.customer_id = c.id
@@ -67,11 +66,62 @@ class Care {
                                 'invoice_paid',care.invoice_paid,
                                 'invoice_send',care.invoice_send
                             	)
-                        ) AS care
+                        ) AS care,
+                        p.alias AS practitioner
                         FROM customer c
+                        LEFT JOIN practitioner p ON c.practitioner_id = p.id
                         LEFT JOIN guardian g ON c.guardian_id = g.customer_id 
                         LEFT JOIN customer gc ON c.guardian_id = gc.id
                         LEFT JOIN care ON care.customer_id = c.id
+                        WHERE c.is_patient = 1 AND care.id = ?`;
+
+    return await pool.query(SELECT_CARE, [id]);
+  }
+
+  static async displayInvoice(id) {
+    const SELECT_CARE = `SELECT
+                          c.id,
+                          c.title,
+                          c.lastname,
+                          c.firstname,
+                          JSON_OBJECT(
+                          	'details', JSON_OBJECT(
+                            	'id', g.id,
+                            	'customer_id', g.customer_id,
+                            	'title', gc.title,
+                                'firstname', gc.firstname,
+                                'lastname', gc.lastname,
+                                'phone', gc.phone,
+                                'email', gc.email
+                          		),
+                            'relationship', g.relationship,
+                            'company', g.company,
+                            'address', JSON_OBJECT(
+                            	'street', g.street,
+                                'city', g.city,
+                                'zip_code', g.zip_code
+                                )
+                         ) AS guardian,
+                         JSON_OBJECT(
+                            'id', care.id,
+                            'performed_at', care.performed_at,
+                            'price', care.price,
+                            'type',care.type,
+                            'complements',care.complements,
+                            'invoice', JSON_OBJECT (
+                            	'invoice_generated',care.invoice_generated,
+                                'invoice_paid',care.invoice_paid,
+                                'invoice_send',care.invoice_send
+                            	)
+                        ) AS care,
+                        p.alias AS practitioner,
+                        rh.name AS retirement_home
+                        FROM customer c
+                        LEFT JOIN practitioner p ON c.practitioner_id = p.id
+                        LEFT JOIN guardian g ON c.guardian_id = g.customer_id 
+                        LEFT JOIN customer gc ON c.guardian_id = gc.id
+                        LEFT JOIN care ON care.customer_id = c.id
+                        LEFT JOIN retirement_home rh ON c.retirement_home_id = rh.id
                         WHERE c.is_patient = 1 AND care.id = ?`;
 
     return await pool.query(SELECT_CARE, [id]);
@@ -146,6 +196,49 @@ class Care {
       type,
       id,
     ]);
+  }
+
+  static async getTotalCareThisMonth() {
+    const COUNT_ALL = `SELECT COUNT(id) AS total_care, 
+                          IFNULL(SUM(CASE WHEN invoice_paid = 1 THEN price ELSE 0 END), 0) AS total_revenue_paid,
+                          IFNULL(SUM(CASE WHEN invoice_paid = 0 THEN price ELSE 0 END), 0) AS total_revenue_estimated
+                        FROM care 
+                        WHERE performed_at BETWEEN DATE_FORMAT(NOW(), '%Y-%m-01 00:00:00') 
+                        AND LAST_DAY(NOW()) + INTERVAL 1 DAY - INTERVAL 1 SECOND;`;
+
+    return await pool.query(COUNT_ALL);
+  }
+
+  static async getTotalCareByYear(year) {
+    const COUNT_BY_YEAR = `SELECT year,
+                        JSON_ARRAYAGG(
+                          JSON_OBJECT(
+                              'month', month,
+                              'total_entries', total_entries,
+                              'total_revenue_paid', total_revenue_paid,
+                              'total_revenue_estimated', total_revenue_estimated
+                            )
+                          ) AS months
+                        FROM (
+                          SELECT 
+                              YEAR(performed_at) AS year,
+                              MONTH(performed_at) AS month,
+                              COUNT(id) AS total_entries,
+                              IFNULL(SUM(CASE WHEN invoice_paid = 1 THEN price ELSE 0 END), 0) AS total_revenue_paid,
+                              IFNULL(SUM(CASE WHEN invoice_paid = 0 THEN price ELSE 0 END), 0) AS total_revenue_estimated
+                          FROM care
+                          WHERE YEAR(performed_at) = ?
+                          GROUP BY YEAR(performed_at), MONTH(performed_at)
+                        ) AS data
+                        GROUP BY year
+                        ORDER BY year DESC;`;
+
+    return await pool.execute(COUNT_BY_YEAR, [year]);
+  }
+
+  static async delete(id) {
+    const DELETE_CARE = "DELETE FROM care WHERE id = ?";
+    return await pool.execute(DELETE_CARE, [id]);
   }
 }
 

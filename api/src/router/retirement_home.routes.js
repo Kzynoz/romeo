@@ -11,7 +11,7 @@ import {
 import {
   validatorCreateRH,
   validatorUpdateRH,
-} from "../middlewares/validator.js";
+} from "../middlewares/validators/retirementHomeValidator.js";
 
 const router = Router();
 

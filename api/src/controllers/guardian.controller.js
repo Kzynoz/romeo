@@ -2,6 +2,7 @@ import { validationResult } from "express-validator";
 import pool from "../config/db.js";
 import Customer from "../models/customer.model.js";
 import Guardian from "../models/guardian.model.js";
+import crypto from "crypto";
 
 const checkGuardian = async (req, res, next) => {
   // à voir
@@ -85,10 +86,13 @@ const create = async (req, res, next) => {
 
     const [customer] = await Customer.insert(customer_detail, connection);
     if (customer.insertId) {
+      const token = crypto.randomBytes(32).toString("hex");
+
       const guardian = {
         ...guardian_info,
         street: `${guardian_info.number} ${guardian_info.street}` || null,
         customer_id: customer.insertId,
+        token: token,
       };
 
       const [response] = await Guardian.insert(guardian, connection);

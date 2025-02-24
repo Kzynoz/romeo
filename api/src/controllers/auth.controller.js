@@ -1,5 +1,6 @@
 import { compare, hash } from "bcrypt";
 import { validationResult } from "express-validator";
+import pool from "../config/db.js";
 import Auth from "../models/auth.model.js";
 import createToken from "../utils/token.js";
 
@@ -88,4 +89,73 @@ const refreshLogin = async (req, res, next) => {
   });
 };
 
-export { register, login, logout, refreshLogin };
+const guardianRegister = async (req, res, next) => {
+  const { tokenUrl } = req.params;
+  const { email, password } = req.body;
+  let connection = null;
+
+  /*   const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      message: "Erreur lors de la validation du formulaire.",
+      errors: errors.array(),
+    });
+  } */
+
+  try {
+    const [[findGuardian]] = await Auth.findGuardian(email, tokenUrl);
+
+    if (!findGuardian) {
+      return res.status(400).json({
+        message: "Token ou email invalide.",
+      });
+    }
+
+    if (!findGuardian.token) {
+      return res.status(400).json({
+        message: "Token invalide ou déjà utilisé.",
+      });
+    }
+
+    const { id, token } = findGuardian;
+    const hashedPassword = await hash(password, SALT);
+
+    connection = await pool.getConnection();
+    await connection.beginTransaction();
+
+    const [response] = await Auth.registerGuardian(connection, {
+      id,
+      email,
+      token,
+      password: hashedPassword,
+    });
+
+    if (!response.affectedRows) {
+      await connection.rollback();
+      res.status(500).json({
+        message: "Une erreur est survenue, veuillez ressayer plus tard.",
+      });
+      return;
+    }
+
+    const [deleteToken] = await Auth.deleteToken(connection, { id, token });
+
+    if (!deleteToken.affectedRows) {
+      await connection.rollback();
+      res.status(201).json({
+        message: "Une erreur est survenue, veuillez ressayer plus tard.",
+      });
+    }
+    await connection.commit();
+
+    return res.status(201).json({ message: "L'utilisateur a été ajouté" });
+  } catch (error) {
+    if (connection) await connection.rollback();
+    next(error);
+  } finally {
+    if (connection) connection.release();
+  }
+};
+
+export { register, login, logout, refreshLogin, guardianRegister };

@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   validatorCreatePatient,
   validatorUpdatePatient,
-} from "../middlewares/validator.js";
+} from "../middlewares/validators/patientValidator.js";
 import isAdmin from "../middlewares/isAdmin.js";
 import {
   create,

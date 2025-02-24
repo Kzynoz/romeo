@@ -5,7 +5,7 @@ class Guardian {
     const SELECT_GUARDIAN = `SELECT 
                               JSON_OBJECT(
                                 'details', JSON_OBJECT(
-                                  'id', g.id,
+                                  'id', c.id,
                                   'customer_id', g.customer_id,
                                   'title', gc.title,
                                   'firstname', gc.firstname,
@@ -21,7 +21,7 @@ class Guardian {
                                   'zip_code', g.zip_code
                                 )
                               ) AS guardian,
-                              COUNT(c.id) AS customers_count,
+                              COUNT(c.id) AS guardianship_count,
                               CASE 
                                 WHEN COUNT(c.id) = 0 THEN NULL 
                                 ELSE JSON_ARRAYAGG(
@@ -37,20 +37,25 @@ class Guardian {
                               END AS customers
                             FROM guardian g
                             LEFT JOIN customer gc ON g.customer_id = gc.id
-                            LEFT JOIN customer c ON c.guardian_id = g.id
-                            WHERE g.id = ?
+                            LEFT JOIN customer c ON c.id = g.customer_id
+                            WHERE c.id = ?
                             GROUP BY g.id, gc.lastname;`;
 
     return await pool.execute(SELECT_GUARDIAN, [id]);
   }
 
   static async getAll() {
-    const SELECT_ALL = `SELECT g.id, c.title, c.firstname, c.lastname, c.phone, c.email,
-                              g.relationship, g.company, 
-                              JSON_OBJECT (
-                              'street',g.street, 
-                              'city',g.city,
-                              'zip_code',g.zip_code) AS address  
+    const SELECT_ALL = `SELECT c.id, c.title, c.firstname, c.lastname, c.phone, 
+                        c.email, g.relationship, g.company, 
+                        JSON_OBJECT (
+                        'street',g.street, 
+                        'city',g.city,
+                        'zip_code',g.zip_code) AS address,
+                        (
+                          SELECT COUNT(id)
+                          FROM customer c
+                          WHERE c.guardian_id = g.customer_id
+                        ) AS guardianship_count
                         FROM guardian g
                         LEFT JOIN customer c ON g.customer_id = c.id 
                         ORDER BY c.lastname ASC`;
@@ -65,13 +70,13 @@ class Guardian {
       street = null,
       city = null,
       zip_code = null,
+      token = null,
       customer_id,
     },
     connection
   ) {
-    console.log(customer_id);
     const INSERT_GUARDIAN =
-      "INSERT INTO guardian (customer_id,relationship,company,street,city,zip_code) VALUES (?,?,?,?,?,?)";
+      "INSERT INTO guardian (customer_id,relationship,company,street,city,zip_code,token) VALUES (?,?,?,?,?,?,?)";
     return await connection.execute(INSERT_GUARDIAN, [
       customer_id,
       relationship,
@@ -79,6 +84,7 @@ class Guardian {
       street,
       city,
       zip_code,
+      token,
     ]);
   }
 
