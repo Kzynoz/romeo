@@ -45,7 +45,7 @@ class Care {
                                 'firstname', gc.firstname,
                                 'lastname', gc.lastname,
                                 'phone', gc.phone,
-                                'email', gc.email
+                                'email', g.email
                           		),
                             'relationship', g.relationship,
                             'company', g.company,
@@ -92,7 +92,7 @@ class Care {
                                 'firstname', gc.firstname,
                                 'lastname', gc.lastname,
                                 'phone', gc.phone,
-                                'email', gc.email
+                                'email', g.email
                           		),
                             'relationship', g.relationship,
                             'company', g.company,
@@ -138,8 +138,9 @@ class Care {
     customer_id,
     practitioner_id,
   }) {
-    const INSERT_CARE =
-      "INSERT INTO care (performed_at,practitioner_id, customer_id,type,complements,price,invoice_paid,invoice_send,invoice_generated) VALUES (?,?,?,?,?,?,?,?,?)";
+    const INSERT_CARE = `INSERT INTO care 
+                         (performed_at,practitioner_id, customer_id,type,complements,price,invoice_paid,invoice_send,invoice_generated) 
+                         VALUES (?,?,?,?,?,?,?,?,?)`;
 
     return await pool.execute(INSERT_CARE, [
       performed_at,
@@ -198,6 +199,7 @@ class Care {
     ]);
   }
 
+  // à stocker dans la BDD
   static async getTotalCareThisMonth() {
     const COUNT_ALL = `SELECT COUNT(id) AS total_care, 
                           IFNULL(SUM(CASE WHEN invoice_paid = 1 THEN price ELSE 0 END), 0) AS total_revenue_paid,
@@ -209,6 +211,7 @@ class Care {
     return await pool.query(COUNT_ALL);
   }
 
+  // à stocker dans la bdd
   static async getTotalCareByYear(year) {
     const COUNT_BY_YEAR = `SELECT year,
                         JSON_ARRAYAGG(

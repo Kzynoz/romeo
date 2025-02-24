@@ -2,9 +2,13 @@ import pool from "../config/db.js";
 
 class Patient {
   static async findPatient({ title, firstname, lastname }) {
-    console.log("info sql entrant", title, firstname, lastname);
-    const SELECT_PATIENT =
-      "SELECT id FROM customer WHERE title = ? AND firstname = ? AND lastname = ? AND is_patient = '1'";
+    const SELECT_PATIENT = `SELECT id 
+                            FROM customer 
+                            WHERE title = ? 
+                            AND firstname = ? 
+                            AND lastname = ? 
+                            AND is_patient = '1'`;
+
     return await pool.execute(SELECT_PATIENT, [title, firstname, lastname]);
   }
 
@@ -25,7 +29,7 @@ class Patient {
                                   'lastname', gc.lastname,
                                   'relationship', g.relationship,
                                   'phone', gc.phone,
-                                  'email', gc.email,
+                                  'email', g.email,
                                   'company', g.company,
                                   'address', JSON_OBJECT(
                                       'street', g.street,
@@ -61,8 +65,8 @@ class Patient {
                             LEFT JOIN retirement_home rh ON c.retirement_home_id = rh.id
                             LEFT JOIN customer gc ON c.guardian_id = gc.id
                             WHERE c.is_patient = 1 
-                            AND c.id = ?;
-`;
+                            AND c.id = ?;`;
+
     return await pool.query(SELECT_PATIENT, [id]);
   }
 
@@ -99,6 +103,7 @@ class Patient {
                             )
                         WHERE c.is_patient = 1
                         ORDER BY care.invoice_paid DESC, care.invoice_send DESC;`;
+
     return await pool.query(SELECT_ALL);
   }
 
@@ -106,23 +111,23 @@ class Patient {
     title,
     firstname,
     lastname,
-    phone = null,
-    email = null,
+    phone,
     is_patient,
     guardian_id = null,
     practitioner_id,
     retirement_home_id = null,
   }) {
-    const INSERT_PATIENT =
-      "INSERT INTO customer (title,firstname,lastname,phone,email,is_patient,guardian_id,practitioner_id,retirement_home_id) VALUES (?,?,?,?,?,?,?,?,?)";
+    const INSERT_PATIENT = `INSERT INTO customer 
+                            (title,firstname,lastname,is_patient,guardian_id,phone,practitioner_id,retirement_home_id) 
+                            VALUES (?,?,?,?,?,?,?,?)`;
+
     return await pool.execute(INSERT_PATIENT, [
       title,
       firstname,
       lastname,
-      phone,
-      email,
       is_patient,
       guardian_id,
+      phone,
       practitioner_id,
       retirement_home_id,
     ]);

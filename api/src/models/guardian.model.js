@@ -10,8 +10,8 @@ class Guardian {
                                   'title', gc.title,
                                   'firstname', gc.firstname,
                                   'lastname', gc.lastname,
-                                  'phone', gc.phone,
-                                  'email', gc.email
+                                  'phone', c.phone,
+                                  'email', g.email
                                 ),
                                 'relationship', g.relationship,
                                 'company', g.company,
@@ -30,8 +30,6 @@ class Guardian {
                                     'title', c.title,
                                     'firstname', c.firstname,
                                     'lastname', c.lastname,
-                                    'phone', c.phone,
-                                    'email', c.email
                                   )
                                 )
                               END AS customers
@@ -46,7 +44,7 @@ class Guardian {
 
   static async getAll() {
     const SELECT_ALL = `SELECT c.id, c.title, c.firstname, c.lastname, c.phone, 
-                        c.email, g.relationship, g.company, 
+                        g.email, g.relationship, g.company, 
                         JSON_OBJECT (
                         'street',g.street, 
                         'city',g.city,
@@ -69,14 +67,17 @@ class Guardian {
       company = null,
       street = null,
       city = null,
+      email = null,
       zip_code = null,
       token = null,
       customer_id,
     },
     connection
   ) {
-    const INSERT_GUARDIAN =
-      "INSERT INTO guardian (customer_id,relationship,company,street,city,zip_code,token) VALUES (?,?,?,?,?,?,?)";
+    const INSERT_GUARDIAN = `INSERT INTO guardian 
+                             (customer_id,relationship,company,street,city,zip_code,email,token)
+                             VALUES (?,?,?,?,?,?,?,?)`;
+
     return await connection.execute(INSERT_GUARDIAN, [
       customer_id,
       relationship,
@@ -84,6 +85,7 @@ class Guardian {
       street,
       city,
       zip_code,
+      email,
       token,
     ]);
   }
@@ -95,17 +97,26 @@ class Guardian {
       street = null,
       city = null,
       zip_code = null,
+      email = null,
     },
     id,
     connection = pool
   ) {
-    const UPDATE_GUARDIAN =
-      "UPDATE guardian SET relationship = COALESCE(?,relationship), company = COALESCE(?,company), street = COALESCE(?,street), city = COALESCE(?,city), zip_code = COALESCE(?,zip_code) WHERE customer_id = ?";
+    const UPDATE_GUARDIAN = `UPDATE guardian 
+                             SET relationship = COALESCE(?,relationship), 
+                             company = COALESCE(?,company), 
+                             street = COALESCE(?,street), 
+                             city = COALESCE(?,city),
+                             email = COALESCE(?,email), 
+                             zip_code = COALESCE(?,zip_code) 
+                             WHERE customer_id = ?`;
+
     return await connection.execute(UPDATE_GUARDIAN, [
       relationship,
       company,
       street,
       city,
+      email,
       zip_code,
       id,
     ]);

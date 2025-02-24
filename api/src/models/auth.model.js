@@ -16,10 +16,10 @@ class Auth {
   }
 
   static async findGuardian(email, token) {
-    const SELECT_GUARDIAN = `SELECT c.id, c.title, c.firstname, c.lastname, c.email, g.token 
+    const SELECT_GUARDIAN = `SELECT c.id, c.title, c.firstname, c.lastname, g.email, g.token 
                              FROM customer c
                              LEFT JOIN guardian g ON c.id = g.customer_id
-                             WHERE email = ?
+                             WHERE g.email = ?
                              AND g.token = ?
                              AND is_patient = '0'`;
 
@@ -29,10 +29,10 @@ class Auth {
   static async registerGuardian(connection, { id, token, email, password }) {
     const UPADTE_GUARDIAN = `UPDATE customer c
                                  JOIN guardian g ON c.id = g.customer_id
-                                 SET c.password = ?
+                                 SET g.password = ?
                                  WHERE c.id = ? 
                                  AND g.token = ? 
-                                 AND c.email = ? 
+                                 AND g.email = ? 
                                  AND c.is_patient = "0"`;
 
     return await connection.execute(UPADTE_GUARDIAN, [

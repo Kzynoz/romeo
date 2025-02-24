@@ -2,8 +2,11 @@ import pool from "../config/db.js";
 
 class Customer {
   static async findCustomerGuardian({ firstname, lastname }) {
-    const SELECT_CUSTOMER =
-      "SELECT id, title, firstname, lastname FROM customer WHERE firstname = ? AND lastname = ? AND is_patient = '0'";
+    const SELECT_CUSTOMER = `SELECT id, title, firstname, lastname 
+                             FROM customer 
+                             WHERE firstname = ? 
+                             AND lastname = ? 
+                             AND is_patient = '0'`;
 
     return await pool.execute(SELECT_CUSTOMER, [firstname, lastname]);
   }
@@ -14,8 +17,6 @@ class Customer {
       firstname,
       lastname,
       phone = null,
-      email = null,
-      password = null,
       is_patient = 0,
       guardian_id = null,
       practitioner_id = null,
@@ -23,16 +24,15 @@ class Customer {
     },
     connection = pool
   ) {
-    const INSERT_CUSTOMER =
-      "INSERT INTO customer (title,firstname,lastname,phone,email,password,is_patient,guardian_id,practitioner_id,retirement_home_id) VALUES (?,?,?,?,?,?,?,?,?,?)";
+    const INSERT_CUSTOMER = `INSERT INTO customer 
+                             (title,firstname,lastname,phone,is_patient,guardian_id,practitioner_id,retirement_home_id) 
+                             VALUES (?,?,?,?,?,?,?,?)`;
 
     return await connection.execute(INSERT_CUSTOMER, [
       title,
       firstname,
       lastname,
       phone,
-      email,
-      password,
       is_patient,
       guardian_id,
       practitioner_id,
@@ -47,13 +47,7 @@ class Customer {
   }
 
   static async updateIsGuardian(
-    {
-      title = null,
-      firstname = null,
-      lastname = null,
-      phone = null,
-      email = null,
-    },
+    { title = null, firstname = null, lastname = null, phone = null },
     id,
     connection = pool
   ) {
@@ -61,8 +55,7 @@ class Customer {
                              SET title = IFNULL(?,title), 
                              firstname = IFNULL(?,firstname), 
                              lastname = IFNULL(?,lastname), 
-                             phone = IFNULL(?,phone), 
-                             email = IFNULL(?,email) 
+                             phone = IFNULL(?,phone)
                              WHERE id = ? AND is_patient = '0'`;
 
     return await connection.execute(UPDATE_GUARDIAN, [
@@ -70,7 +63,6 @@ class Customer {
       firstname,
       lastname,
       phone,
-      email,
       id,
     ]);
   }
@@ -81,7 +73,6 @@ class Customer {
     firstname = null,
     lastname = null,
     phone = null,
-    email = null,
     guardian_id = null,
     practitioner_id = null,
     retirement_home_id = null,
@@ -90,19 +81,18 @@ class Customer {
                             SET title = IFNULL(?, title), 
                             firstname = IFNULL(?,firstname), 
                             lastname = IFNULL(?,lastname), 
-                            phone = IFNULL(?,phone), 
-                            email = IFNULL(?,email), 
+                            phone = IFNULL(?,phone)
                             guardian_id = IFNULL(?,guardian_id), 
                             practitioner_id = IFNULL(?,practitioner_id), 
                             retirement_home_id = IFNULL(?,retirement_home_id) 
-                            WHERE id = ? AND is_patient = '1'`;
+                            WHERE id = ? 
+                            AND is_patient = '1'`;
 
     return await pool.execute(UPDATE_PATIENT, [
       title,
       firstname,
       lastname,
       phone,
-      email,
       guardian_id,
       practitioner_id,
       retirement_home_id,
