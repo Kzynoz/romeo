@@ -25,11 +25,18 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 
+// pour le dev
 app.get("/", (req, res) => {
   res.json({ msg: "API is running" });
 });
 
 app.use(base_url, router);
+
+app.use((req, res, next) => {
+  res.status(404).json({
+    message: "Route non trouvée.",
+  });
+});
 
 app.use((err, req, res, next) => {
   if (err.code === "ER_DUP_ENTRY") {

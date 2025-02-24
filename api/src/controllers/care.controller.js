@@ -59,8 +59,8 @@ const getBySearch = async (req, res, next) => {
   }
 };
 
+// tester avec l'autre route (avec l'id du patient passé en param) + REMPLACER PAR UNE TRANSACTION
 const create = async (req, res, next) => {
-  // tester avec l'autre route
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -70,10 +70,12 @@ const create = async (req, res, next) => {
     });
   }
   const { care, patient_id, practitioner_id } = req.body;
-  const id = req.params.id || patient_id;
+  const id = req.params.id || patient_id; // si deuxieme route
+  const careDate = new Date(care.performed_at).toISOString().split("T")[0];
+  console.log(careDate);
 
   try {
-    const [[existingCare]] = await Care.findCare(id, care);
+    const [[existingCare]] = await Care.findCare(id, careDate);
 
     if (existingCare) {
       res.status(400).json({ message: "Ce soin pour ce patient existe déjà." });
@@ -82,21 +84,25 @@ const create = async (req, res, next) => {
 
     const newCare = {
       ...care,
-      invoice_generated: 0,
+      performed_at: careDate,
+      invoice_generated: 1,
       invoice_paid: 0,
       invoice_send: 0,
       customer_id: id,
       practitioner_id: practitioner_id || req.user.alias,
     };
 
-    console.log(newCare);
-
     const [response] = await Care.insert(newCare, id);
 
     if (response.insertId) {
-      return res
-        .status(200)
-        .json({ message: "Le soin a été ajouté avec succès." });
+      const [[getInvoice]] = await Care.displayInvoice(response.insertId);
+
+      if (getInvoice) {
+        return res.status(200).json({
+          message: "Le soin a été ajouté avec succès.",
+          response: getInvoice,
+        });
+      }
     }
 
     res.status(500).json({ message: "Erreur lors de l'ajout du soin." });
@@ -141,4 +147,69 @@ const update = async (req, res, next) => {
   }
 };
 
-export { getAll, getOne, getBySearch, create, update };
+const getTotalCareThisMonth = async (req, res, next) => {
+  try {
+    const response = await Care.getTotalCareThisMonth();
+    console.log(response);
+    if (response) {
+      return res.status(200).json({
+        message: "Total des soins trouvés ce mois-ci.",
+        response: response,
+      });
+    }
+
+    res.status(404).json({
+      message: "Problème lors de la récupération.",
+      response,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getTotalCareByYear = async (req, res, next) => {
+  const { year } = req.params;
+  try {
+    const [[response]] = await Care.getTotalCareByYear(year);
+
+    if (response) {
+      return res.status(200).json({
+        message: "Total des soins récupérés avec succès.",
+        response,
+      });
+    }
+    return res.status(400).json({
+      message: "Aucun soin trouvé pour cette année.",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const remove = async (req, res, next) => {
+  const { id } = req.body;
+  try {
+    const [response] = await Care.delete(id);
+
+    if (response.affectedRows) {
+      res.json({ message: "Soin supprimé." });
+      return;
+    }
+    res.status(400).json({
+      message: "Ce soin n'existe pas.",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export {
+  getAll,
+  getOne,
+  getBySearch,
+  create,
+  update,
+  getTotalCareThisMonth,
+  getTotalCareByYear,
+  remove,
+};

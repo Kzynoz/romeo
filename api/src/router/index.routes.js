@@ -14,4 +14,5 @@ router.use("/patients", authCheck, patientRoutes);
 router.use("/guardians", authCheck, guardianRoutes);
 router.use("/retirement-homes", authCheck, retirementHomeRoutes);
 router.use("/care", authCheck, careRoutes);
+
 export default router;

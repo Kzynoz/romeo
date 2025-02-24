@@ -11,7 +11,7 @@ import {
 import {
   validatorCreateGuardian,
   validatorUpdateGuardian,
-} from "../middlewares/validator.js";
+} from "../middlewares/validators/guardianValidator.js";
 
 const router = Router();
 

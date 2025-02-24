@@ -9,7 +9,6 @@ class Patient {
   }
 
   static async getOne(id) {
-    // manques des infos par exemple l'ID du soin, à finaliser
     const SELECT_PATIENT = `SELECT
                               c.id,
                               c.title,
@@ -51,7 +50,12 @@ class Patient {
                                              care.invoice_send ASC,
                                              care.performed_at DESC
                                 ) AS sorted_care
-                            ) AS all_cares
+                            ) AS all_cares,
+                            (
+                              SELECT COUNT(care.id)
+                              FROM care
+                              WHERE care.customer_id = c.id
+                            ) AS care_count
                             FROM customer c
                             LEFT JOIN guardian g ON c.guardian_id = g.customer_id 
                             LEFT JOIN retirement_home rh ON c.retirement_home_id = rh.id
