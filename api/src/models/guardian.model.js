@@ -68,6 +68,7 @@ class Guardian {
       street = null,
       city = null,
       email = null,
+      password = null,
       zip_code = null,
       token = null,
       customer_id,
@@ -75,8 +76,8 @@ class Guardian {
     connection
   ) {
     const INSERT_GUARDIAN = `INSERT INTO guardian 
-                             (customer_id,relationship,company,street,city,zip_code,email,token)
-                             VALUES (?,?,?,?,?,?,?,?)`;
+                             (customer_id,relationship,company,street,city,zip_code,email,password,token)
+                             VALUES (?,?,?,?,?,?,?,?,?)`;
 
     return await connection.execute(INSERT_GUARDIAN, [
       customer_id,
@@ -86,6 +87,7 @@ class Guardian {
       city,
       zip_code,
       email,
+      password,
       token,
     ]);
   }

@@ -2,11 +2,18 @@ import jwt from "jsonwebtoken";
 
 const SECRET = process.env.JWT_SECRET;
 
-export default ({ id, alias, is_admin }) => {
+export default ({
+  id,
+  alias = null,
+  is_admin = null,
+  title = null,
+  firstname = null,
+  lastname = null,
+}) => {
   const PAYLOAD = {
     id,
-    alias,
-    is_admin,
+    alias: alias || `${title} ${firstname} ${lastname}`,
+    is_admin: is_admin === 0 || is_admin === 1 ? is_admin : "tuteur",
   };
 
   const OPTIONS = {

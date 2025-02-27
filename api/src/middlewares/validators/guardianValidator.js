@@ -42,15 +42,6 @@ const validatorCreateGuardian = [
     .withMessage("Doit contenir uniquement des chiffres")
     .isLength({ min: 10, max: 10 })
     .withMessage("Le numéro de téléphone doit être de 10 chiffres."),
-  body("customer_detail.email")
-    .notEmpty()
-    .withMessage("Champ obligatoire.")
-    .trim()
-    .isLength({ max: 150 })
-    .withMessage("L'email ne doit pas dépasser 150 caractères.")
-    .isEmail()
-    .withMessage("L'email doit être valide.")
-    .normalizeEmail(),
 
   body("guardian_info")
     .notEmpty()
@@ -67,6 +58,15 @@ const validatorCreateGuardian = [
     .isLength({ max: 150 })
     .withMessage("Le nom de société ne doit pas dépasser 50 caractères.")
     .toLowerCase(),
+  body("guardian_info.email")
+    .notEmpty()
+    .withMessage("Champ obligatoire.")
+    .trim()
+    .isLength({ max: 150 })
+    .withMessage("L'email ne doit pas dépasser 150 caractères.")
+    .isEmail()
+    .withMessage("L'email doit être valide.")
+    .normalizeEmail(),
   body("guardian_info.number")
     .notEmpty()
     .withMessage("Champ obligatoire.")
@@ -125,14 +125,6 @@ const validatorUpdateGuardian = [
     .withMessage("Doit contenir uniquement des chiffres")
     .isLength({ min: 10, max: 10 })
     .withMessage("Le numéro de téléphone doit être de 10 chiffres."),
-  body("customer_detail.email")
-    .optional()
-    .trim()
-    .isLength({ max: 150 })
-    .withMessage("L'email ne doit pas dépasser 150 caractères.")
-    .isEmail()
-    .withMessage("L'email doit être valide.")
-    .normalizeEmail(),
 
   body("guardian_info")
     .optional()
@@ -147,6 +139,14 @@ const validatorUpdateGuardian = [
     .isLength({ max: 150 })
     .withMessage("Le nom de société ne doit pas dépasser 50 caractères.")
     .toLowerCase(),
+  body("guardian_info.email")
+    .optional()
+    .trim()
+    .isLength({ max: 150 })
+    .withMessage("L'email ne doit pas dépasser 150 caractères.")
+    .isEmail()
+    .withMessage("L'email doit être valide.")
+    .normalizeEmail(),
   body("guardian_info.number")
     .optional()
     .trim()

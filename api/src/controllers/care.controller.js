@@ -19,10 +19,11 @@ const getAll = async (req, res, next) => {
   }
 };
 
-const getOne = async (req, res, next) => {
-  const { id } = req.params;
+const getOneCare = async (req, res, next) => {
+  const { patientId, id } = req.params;
+  console.log("patient id :", patientId, "careId :", id);
   try {
-    const [[response]] = await Care.getOne(id);
+    const [[response]] = await Care.getOne({ patientId, id });
 
     if (!response) {
       res.status(400).json({
@@ -43,6 +44,7 @@ const getOne = async (req, res, next) => {
 const getBySearch = async (req, res, next) => {
   const { q = "" } = req.query;
   const formattedSearch = `%${q.trim()}%`;
+  console.log(formattedSearch);
 
   try {
     const [response] = await Care.findBySearch(formattedSearch);
@@ -149,8 +151,8 @@ const update = async (req, res, next) => {
 
 const getTotalCareThisMonth = async (req, res, next) => {
   try {
-    const response = await Care.getTotalCareThisMonth();
-    console.log(response);
+    const [[response]] = await Care.getTotalCareThisMonth();
+
     if (response) {
       return res.status(200).json({
         message: "Total des soins trouvés ce mois-ci.",
@@ -205,7 +207,7 @@ const remove = async (req, res, next) => {
 
 export {
   getAll,
-  getOne,
+  getOneCare,
   getBySearch,
   create,
   update,

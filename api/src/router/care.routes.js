@@ -4,7 +4,6 @@ import {
   create,
   getAll,
   getBySearch,
-  getOne,
   getTotalCareByYear,
   getTotalCareThisMonth,
   remove,
@@ -23,7 +22,6 @@ router.get("/", getAll);
 router.get("/count-this-month", getTotalCareThisMonth);
 router.get("/count-by-year/:year", getTotalCareByYear);
 router.get("/search", getBySearch);
-router.get("/:id", getOne);
 
 router.patch("/:id", validatorUpdateCare, update);
 

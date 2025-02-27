@@ -43,14 +43,6 @@ const validatorCreatePatient = [
     .withMessage("Doit contenir uniquement des chiffres")
     .isLength({ min: 10, max: 10 })
     .withMessage("Le numéro de téléphone doit être de 10 chiffres."),
-  body("patient.email")
-    .optional()
-    .trim()
-    .isLength({ max: 150 })
-    .withMessage("L'email ne doit pas dépasser 150 caractères.")
-    .isEmail()
-    .withMessage("L'email doit être valide.")
-    .normalizeEmail(),
   body("guardian_id")
     .isInt()
     .withMessage("Une erreur est survenue, veuillez ressayer plus tard."),
@@ -90,14 +82,6 @@ const validatorUpdatePatient = [
     .withMessage("Doit contenir uniquement des chiffres")
     .isLength({ min: 10, max: 10 })
     .withMessage("Le numéro de téléphone doit être de 10 chiffres."),
-  body("patient.email")
-    .optional()
-    .trim()
-    .isLength({ max: 150 })
-    .withMessage("L'email ne doit pas dépasser 150 caractères.")
-    .isEmail()
-    .withMessage("L'email doit être valide.")
-    .normalizeEmail(),
   body("guardian_id")
     .optional()
     .isInt()

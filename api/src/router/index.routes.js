@@ -4,6 +4,7 @@ import patientRoutes from "./patient.routes.js";
 import guardianRoutes from "./guardian.routes.js";
 import retirementHomeRoutes from "./retirement_home.routes.js";
 import careRoutes from "./care.routes.js";
+import userRoutes from "./user.routes.js";
 
 import authCheck from "../middlewares/authCheck.js";
 
@@ -14,5 +15,6 @@ router.use("/patients", authCheck, patientRoutes);
 router.use("/guardians", authCheck, guardianRoutes);
 router.use("/retirement-homes", authCheck, retirementHomeRoutes);
 router.use("/care", authCheck, careRoutes);
+router.use("/user", authCheck, userRoutes);
 
 export default router;

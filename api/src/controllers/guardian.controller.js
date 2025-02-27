@@ -63,6 +63,7 @@ const getOne = async (req, res, next) => {
 const create = async (req, res, next) => {
   const { customer_detail, guardian_info } = req.body;
   let connection = null;
+
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -107,6 +108,7 @@ const create = async (req, res, next) => {
     await connection.rollback();
   } catch (error) {
     if (connection) await connection.rollback();
+    console.log(error);
     res.status(500).json({ message: "Erreur lors de l'ajout du tuteur." });
   } finally {
     if (connection) connection.release();

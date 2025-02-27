@@ -12,6 +12,7 @@ import {
   remove,
   update,
 } from "../controllers/patient.controller.js";
+import { getOneCare } from "../controllers/care.controller.js";
 
 const router = Router();
 
@@ -19,6 +20,7 @@ router.post("/", validatorCreatePatient, create);
 
 router.get("/", getAll);
 router.get("/search", getBySearch);
+router.get("/:patientId/care/:id", getOneCare);
 router.get("/:id", getOne);
 
 router.patch("/:id", validatorUpdatePatient, update);

@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 
 const validatorCreateUser = [
   body("alias")
@@ -35,4 +35,37 @@ const validatorCreateUser = [
     ),
 ];
 
-export { validatorCreateUser };
+const validatorRegisterGuardian = [
+  param("tokenUrl")
+    .isLength({ min: 64, max: 64 })
+    .withMessage("Token invalide ou manquant.")
+    .matches(/^[a-f0-9]{64}$/i)
+    .withMessage("Token invalide ou manquant."),
+  body("email")
+    .notEmpty()
+    .withMessage("L'email est obligatoire.")
+    .trim()
+    .isLength({ max: 150 })
+    .withMessage("L'email ne doit pas dépasser 150 caractères.")
+    .isEmail()
+    .withMessage("L'email doit être valide.")
+    .normalizeEmail(),
+  body("password")
+    .notEmpty()
+    .withMessage("Le mot de passe est obligatoire.")
+    .trim()
+    .isLength({ min: 8 })
+    .withMessage("Le mot de passe doit contenir 8 caractères mininum.")
+    .matches(/\d/)
+    .withMessage("Le mot de passe doit contenir au moins un chiffre.")
+    .matches(/[A-Z]/)
+    .withMessage("Le mot de passe doit contenir au moins une lettre majuscule.")
+    .matches(/[a-z]/)
+    .withMessage("Le mot de passe doit contenir au moins une lettre minuscule.")
+    .matches(/[!@#$%^&*(),.?":{}|<>]/)
+    .withMessage(
+      "Le mot de passe doit contenir au moins un caractère spécial."
+    ),
+];
+
+export { validatorCreateUser, validatorRegisterGuardian };
