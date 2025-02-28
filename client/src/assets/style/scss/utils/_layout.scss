@@ -1,0 +1,31 @@
+#root {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+
+	.container {
+		flex: 1;
+		margin: 1em 2em;
+	}
+
+	.rubriques {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 2em;
+	}
+
+	> header {
+		margin: 1em 2em;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+}
+
+#home {
+	> header {
+		p {
+			background-color: $background;
+		}
+	}
+}

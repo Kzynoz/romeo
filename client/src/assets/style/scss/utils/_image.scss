@@ -1,0 +1,13 @@
+.logo img {
+	width: 200px;
+}
+
+#home {
+	> header {
+		padding-top: 14em;
+		background-image: url(../../img/mascotte-romeo.svg);
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: right top;
+	}
+}

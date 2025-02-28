@@ -1,0 +1,17 @@
+.care-type {
+	background-color: $primary-color;
+	padding: 0.5rem 1rem;
+	color: white;
+	font-weight: 500;
+	width: 13em;
+	text-align: center;
+	border-radius: 1rem;
+
+	&::first-letter {
+		text-transform: uppercase;
+	}
+
+	&.soin {
+		background-color: $secondary-color;
+	}
+}

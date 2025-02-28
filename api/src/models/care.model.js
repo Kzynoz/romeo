@@ -159,12 +159,13 @@ class Care {
 	}
 
 	static async findBySearch(search) {
-		const SELECT_ALL = `SELECT care.id, care.performed_at, care.type, c.title, c.firstname, c.lastname 
+		const SELECT_ALL = `SELECT care.id, care.performed_at, care.type, c.title, c.firstname, c.lastname, c.id AS patient_id 
                         FROM care 
                         LEFT JOIN customer c ON care.customer_id = c.id
-                        WHERE DATE_FORMAT(care.performed_at, '%d-%m-%Y') LIKE ?
+                        WHERE DATE_FORMAT(care.performed_at, '%d-%m-%Y') LIKE REPLACE(?, "/", "-") 
                         OR care.type LIKE ?
-                        OR CONCAT(firstname, ' ', lastname) LIKE ? `; // Conversion de la colonne performed_at en chaine de caractères
+                        OR CONCAT(firstname, ' ', lastname) LIKE ?
+                        ORDER BY c.lastname, care.performed_at DESC `;
 
 		return await pool.execute(SELECT_ALL, [search, search, search]);
 	}

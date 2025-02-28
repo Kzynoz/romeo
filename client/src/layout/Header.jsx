@@ -1,14 +1,18 @@
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
+import logo from "../assets/img/logo-romeo.svg";
 
 import { logout } from "../features/authSlice";
 import { toggleMenu } from "../features/menuSlice";
+import { useEffect, useState } from "react";
 
 function Header() {
 	const { isLogged } = useSelector((state) => state.auth);
 	const { isMenuOpen } = useSelector((state) => state.menu);
+	const [date, setDate] = useState(null);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -38,17 +42,29 @@ function Header() {
 		dispatch(toggleMenu());
 	}
 
+	function getDate() {
+		const options = { day: "numeric", month: "short", year: "numeric" };
+		const today = new Date();
+		return today.toLocaleDateString("fr-FR", options);
+	}
+
+	useEffect(() => {
+		setDate(getDate());
+	}, []);
+
 	return (
 		<header>
 			<div className="logo">
 				<NavLink to="/" end>
 					<img
 						className="logo"
-						src="mon-logo.svg"
+						src={logo}
 						alt="Roméo, ton assistant facturation"
 					/>
 				</NavLink>
 			</div>
+			{date && <span className="current-date">{date}</span>}
+
 			{isLogged && (
 				<>
 					<div className={`burger-menu`} onClick={handleClick}>

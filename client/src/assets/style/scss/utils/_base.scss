@@ -1,0 +1,41 @@
+body {
+	min-height: 100vh;
+	overflow-x: clip;
+	background-color: $background;
+	background-image: radial-gradient(
+			ellipse calc(140vw) calc(30vh) at top left,
+			rgba(194, 213, 243, 1) 0%,
+			rgba(194, 213, 243, 1) 50%,
+			rgba(194, 213, 243, 0) 100%
+		),
+		radial-gradient(
+			ellipse 160vw 50vh at bottom right,
+			rgba(194, 213, 243, 1) 0%,
+			rgba(194, 213, 243, 1) 50%,
+			rgba(194, 213, 243, 0) 100%
+		);
+
+	p {
+		margin: 1rem 0;
+		line-height: 1.5;
+	}
+}
+
+*,
+*::before,
+*::after {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+ul {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}

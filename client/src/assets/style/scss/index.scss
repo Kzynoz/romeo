@@ -1,18 +1,12 @@
-@import "normalize";
-@import "variable";
+@import "./utils/normalize";
+@import "./utils/variable";
+@import "./utils/mixins";
+@import "./utils/font";
+@import "./utils/base";
+@import "./utils/layout";
+@import "./utils/image";
 
-@import "font";
-//@import "mixins";
-
-@import "base";
-@import "nav";
-//@import "layout";
-
-/* @import "icon";
-
-@import "modal";
-@import "form";
-
-@import "home";
-@import "cart";
-@import "login"; */
+@import "./components/nav";
+@import "./components/card";
+@import "./components/search-bar";
+@import "./components/status";

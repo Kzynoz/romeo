@@ -1,0 +1,27 @@
+#home {
+	aside {
+		@include card();
+		margin: 3em 0;
+
+		a {
+			margin-top: 1em;
+			display: inline-block;
+			text-decoration: revert;
+		}
+	}
+
+	.rubriques {
+		article {
+			@include card($primary-color, $white, $blue-shadow, $white);
+			cursor: pointer;
+
+			.svg-inline--fa {
+				height: 2.5em;
+			}
+
+			h2 {
+				margin-top: 1em;
+			}
+		}
+	}
+}

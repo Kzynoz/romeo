@@ -5,6 +5,7 @@ import CareStatus from "./Components/CareStatus";
 function Patient() {
 	const [datas, setDatas] = useState([]);
 	const [error, setError] = useState("");
+	const [route, setRoute] = useState(null);
 	const navigate = useNavigate();
 
 	useEffect(() => {
