@@ -43,13 +43,15 @@ header {
 }
 
 footer {
+	margin-top: 8em;
+
 	nav {
 		background-color: white;
 		border-radius: 5em;
 		padding: 1rem 0;
 		position: fixed;
 		box-shadow: $shadow;
-		bottom: 2rem;
+		bottom: 3em;
 		left: 1rem;
 		right: 1rem;
 
@@ -178,5 +180,9 @@ footer {
 			opacity: 1;
 			transition: transform 0.3s ease-out;
 		}
+	}
+
+	p {
+		text-align: center;
 	}
 }

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -16,7 +16,7 @@ import { toggleSubMenu } from "../features/menuSlice";
 function Footer() {
 	const { isLogged } = useSelector((state) => state.auth);
 	const { isSubMenuOpen } = useSelector((state) => state.menu);
-
+	const location = useLocation();
 	const dispatch = useDispatch();
 
 	function handleClick() {
@@ -35,7 +35,7 @@ function Footer() {
 							</NavLink>
 						</li>
 						<li>
-							<NavLink to="patients" end onClick={() => handleClick()}>
+							<NavLink to="patients">
 								<FontAwesomeIcon icon={faUser} />
 								<span>Patients</span>
 							</NavLink>

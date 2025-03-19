@@ -1,0 +1,49 @@
+#maisons-retraite-details {
+	.row-contact {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		padding: 2em;
+		column-gap: 1em;
+
+		h2 {
+			grid-column: span 2;
+			margin-bottom: 1em;
+		}
+
+		p {
+			margin: 0;
+		}
+
+		address {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+			font-style: normal;
+
+			a {
+				display: flex;
+				gap: 1rem;
+				align-items: center;
+				padding: 0.5rem 0;
+
+				.svg-inline--fa {
+					color: $primary-color;
+					height: 2rem;
+				}
+			}
+		}
+	}
+
+	> article {
+		> header {
+			@include card($primary-color, $white);
+			text-align: left;
+			cursor: initial;
+
+			h1 {
+				margin-top: 0;
+				text-transform: capitalize;
+			}
+		}
+	}
+}

@@ -5,10 +5,17 @@ body {
 	color: $secondary-color;
 	font-family: "Poppins", sans-serif;
 
-	h2 {
-		font-size: 1.6rem;
+	h2,
+	legend {
+		font-size: 2rem;
 		font-weight: 600;
 		color: $primary-color;
+		margin: 0;
+
+		.society {
+			font-size: 1.4rem;
+			color: $secondary-color;
+		}
 	}
 
 	h1 {
@@ -24,5 +31,50 @@ header {
 	.current-date {
 		font-size: 1.6rem;
 		color: $primary-color;
+	}
+}
+
+.row-guardian {
+	h2 + p > strong {
+		font-size: 1.6rem;
+		font-weight: 600;
+	}
+}
+
+.row-contact {
+	h2 + p {
+		font-size: 1.6rem;
+		font-weight: 600;
+	}
+}
+
+#patients-details h1 > span,
+#soins-details h1 > span,
+#tuteurs-details h1 > span {
+	font-size: 1.4rem;
+	text-transform: uppercase;
+	letter-spacing: 0.2rem;
+	display: block;
+	font-weight: 400;
+}
+
+#soins-details {
+	.price {
+		font-size: 2rem;
+	}
+}
+
+#add-form form {
+	legend {
+		margin-bottom: 1em;
+	}
+
+	label {
+		font-weight: 700;
+
+		input {
+			font-style: normal;
+			color: $primary-color;
+		}
 	}
 }

@@ -1,0 +1,34 @@
+%card-grid {
+	@include card();
+	display: grid;
+	grid-template-columns: 2fr 1fr;
+	grid-template-rows: auto;
+	text-align: left;
+	align-items: center;
+	margin: 1rem 0;
+
+	h2 {
+		text-align: left;
+		grid-column: 1 / 2;
+		grid-row: 1;
+	}
+
+	p {
+		grid-column: 1/2;
+		grid-row: 2;
+	}
+
+	aside {
+		grid-column: 2/3;
+		grid-row: 1/3;
+		justify-self: end;
+	}
+}
+
+%card-flex {
+	@include card();
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin: 1rem 0;
+}

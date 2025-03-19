@@ -10,10 +10,46 @@
 	box-shadow: $shadow;
 	border-radius: $border-radius-small;
 	text-align: center;
+	cursor: pointer;
 
 	h2 {
 		color: $title-color;
 		text-align: center;
-		margin-bottom: 1em;
 	}
+}
+
+@mixin input() {
+	padding: 1.5rem 2rem;
+	border: 1px solid $primary-color;
+	width: 100%;
+	border-radius: 3rem;
+	color: $secondary-color;
+	font-style: italic;
+
+	&:focus-visible {
+		padding: 1.5rem 2rem;
+		padding-inline: 1.5rem 2rem;
+		outline-offset: 0;
+		outline: 0;
+	}
+
+	&::placeholder {
+		font-style: italic;
+	}
+
+	&::-webkit-search-cancel-button {
+		margin-right: 3em;
+	}
+}
+
+@mixin button($background: $primary-color, $color: $white) {
+	background-color: $background;
+	color: $color;
+	padding: 1em 2em;
+	border-radius: 1.5em;
+	text-align: center;
+	cursor: pointer;
+	text-transform: uppercase;
+	font-weight: 600;
+	letter-spacing: 0.2rem;
 }

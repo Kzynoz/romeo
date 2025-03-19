@@ -212,7 +212,7 @@ class Care {
                           SUM(care.price) AS total_revenue_estimated
                         FROM care 
                         WHERE performed_at BETWEEN DATE_FORMAT(NOW(), '%Y-%m-01 00:00:00') 
-                        AND LAST_DAY(NOW()) + INTERVAL 1 DAY - INTERVAL 1 SECOND`;
+                        AND DATE_FORMAT(LAST_DAY(NOW()), '%Y-%m-%d 23:59:59')`;
 
 		return await pool.query(COUNT_ALL);
 	}

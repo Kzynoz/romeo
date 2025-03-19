@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CareStatus from "./Components/CareStatus";
+import SearchBar from "./Components/SearchBar/SearchBar";
 
 function Patient() {
 	const [datas, setDatas] = useState([]);
 	const [error, setError] = useState("");
-	const [route, setRoute] = useState(null);
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -34,7 +34,7 @@ function Patient() {
 				<h1>Mes patients</h1>
 				<p>Ici tu retrouveras la liste de tous tes patients</p>
 			</header>
-			{/*ici le champ de recherche*/}
+			<SearchBar entityType={"patient"} />
 			<section className="wrapper">
 				<button onClick={"coucou"}>Ajouter un patient</button>
 				{error && <p>{error}</p>}
@@ -45,16 +45,16 @@ function Patient() {
 					datas.map((patient) => (
 						<article
 							key={patient.id}
-							onClick={() => navigate(`/patient/${patient.id}`)}
+							onClick={() => navigate(`/patients/${patient.id}`)}
 						>
 							<h2>
 								{patient.title} {patient.firstname} {patient.lastname}
 							</h2>
 							<p>
-								Tuteur: {patient.guardian.title} {patient.guardian.firstname}{" "}
-								{patient.guardian.lastname}{" "}
+								<strong>Tuteur:</strong> {patient.guardian.title}{" "}
+								{patient.guardian.firstname} {patient.guardian.lastname}{" "}
 								{patient.guardian?.relationship === "société" && (
-									<span>{patient.guardian.company}</span>
+									<span className="society">{patient.guardian.company}</span>
 								)}
 							</p>
 							{patient.latest_care && (
@@ -65,13 +65,10 @@ function Patient() {
 											patient.latest_care.performed_at
 										).toLocaleDateString()}
 									</p>
-									<p>
-										<strong>Status du soin :</strong>{" "}
-										<CareStatus
-											invoice_paid={patient.latest_care.invoice_paid}
-											invoice_send={patient.latest_care.invoice_send}
-										/>
-									</p>
+									<CareStatus
+										invoice_paid={patient.latest_care.invoice_paid}
+										invoice_send={patient.latest_care.invoice_send}
+									/>
 								</aside>
 							)}
 						</article>

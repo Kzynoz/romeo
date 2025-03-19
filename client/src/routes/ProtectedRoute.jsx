@@ -1,60 +1,57 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { login, logout } from "../features/authSlice";
-import PropTypes from "prop-types";
 
-function ProtectedRoute({ children }) {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { isLogged } = useSelector((state) => state.auth);
-  const [isVerifying, setIsVerifying] = useState(true);
-  const [message, setMessage] = useState("");
+function ProtectedRoute() {
+	const dispatch = useDispatch();
+	const { isLogged } = useSelector((state) => state.auth);
+	const [isVerifying, setIsVerifying] = useState(true);
 
-  useEffect(() => {
-    async function checkToken() {
-      try {
-        const res = await fetch(
-          "http://localhost:9000/api/v1/auth/refresh-login",
-          {
-            method: "POST",
-            credentials: "include",
-          }
-        );
+	useEffect(() => {
+		async function checkToken() {
+			try {
+				const res = await fetch(
+					"http://localhost:9000/api/v1/auth/refresh-login",
+					{
+						method: "POST",
+						credentials: "include",
+					}
+				);
 
-        const resJSON = await res.json();
+				const resJSON = await res.json();
 
-        if (res.ok) {
-          dispatch(login(resJSON.user));
-        } else {
-          dispatch(logout());
-          navigate("/login");
-        }
-      } catch (resJSON) {
-        setMessage(resJSON);
-        dispatch(logout());
-        navigate("/login");
-      } finally {
-        setIsVerifying(false);
-      }
-    }
+				if (res.ok) {
+					dispatch(login(resJSON.user));
+				} else {
+					dispatch(logout());
+					//navigate("/login");
+				}
+			} catch (error) {
+				//	setMessage(error.message);
+				dispatch(logout());
+				//	navigate("/login");
+			} finally {
+				setIsVerifying(false);
+			}
+		}
 
-    if (isLogged) {
-      setIsVerifying(false);
-    } else {
-      checkToken();
-    }
-  }, [isLogged, dispatch, navigate]);
+		if (isLogged) {
+			setIsVerifying(false);
+		} else {
+			checkToken();
+		}
+	}, [isLogged, dispatch]);
 
-  if (isVerifying) {
-    return <p>Chargement…</p>;
-  }
+	if (isVerifying) {
+		return <p>Chargement…</p>;
+	}
 
-  return children;
+	if (!isLogged) {
+		return <Navigate to="/login" />;
+	}
+
+	return <Outlet />;
 }
-
-ProtectedRoute.PropTypes = {
-  children: PropTypes.node.isRequired,
-};
 
 export default ProtectedRoute;

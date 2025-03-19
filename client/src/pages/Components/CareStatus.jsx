@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 
 function CareStatus({ invoice_paid, invoice_send }) {
 	function removeAccents() {
-		let careStatus = "Pas Envoyé";
+		let careStatus = "En attente";
 
 		if (invoice_paid && invoice_send) {
 			careStatus = "Acquitté";
@@ -19,12 +19,12 @@ function CareStatus({ invoice_paid, invoice_send }) {
 	}
 	const { careStatus, className } = removeAccents();
 
-	return <span className={`status-${className}`}>{careStatus}</span>;
+	return <span className={`status ${className}`}>{careStatus}</span>;
 }
 
 export default CareStatus;
 
-CareStatus.PropTypes = {
+CareStatus.propTypes = {
 	invoice_paid: PropTypes.oneOf([0, 1]).isRequired,
 	invoice_send: PropTypes.oneOf([0, 1]).isRequired,
 };

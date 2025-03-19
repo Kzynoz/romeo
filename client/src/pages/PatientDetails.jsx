@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import CareStatus from "./Components/CareStatus";
+import GuardianContact from "./Components/GuardianContact";
 
 function PatientDetails() {
 	const { id } = useParams();
@@ -10,7 +11,7 @@ function PatientDetails() {
 	const [error, setError] = useState("");
 
 	useEffect(() => {
-		async function fetchPatients() {
+		async function fetchPatient() {
 			try {
 				const res = await fetch(`http://localhost:9000/api/v1/patients/${id}`, {
 					credentials: "include",
@@ -31,7 +32,7 @@ function PatientDetails() {
 				setError(error);
 			}
 		}
-		fetchPatients();
+		fetchPatient();
 	}, []);
 
 	return (
@@ -46,66 +47,26 @@ function PatientDetails() {
 					</div>
 					<header>
 						<h1>
+							<span>Patient</span>
 							{datas.title} {datas.firstname} {datas.lastname}
 						</h1>
-						<address>
-							{datas.phone && (
-								<>
-									<p>Coordonnées</p>
-									<p>
-										Téléphone :
-										<a href={`tel:+${datas.phone}`} target="_blank">
-											{datas.phone}
-										</a>
-									</p>
-								</>
-							)}
-
-							{datas.retirement_home && (
-								<>
-									<p>Maison de retraite :</p>
-									<p>
-										<Link to={`/ehpads/${datas.retirement_home.id}`}>
-											{datas.retirement_home.name}
-										</Link>
-									</p>
-								</>
-							)}
-						</address>
+						{datas.retirement_home && (
+							<address>
+								<p>
+									Maison de retraite :{" "}
+									<Link to={`/ehpads/${datas.retirement_home.id}`}>
+										{datas.retirement_home.name}
+									</Link>
+								</p>
+							</address>
+						)}
 					</header>
 
 					{datas.guardian && (
-						<section>
-							<h2>Sous tutuelle</h2>
-							<p>
-								{datas.guardian.title} {datas.guardian.firstname}{" "}
-								{datas.guardian.lastname} ({datas.guardian.relationship})
-							</p>
-
-							{datas.guardian.company && (
-								<p>Société : {datas.guardian.company} </p>
-							)}
-
-							<address>
-								{datas.guardian.address && (
-									<p>
-										{datas.guardian.address.street} -{" "}
-										{datas.guardian.address.city}{" "}
-										{datas.guardian.address.zip_code}
-									</p>
-								)}
-
-								<a href={`mailto:${datas.guardian.email}`} target="_blank">
-									{datas.guardian.email}
-								</a>
-
-								<a href={`tel:+${datas.guardian.phone}`} target="_blank">
-									{datas.guardian.phone}
-								</a>
-							</address>
-						</section>
+						<GuardianContact datas={datas.guardian} isFull={true} />
 					)}
-					<aside>
+
+					<aside className="wrapper">
 						<header>
 							<h2>Liste de(s) soin(s) ({datas.care_count})</h2>
 							<button onClick={"ajouter"}>Ajouter</button>
@@ -115,7 +76,7 @@ function PatientDetails() {
 							datas.all_cares.map((care) => (
 								<article
 									key={care.id}
-									onClick={() => navigate(`/patient/${id}/care/${care.id}`)}
+									onClick={() => navigate(`/patients/${id}/soin/${care.id}`)}
 								>
 									<h3>
 										Soin{" "}
@@ -123,13 +84,10 @@ function PatientDetails() {
 											{new Date(care.performed_at).toLocaleDateString()}
 										</span>
 									</h3>
-									<p>
-										<strong>Status du soin :</strong>
-										<CareStatus
-											invoice_paid={care.invoice_paid}
-											invoice_send={care.invoice_send}
-										/>
-									</p>
+									<CareStatus
+										invoice_paid={care.invoice_paid}
+										invoice_send={care.invoice_send}
+									/>
 								</article>
 							))
 						) : (

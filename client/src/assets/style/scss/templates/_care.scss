@@ -1,0 +1,42 @@
+#soins-details > article {
+	header {
+		@include card($primary-color, $white);
+		text-align: left;
+		cursor: initial;
+
+		h1 {
+			margin-top: 0;
+			text-transform: capitalize;
+		}
+	}
+
+	.care-details {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		@include card();
+		text-align: left;
+		cursor: initial;
+
+		.complements > strong {
+			display: block;
+			text-decoration: underline;
+		}
+
+		p {
+			flex-basis: 100%;
+		}
+
+		h2 {
+			flex-basis: 50%;
+			margin: auto;
+			margin-left: 0;
+			text-align: left;
+		}
+
+		+ span {
+			width: fit-content;
+		}
+	}
+}

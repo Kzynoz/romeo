@@ -1,18 +1,32 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
-function SearchCard({ result, index }) {
+function SearchCard({ result, entityType }) {
 	const navigate = useNavigate();
 
 	function handleClick(e) {
-		navigate(`/patient/${result.id}`);
+		if (result?.is_patient === 1) {
+			navigate(`/patients/${result.id}`);
+		} else if (result?.is_patient === 0) {
+			navigate(`/tuteurs/${result.id}`);
+		} else if (result?.performed_at) {
+			navigate(`/patients/${result.patient_id}/soin/${result.id}`);
+		} else if (result?.name) {
+			navigate(`/maisons-retraite/${result.id}`);
+		}
 	}
 
 	return (
-		<article key={result.id || index} onClick={handleClick}>
+		<article onClick={handleClick}>
 			{result.title && result.firstname && result.lastname && (
 				<h3>
-					{result.title} {result.firstname} {result.lastname}
+					{result.title} {result.firstname} {result.lastname}{" "}
+					{entityType === "all" && result.is_patient === 1 ? (
+						<span>patient</span>
+					) : entityType === "all" && result.is_patient === 0 ? (
+						<span>tuteur</span>
+					) : null}
 				</h3>
 			)}
 
@@ -36,4 +50,8 @@ function SearchCard({ result, index }) {
 }
 
 export default SearchCard;
-// propsType
+
+SearchCard.propTypes = {
+	entityType: PropTypes.string.isRequired,
+	result: PropTypes.object.isRequired,
+};

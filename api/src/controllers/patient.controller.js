@@ -135,6 +135,12 @@ const getBySearch = async (req, res, next) => {
 	const { q = "" } = req.query;
 	const formattedSearch = `%${q.trim()}%`;
 
+	if (!q) {
+		return res
+			.status(400)
+			.json({ message: "La recherche ne peut pas être vide." });
+	}
+
 	try {
 		const [response] = await Customer.findBySearch(formattedSearch, 1);
 

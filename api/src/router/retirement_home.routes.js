@@ -1,16 +1,16 @@
 import { Router } from "express";
 import isAdmin from "../middlewares/isAdmin.js";
 import {
-  create,
-  getAll,
-  getBySearch,
-  getOne,
-  remove,
-  update,
+	create,
+	getAll,
+	getBySearch,
+	getOne,
+	remove,
+	update,
 } from "../controllers/retirement_home.controller.js";
 import {
-  validatorCreateRH,
-  validatorUpdateRH,
+	validatorCreateRH,
+	validatorUpdateRH,
 } from "../middlewares/validators/retirementHomeValidator.js";
 
 const router = Router();
@@ -23,6 +23,6 @@ router.get("/:id", getOne);
 
 router.patch("/:id", validatorUpdateRH, update);
 
-router.delete("/:id", isAdmin, remove);
+router.delete("/:idItem", isAdmin, remove);
 
 export default router;

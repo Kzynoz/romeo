@@ -3,7 +3,8 @@
 	padding: 0.5rem 1rem;
 	color: white;
 	font-weight: 500;
-	width: 13em;
+	width: fit-content;
+	min-width: 7em;
 	text-align: center;
 	border-radius: 1rem;
 
@@ -13,5 +14,33 @@
 
 	&.soin {
 		background-color: $secondary-color;
+	}
+}
+
+.status {
+	background-color: $primary-color;
+	padding: 0.5rem 1rem;
+	color: white;
+	font-weight: 500;
+	width: fit-content;
+	min-width: 7em;
+	text-align: center;
+	border-radius: 1rem;
+
+	&::first-letter {
+		text-transform: uppercase;
+	}
+
+	&.en-attente {
+		background-color: $pending;
+		color: $secondary-color;
+	}
+
+	&.acquitte {
+		background-color: $paid;
+	}
+
+	&.impaye {
+		background-color: $unpaid;
 	}
 }

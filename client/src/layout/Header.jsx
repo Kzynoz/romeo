@@ -17,6 +17,8 @@ function Header() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
+	const year = new Date().getFullYear();
+
 	const open = <FontAwesomeIcon icon={faBars} />;
 	const close = <FontAwesomeIcon icon={faXmark} />;
 
@@ -38,8 +40,18 @@ function Header() {
 		}
 	}
 
-	function handleClick() {
-		dispatch(toggleMenu());
+	function handleDelayedMenuClose() {
+		setTimeout(function () {
+			dispatch(toggleMenu());
+		}, 200);
+	}
+
+	function handleClick(e) {
+		if (e.target.tagName === "A") {
+			handleDelayedMenuClose();
+		} else {
+			dispatch(toggleMenu());
+		}
 	}
 
 	function getDate() {
@@ -74,37 +86,37 @@ function Header() {
 					<nav className={isMenuOpen ? "active" : null}>
 						<ul>
 							<li>
-								<NavLink to="/" end>
+								<NavLink to="/" end onClick={handleClick}>
 									Dashboard
 								</NavLink>
 							</li>
 							<li>
-								<NavLink to="patients" end>
+								<NavLink to="patients" onClick={handleClick}>
 									Patients
 								</NavLink>
 							</li>
 							<li>
-								<NavLink to="soins" end>
+								<NavLink to="soins" onClick={handleClick}>
 									Soins
 								</NavLink>
 							</li>
 							<li>
-								<NavLink to="tuteurs" end>
+								<NavLink to="tuteurs" onClick={handleClick}>
 									Tuteurs
 								</NavLink>
 							</li>
 							<li>
-								<NavLink to="ehpads" end>
-									Ehpads
+								<NavLink to="maisons-retraite" onClick={handleClick}>
+									Maisons de retraite
 								</NavLink>
 							</li>
 							<li>
-								<NavLink to="statistiques" end>
+								<NavLink to={`statistiques/${year}`} onClick={handleClick} end>
 									Statistiques
 								</NavLink>
 							</li>
 							<li>
-								<NavLink to="profil" end>
+								<NavLink to="profil" onClick={handleClick} end>
 									Profil
 								</NavLink>
 							</li>
