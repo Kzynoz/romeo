@@ -3,15 +3,24 @@ import Customer from "../models/customer.model.js";
 import { validationResult } from "express-validator";
 
 const getAll = async (req, res, next) => {
-	try {
-		const [response] = await Patient.gettAllWithLatestCare();
+	const offset = req.query.offset || "0";
+	const limit = req.query.limit || "10";
 
-		if (response.length) {
-			return res.status(200).json({
-				message: "Patients récupérés.",
-				response,
-			});
+	try {
+		const [[count]] = await Patient.countAll();
+
+		if (count.total > 0) {
+			const [response] = await Patient.gettAllWithLatestCare(offset, limit);
+
+			if (response.length) {
+				return res.status(200).json({
+					message: "Patients récupérés.",
+					response,
+					totalPages: Math.ceil(count.total / limit),
+				});
+			}
 		}
+
 		return res.status(400).json({
 			message: "Aucun patients récupérés.",
 		});
@@ -22,8 +31,13 @@ const getAll = async (req, res, next) => {
 
 const getOne = async (req, res, next) => {
 	const { id } = req.params;
+	const offset = req.query.offset || "0";
+	const limit = req.query.limit || "10";
+
+	console.log(offset, limit);
+
 	try {
-		const [[response]] = await Patient.getOne(id);
+		const [[response]] = await Patient.getOne(offset, limit, id);
 
 		if (!response) {
 			res.status(400).json({
@@ -42,8 +56,6 @@ const getOne = async (req, res, next) => {
 };
 
 const create = async (req, res) => {
-	const { patient, guardian_id, retirement_home_id, practitioner_id } =
-		req.body;
 	const errors = validationResult(req);
 
 	if (!errors.isEmpty()) {
@@ -54,35 +66,30 @@ const create = async (req, res) => {
 	}
 
 	try {
-		const [[existingPatient]] = await Patient.findPatient(patient);
+		const [[existingPatient]] = await Patient.findPatient(req.body);
 
 		if (existingPatient) {
 			return res.status(400).json({ message: "Le patient existe déjà." });
 		}
 
-		if (patient) {
-			const newPatient = {
-				...patient,
-				is_patient: 1,
-				guardian_id: guardian_id || null,
-				retirement_home_id: retirement_home_id || null,
-				practitioner_id: practitioner_id,
-			};
+		const patient = {
+			...req.body,
+			is_patient: 1,
+			guardian_id: req.body.guardian_id || null,
+			retirement_home_id: req.body.retirement_home_id || null,
+		};
 
-			const [response] = await Patient.insert(newPatient);
+		const [response] = await Patient.insert(patient);
 
-			if (response.insertId) {
-				return res.status(201).json({ message: "Patient ajouté avec succès." });
-			}
+		if (response.insertId) {
+			return res.status(201).json({ message: "Patient ajouté avec succès." });
 		}
 	} catch (error) {
-		res.status(500).json({ message: "Erreur lors de l'ajout du patient." });
+		next(error);
 	}
 };
 
 const update = async (req, res, next) => {
-	const { patient, guardian_id, retirement_home_id, practitioner_id } =
-		req.body;
 	const { id } = req.params;
 	const errors = validationResult(req);
 
@@ -93,12 +100,11 @@ const update = async (req, res, next) => {
 		});
 	}
 
+	console.log(errors);
+
 	const updatedPatient = {
-		...patient,
+		...req.body,
 		id,
-		guardian_id: guardian_id,
-		retirement_home_id: retirement_home_id,
-		practitioner_id: practitioner_id,
 	};
 
 	try {

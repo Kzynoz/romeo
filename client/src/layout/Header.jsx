@@ -40,15 +40,9 @@ function Header() {
 		}
 	}
 
-	function handleDelayedMenuClose() {
-		setTimeout(function () {
-			dispatch(toggleMenu());
-		}, 200);
-	}
-
 	function handleClick(e) {
 		if (e.target.tagName === "A") {
-			handleDelayedMenuClose();
+			dispatch(toggleMenu(false));
 		} else {
 			dispatch(toggleMenu());
 		}

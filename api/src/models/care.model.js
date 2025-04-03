@@ -10,7 +10,14 @@ class Care {
 		return await pool.execute(SELECT_CARE, [performed_at, id]);
 	}
 
-	static async getAll() {
+	static async countAll() {
+		const COUNT = `SELECT COUNT(care.id) AS total 
+                         FROM care`;
+
+		return await pool.query(COUNT);
+	}
+
+	static async getAll(offset, limit) {
 		const SELECT_ALL = `SELECT JSON_OBJECT (
                         	'id',care.id,
                         	'performed_at',care.performed_at,
@@ -26,13 +33,21 @@ class Care {
                               'lastname',c.lastname) AS patient
                         FROM care
                         LEFT JOIN practitioner p ON care.practitioner_id = p.id
-                        LEFT JOIN customer c ON  care.customer_id = c.id`;
+                        LEFT JOIN customer c ON  care.customer_id = c.id
+                        ORDER BY 
+                            CASE 
+                                WHEN care.invoice_paid = 0 AND care.invoice_send = 1 THEN 1
+                                WHEN care.invoice_send = 1 THEN 32
+                                ELSE 3
+                            END,
+                            care.performed_at DESC
+                        LIMIT ?
+                        OFFSET ?`;
 
-		return await pool.query(SELECT_ALL);
+		return await pool.execute(SELECT_ALL, [limit, offset]);
 	}
 
 	static async getOne({ patientId, id }) {
-		console.log("patient id :", patientId, "careId :", id);
 		const SELECT_CARE = `SELECT
                           c.id,
                           c.title,
@@ -68,17 +83,18 @@ class Care {
                                 'invoice_send',care.invoice_send
                             	)
                         ) AS care,
-                        p.alias AS practitioner
+                        p.alias AS practitioner,
+                        p.id AS practitioner_id
                         FROM customer c
-                        LEFT JOIN practitioner p ON c.practitioner_id = p.id
+                        LEFT JOIN care ON care.customer_id = c.id
+                        LEFT JOIN practitioner p ON care.practitioner_id = p.id
                         LEFT JOIN guardian g ON c.guardian_id = g.customer_id 
                         LEFT JOIN customer gc ON c.guardian_id = gc.id
-                        LEFT JOIN care ON care.customer_id = c.id
                         WHERE c.id = ? 
                         AND c.is_patient = 1
                         AND care.id = ?`;
 
-		return await pool.query(SELECT_CARE, [patientId, id]);
+		return await pool.execute(SELECT_CARE, [patientId, id]);
 	}
 
 	static async displayInvoice(id) {
@@ -127,7 +143,7 @@ class Care {
                         LEFT JOIN retirement_home rh ON c.retirement_home_id = rh.id
                         WHERE c.is_patient = 1 AND care.id = ?`;
 
-		return await pool.query(SELECT_CARE, [id]);
+		return await pool.execute(SELECT_CARE, [id]);
 	}
 
 	static async insert({
@@ -165,42 +181,34 @@ class Care {
                         WHERE DATE_FORMAT(care.performed_at, '%d-%m-%Y') LIKE REPLACE(?, "/", "-") 
                         OR care.type LIKE ?
                         OR CONCAT(firstname, ' ', lastname) LIKE ?
-                        ORDER BY c.lastname, care.performed_at DESC `;
+                        ORDER BY c.lastname, care.performed_at DESC
+                        LIMIT 5`;
 
 		return await pool.execute(SELECT_ALL, [search, search, search]);
 	}
 
 	static async update({
 		id,
-		performed_at = null,
-		invoice_generated = null,
-		invoice_paid = null,
-		invoice_send = null,
-		practitioner_id = null,
-		complements = null,
-		price = null,
-		type = null,
+		performed_at,
+		practitioner_id,
+		complements,
+		price,
+		type,
 	}) {
 		const UPDATE_CARE = `UPDATE care 
-                          SET performed_at = IFNULL(?, performed_at), 
-                          price = IFNULL(?,price), 
-                          type = IFNULL(?,type), 
-                          complements = IFNULL(?,complements), 
-                          practitioner_id = IFNULL(?,practitioner_id), 
-                          invoice_paid = IFNULL(?,invoice_paid), 
-                          invoice_generated = IFNULL(?,invoice_generated), 
-                          invoice_send = IFNULL(?,invoice_send) 
+                          SET performed_at = ?, 
+                          price = ?, 
+                          type = ?, 
+                          complements = ?, 
+                          practitioner_id = ?
                          WHERE id = ? `;
 
 		return await pool.execute(UPDATE_CARE, [
 			performed_at,
-			invoice_generated,
-			invoice_paid,
-			invoice_send,
-			practitioner_id,
-			complements,
 			price,
 			type,
+			complements,
+			practitioner_id,
 			id,
 		]);
 	}
@@ -237,7 +245,9 @@ class Care {
                               IFNULL(SUM(CASE WHEN invoice_paid = 0 THEN price ELSE 0 END), 0) AS total_revenue_estimated
                           FROM care
                           WHERE YEAR(performed_at) = ?
+                          AND MONTH(performed_at) != MONTH(CURDATE())
                           GROUP BY YEAR(performed_at), MONTH(performed_at)
+                          ORDER BY month DESC
                         ) AS data
                         GROUP BY year
                         ORDER BY year DESC;`;

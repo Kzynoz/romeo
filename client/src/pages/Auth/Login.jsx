@@ -38,7 +38,9 @@ function Login() {
 				navigate("/");
 			}
 			setMessage(resJSON.message);
-		} catch (error) {}
+		} catch (error) {
+			console.log(error);
+		}
 	}
 
 	return (

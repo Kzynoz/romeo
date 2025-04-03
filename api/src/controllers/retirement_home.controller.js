@@ -2,14 +2,22 @@ import { validationResult } from "express-validator";
 import RetirementHome from "../models/retirement_home.model.js";
 
 const getAll = async (req, res, next) => {
-	try {
-		const [response] = await RetirementHome.getAll();
+	const offset = req.query.offset || "0";
+	const limit = req.query.limit || "10";
 
-		if (response.length) {
-			return res.status(200).json({
-				message: "Maisons de retraites récupérées.",
-				response,
-			});
+	try {
+		const [[count]] = await RetirementHome.countAll();
+
+		if (count.total > 0) {
+			const [response] = await RetirementHome.getAll(offset, limit);
+
+			if (response.length) {
+				return res.status(200).json({
+					message: "Maisons de retraites récupérées.",
+					response,
+					totalPages: Math.ceil(count.total / limit),
+				});
+			}
 		}
 
 		return res.status(400).json({
@@ -21,7 +29,7 @@ const getAll = async (req, res, next) => {
 };
 
 const create = async (req, res, next) => {
-	const { name, contact, number, street, city, zip_code } = req.body;
+	const { name, contact, street, city, zip_code } = req.body;
 	const errors = validationResult(req);
 
 	if (!errors.isEmpty()) {
@@ -34,15 +42,13 @@ const create = async (req, res, next) => {
 	const rh = {
 		name,
 		contact: contact || null,
-		street: `${number} ${street}`,
+		street: street,
 		city,
 		zip_code,
 	};
 
 	try {
 		const [response] = await RetirementHome.create(rh);
-
-		console.log(rh);
 
 		if (response.insertId) {
 			return res.status(201).json({
@@ -82,7 +88,7 @@ const remove = async (req, res, next) => {
 };
 
 const update = async (req, res, next) => {
-	const { name, contact, street, number, city, zip_code } = req.body;
+	const { name, contact, street, city, zip_code } = req.body;
 	const { id } = req.params;
 
 	const errors = validationResult(req);
@@ -98,7 +104,7 @@ const update = async (req, res, next) => {
 		id,
 		name: name || null,
 		contact: contact || null,
-		street: `${number} ${street}` || null,
+		street: street || null,
 		city: city || null,
 		zip_code: zip_code || null,
 	};

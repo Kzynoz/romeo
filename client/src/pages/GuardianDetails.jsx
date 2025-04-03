@@ -1,20 +1,35 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
+import { toggleEditing, toggleModal } from "../features/menuSlice";
+import { setTotalPages, reset } from "../features/paginationSlice";
+
+import RemoveEntity from "./RemoveEntity";
+import UpdateEntity from "./UpdateEntity";
 import GuardianContact from "./Components/GuardianContact";
+import Pagination from "./Components/Pagination";
 
 function GuardianDetails() {
 	const { id } = useParams();
-	const navigate = useNavigate();
 
 	const [datas, setDatas] = useState(null);
 	const [error, setError] = useState("");
 
+	const { isEditingOpen } = useSelector((state) => state.menu);
+	const { page } = useSelector((state) => state.pagination);
+
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
 	useEffect(() => {
-		async function fetchGuardian() {
+		async function fetchGuardian(page) {
+			const limit = 5;
+			const offset = (page - 1) * limit;
+
 			try {
 				const res = await fetch(
-					`http://localhost:9000/api/v1/guardians/${id}`,
+					`http://localhost:9000/api/v1/guardians/${id}?limit=${limit}&offset=${offset}`,
 					{
 						credentials: "include",
 					}
@@ -22,8 +37,12 @@ function GuardianDetails() {
 
 				if (res.ok) {
 					const { response } = await res.json();
-					console.log(response);
+
 					setDatas(response);
+					if (response.guardianship_count)
+						dispatch(
+							setTotalPages(Math.ceil(response.guardianship_count / limit))
+						);
 				} else {
 					const { message } = await res.json();
 					setError(message);
@@ -33,58 +52,98 @@ function GuardianDetails() {
 				setError(error.message);
 			}
 		}
-		fetchGuardian();
-	}, []);
+		fetchGuardian(page);
+	}, [isEditingOpen, page]);
+
+	useEffect(() => {
+		dispatch(reset());
+	}, [navigate]);
 
 	return (
 		<>
 			{error && <p>{error}</p>}
 
 			{datas && (
-				<article>
-					<div className="actions">
-						<button onClick={"ajouter"}>Modifier</button>
-						<button onClick={"ajouter"}>Supprimer</button>
-					</div>
-					<header>
-						<h1>
-							<span>Tuteur</span>
-							{datas.guardian.details.title} {datas.guardian.details.firstname}{" "}
-							{datas.guardian.details.lastname}
-						</h1>
-					</header>
-
-					{datas.guardian && (
-						<GuardianContact datas={datas.guardian} isFull={false} />
-					)}
-
-					<aside className="wrapper">
-						<header>
-							<h2>Liste de(s) tutelle(s) ({datas.guardianship_count})</h2>
-							<button onClick={"ajouter"}>Ajouter</button>
-						</header>
-
-						{datas.patients ? (
-							datas.patients.map((patient) => (
-								<article
-									key={patient.id}
-									onClick={() => navigate(`/patients/${patient.id}`)}
+				<>
+					{isEditingOpen ? (
+						<UpdateEntity data={datas.guardian} />
+					) : (
+						<>
+							<div className="actions">
+								<RemoveEntity
+									entity={{
+										id: datas.guardian.details.id,
+										name: `${datas.guardian.details.title} ${datas.guardian.details.firstname} ${datas.guardian.details.lastname}`,
+									}}
+									link={{
+										url: "guardians",
+										title: "le tuteur",
+									}}
+								/>
+								<button
+									onClick={() => {
+										dispatch(toggleEditing(true));
+									}}
 								>
-									<h3>
-										{patient.title} {patient.firstname} {patient.lastname}
-									</h3>
-									{patient.retirement_home && (
-										<p className="retirement-home">{patient.retirement_home}</p>
-									)}
-								</article>
-							))
-						) : (
-							<p>Aucune tutelle trouvée</p>
-						)}
-					</aside>
+									Modifier
+								</button>
+								<button
+									onClick={() => {
+										dispatch(toggleModal(true));
+									}}
+								>
+									Supprimer
+								</button>
+							</div>
+							<article>
+								<header>
+									<h1>
+										<span>Tuteur</span>
+										{datas.guardian.details.title}{" "}
+										{datas.guardian.details.firstname}{" "}
+										{datas.guardian.details.lastname}
+									</h1>
+								</header>
 
-					<img></img>
-				</article>
+								{datas.guardian && (
+									<GuardianContact datas={datas.guardian} isFull={false} />
+								)}
+
+								<aside className="wrapper">
+									<header>
+										<h2>Liste de(s) tutelle(s) ({datas.guardianship_count})</h2>
+										<button onClick={"ajouter"}>Ajouter</button>
+									</header>
+
+									{datas.patients ? (
+										<>
+											{datas.patients.map((patient) => (
+												<article
+													key={patient.id}
+													onClick={() => navigate(`/patients/${patient.id}`)}
+												>
+													<h3>
+														{patient.title} {patient.firstname}{" "}
+														{patient.lastname}
+													</h3>
+													{patient.retirement_home && (
+														<p className="retirement-home">
+															{patient.retirement_home}
+														</p>
+													)}
+												</article>
+											))}
+
+											{datas.guardianship_count && <Pagination />}
+										</>
+									) : (
+										<p>Aucune tutelle trouvée</p>
+									)}
+								</aside>
+							</article>
+						</>
+					)}
+				</>
 			)}
 		</>
 	);

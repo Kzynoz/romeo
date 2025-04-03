@@ -1,14 +1,15 @@
 import pool from "../config/db.js";
 
 class Customer {
-	static async findCustomerGuardian({ firstname, lastname }) {
+	static async findCustomerGuardian({ title, firstname, lastname }) {
 		const SELECT_CUSTOMER = `SELECT id, title, firstname, lastname 
                              FROM customer 
-                             WHERE firstname = ? 
+							 WHERE title = ?
+                             AND firstname = ? 
                              AND lastname = ? 
                              AND is_patient = '0'`;
 
-		return await pool.execute(SELECT_CUSTOMER, [firstname, lastname]);
+		return await pool.execute(SELECT_CUSTOMER, [title, firstname, lastname]);
 	}
 
 	static async insert(
@@ -47,15 +48,15 @@ class Customer {
 	}
 
 	static async updateIsGuardian(
-		{ title = null, firstname = null, lastname = null, phone = null },
+		{ title, firstname, lastname, phone },
 		id,
 		connection = pool
 	) {
 		const UPDATE_GUARDIAN = `UPDATE customer 
-                             SET title = IFNULL(?,title), 
-                             firstname = IFNULL(?,firstname), 
-                             lastname = IFNULL(?,lastname), 
-                             phone = IFNULL(?,phone)
+                             SET title = ?, 
+                             firstname = ?, 
+                             lastname = ?, 
+                             phone = ?
                              WHERE id = ? AND is_patient = '0'`;
 
 		return await connection.execute(UPDATE_GUARDIAN, [
@@ -69,22 +70,18 @@ class Customer {
 
 	static async updateIsPatient({
 		id,
-		title = null,
-		firstname = null,
-		lastname = null,
-		phone = null,
-		guardian_id = null,
-		practitioner_id = null,
-		retirement_home_id = null,
+		title,
+		firstname,
+		lastname,
+		guardian_id,
+		retirement_home_id,
 	}) {
 		const UPDATE_PATIENT = `UPDATE customer 
-                            SET title = IFNULL(?, title), 
-                            firstname = IFNULL(?,firstname), 
-                            lastname = IFNULL(?,lastname), 
-                            phone = IFNULL(?,phone)
-                            guardian_id = IFNULL(?,guardian_id), 
-                            practitioner_id = IFNULL(?,practitioner_id), 
-                            retirement_home_id = IFNULL(?,retirement_home_id) 
+                            SET title = ?, 
+                            firstname = ?, 
+                            lastname = ?, 
+                            guardian_id = ?, 
+                            retirement_home_id = ?
                             WHERE id = ? 
                             AND is_patient = '1'`;
 
@@ -92,9 +89,7 @@ class Customer {
 			title,
 			firstname,
 			lastname,
-			phone,
 			guardian_id,
-			practitioner_id,
 			retirement_home_id,
 			id,
 		]);
@@ -105,7 +100,9 @@ class Customer {
 		const SELECT_ALL = `SELECT id, title, firstname, lastname, is_patient 
                         FROM customer 
                         WHERE CONCAT(firstname, ' ', lastname) LIKE ? 
-                        AND is_patient = ${isPatient}`;
+                        AND is_patient = ${isPatient}
+						ORDER BY lastname
+						LIMIT 5`;
 
 		return await pool.execute(SELECT_ALL, [search]);
 	}

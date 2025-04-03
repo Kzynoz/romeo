@@ -1,32 +1,51 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
 import CareStatus from "./Components/CareStatus";
 import SearchBar from "./Components/SearchBar/SearchBar";
+import Pagination from "./Components/Pagination";
+
+import { setTotalPages, reset } from "../features/paginationSlice";
 
 function Care() {
 	const [datas, setDatas] = useState([]);
 	const [error, setError] = useState("");
+
+	const { page } = useSelector((state) => state.pagination);
+
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		async function fetchPatients() {
+		async function fetchPatients(page) {
+			const limit = 10;
+			const offset = (page - 1) * limit;
+
 			try {
-				const res = await fetch("http://localhost:9000/api/v1/care", {
-					credentials: "include",
-				});
+				const res = await fetch(
+					`http://localhost:9000/api/v1/care?limit=${limit}&offset=${offset}`,
+					{
+						credentials: "include",
+					}
+				);
 
 				if (res.ok) {
-					const { response } = await res.json();
-					console.log(response);
+					const { response, totalPages } = await res.json();
 					setDatas(response);
+					dispatch(setTotalPages(totalPages));
 				}
 			} catch (error) {
 				console.error("error", error);
 				setError(error);
 			}
 		}
-		fetchPatients();
-	}, []);
+		fetchPatients(page);
+	}, [page]);
+
+	useEffect(() => {
+		dispatch(reset());
+	}, [navigate]);
 
 	return (
 		<>
@@ -38,38 +57,41 @@ function Care() {
 			<SearchBar entityType={"care"} />
 
 			<section className="wrapper">
-				<button onClick={"coucou"}>Ajouter un soin</button>
 				{error && <p>{error}</p>}
 
 				{!datas.length ? (
 					<p>Chargement…</p>
 				) : (
-					datas.map((data) => (
-						<article
-							key={data.care.id}
-							onClick={() =>
-								navigate(`/patients/${data.patient.id}/soin/${data.care.id}`)
-							}
-						>
-							<h2>
-								Soin{" "}
-								<span>
-									{new Date(data.care.performed_at).toLocaleDateString()}
-								</span>
-							</h2>
-							<h3>
-								{data.patient.title} {data.patient.firstname}{" "}
-								{data.patient.lastname}
-							</h3>
-							<p>
-								<strong>Praticien:</strong> {data.practitioner.alias}
-							</p>
-							<CareStatus
-								invoice_paid={data.care.invoice_paid}
-								invoice_send={data.care.invoice_send}
-							/>
-						</article>
-					))
+					<>
+						{datas.map((data) => (
+							<article
+								key={data.care.id}
+								onClick={() =>
+									navigate(`/patients/${data.patient.id}/soin/${data.care.id}`)
+								}
+							>
+								<h2>
+									Soin{" "}
+									<span>
+										{new Date(data.care.performed_at).toLocaleDateString()}
+									</span>
+								</h2>
+								<h3>
+									{data.patient.title} {data.patient.firstname}{" "}
+									{data.patient.lastname}
+								</h3>
+								<p>
+									<strong>Praticien:</strong> {data.practitioner.alias}
+								</p>
+								<CareStatus
+									invoice_paid={data.care.invoice_paid}
+									invoice_send={data.care.invoice_send}
+								/>
+							</article>
+						))}
+
+						<Pagination />
+					</>
 				)}
 			</section>
 		</>

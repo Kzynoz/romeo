@@ -2,15 +2,24 @@ import { validationResult } from "express-validator";
 import Care from "../models/care.model.js";
 
 const getAll = async (req, res, next) => {
-	try {
-		const [response] = await Care.getAll();
+	const offset = req.query.offset || "0";
+	const limit = req.query.limit || "10";
 
-		if (response.length) {
-			return res.status(200).json({
-				message: "Soins récupérés avec succès.",
-				response,
-			});
+	try {
+		const [[count]] = await Care.countAll();
+
+		if (count.total > 0) {
+			const [response] = await Care.getAll(offset, limit);
+
+			if (response.length) {
+				return res.status(200).json({
+					message: "Soins récupérés avec succès.",
+					response,
+					totalPages: Math.ceil(count.total / limit),
+				});
+			}
 		}
+
 		return res.status(400).json({
 			message: "Aucun soins récupérés.",
 		});
@@ -21,7 +30,7 @@ const getAll = async (req, res, next) => {
 
 const getOneCare = async (req, res, next) => {
 	const { patientId, id } = req.params;
-	console.log("patient id :", patientId, "careId :", id);
+
 	try {
 		const [[response]] = await Care.getOne({ patientId, id });
 
@@ -71,13 +80,13 @@ const create = async (req, res, next) => {
 			errors: errors.array(),
 		});
 	}
-	const { care, patient_id, practitioner_id } = req.body;
-	const id = req.params.id || patient_id; // si deuxieme route
-	const careDate = new Date(care.performed_at).toISOString().split("T")[0];
-	console.log(careDate);
+
+	/* 	const { care, patient_id, practitioner_id } = req.body; */
+	const id = req.params.id || req.body.patient_id; // si deuxieme route
+	const date = new Date(req.body.performed_at).toLocaleDateString("fr-CA");
 
 	try {
-		const [[existingCare]] = await Care.findCare(id, careDate);
+		const [[existingCare]] = await Care.findCare(id, date);
 
 		if (existingCare) {
 			res.status(400).json({ message: "Ce soin pour ce patient existe déjà." });
@@ -85,13 +94,15 @@ const create = async (req, res, next) => {
 		}
 
 		const newCare = {
-			...care,
-			performed_at: careDate,
+			performed_at: date,
+			practitioner_id: req.body.practitioner_id,
+			type: req.body.type,
+			complements: req.body.complements || null,
+			price: req.body.price,
 			invoice_generated: 1,
 			invoice_paid: 0,
 			invoice_send: 0,
 			customer_id: id,
-			practitioner_id: practitioner_id || req.user.alias,
 		};
 
 		const [response] = await Care.insert(newCare, id);
@@ -122,17 +133,16 @@ const update = async (req, res, next) => {
 			errors: errors.array(),
 		});
 	}
-	const { id } = req.params;
-	const { care, practitioner_id, invoices } = req.body;
-	console.log(invoices);
+
+	const careDate = new Date(req.body.performed_at).toISOString().split("T")[0];
 
 	const updatedCare = {
-		...care,
-		id: id,
-		practitioner_id: practitioner_id,
-		invoice_generated: invoices.invoice_generated || null,
-		invoice_paid: invoices.invoice_paid || null,
-		invoice_send: invoices.invoice_send || null,
+		performed_at: careDate,
+		practitioner_id: req.body.practitioner_id,
+		type: req.body.type,
+		complements: req.body.complements || null,
+		price: req.body.price,
+		id: req.body.care_id,
 	};
 
 	try {

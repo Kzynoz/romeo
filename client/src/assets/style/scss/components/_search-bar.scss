@@ -6,6 +6,9 @@
 		overflow-y: scroll;
 		max-height: 30vh;
 		margin-top: 2em;
+		position: relative;
+		padding-top: 2em;
+		display: block;
 
 		article {
 			display: flex;
@@ -35,6 +38,28 @@
 				bottom: -0.75em;
 				left: 0;
 			}
+		}
+
+		button {
+			position: absolute;
+			background-color: #5b80fa;
+			padding: 1rem;
+			border-radius: 3rem;
+			color: white;
+			aspect-ratio: 1;
+			transition: box-shadow 0.3s ease-out;
+			top: 0.5rem;
+			right: 0.5rem;
+
+			.svg-inline--fa {
+				height: 1.5rem;
+				aspect-ratio: 1;
+				transition: transform 0.3s ease-out;
+			}
+		}
+
+		&.close {
+			display: none;
 		}
 	}
 

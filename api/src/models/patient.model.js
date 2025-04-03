@@ -12,7 +12,15 @@ class Patient {
 		return await pool.execute(SELECT_PATIENT, [title, firstname, lastname]);
 	}
 
-	static async getOne(id) {
+	static async countAll() {
+		const COUNT = `SELECT COUNT(customer.id) AS total 
+                         FROM customer
+                         WHERE is_patient = 1`;
+
+		return await pool.query(COUNT);
+	}
+
+	static async getOne(offset, limit, id) {
 		const SELECT_PATIENT = `SELECT
                               c.id,
                               c.title,
@@ -55,9 +63,9 @@ class Patient {
                                     SELECT care.id, care.performed_at, care.invoice_paid, care.invoice_send
                                     FROM care
                                     WHERE care.customer_id = c.id
-                                    ORDER BY care.invoice_paid ASC, 
-                                             care.invoice_send ASC,
-                                             care.performed_at DESC
+                                    ORDER BY care.invoice_paid = 0 DESC
+                                    LIMIT ?
+                                    OFFSET ?
                                 ) AS sorted_care
                             ) AS all_cares,
                             (
@@ -72,10 +80,10 @@ class Patient {
                             WHERE c.is_patient = 1 
                             AND c.id = ?;`;
 
-		return await pool.query(SELECT_PATIENT, [id]);
+		return await pool.execute(SELECT_PATIENT, [limit, offset, id]);
 	}
 
-	static async gettAllWithLatestCare() {
+	static async gettAllWithLatestCare(offset, limit) {
 		const SELECT_ALL = `SELECT
                           c.id,
                           c.title,
@@ -107,24 +115,24 @@ class Patient {
                                 WHERE their_care.customer_id = c.id
                             )
                         WHERE c.is_patient = 1
-                        ORDER BY care.invoice_paid DESC, care.invoice_send DESC;`;
+                        ORDER BY care.invoice_paid DESC, care.invoice_send DESC
+                        LIMIT ?
+                        OFFSET ?`;
 
-		return await pool.query(SELECT_ALL);
+		return await pool.execute(SELECT_ALL, [limit, offset]);
 	}
 
 	static async insert({
 		title,
 		firstname,
 		lastname,
-		phone,
 		is_patient,
-		guardian_id = null,
-		practitioner_id,
-		retirement_home_id = null,
+		guardian_id,
+		retirement_home_id,
 	}) {
 		const INSERT_PATIENT = `INSERT INTO customer 
-                            (title,firstname,lastname,is_patient,guardian_id,phone,practitioner_id,retirement_home_id) 
-                            VALUES (?,?,?,?,?,?,?,?)`;
+                            (title,firstname,lastname,is_patient,guardian_id,retirement_home_id) 
+                            VALUES (?,?,?,?,?,?)`;
 
 		return await pool.execute(INSERT_PATIENT, [
 			title,
@@ -132,8 +140,6 @@ class Patient {
 			lastname,
 			is_patient,
 			guardian_id,
-			phone,
-			practitioner_id,
 			retirement_home_id,
 		]);
 	}

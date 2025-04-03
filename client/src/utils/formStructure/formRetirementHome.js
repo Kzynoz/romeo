@@ -18,17 +18,10 @@ export const formRetirementHome = {
 		],
 		adresse: [
 			{
-				name: "number",
-				type: "text",
-				label: "Numéro de rue",
-				maxLength: 10,
-				required: true,
-			},
-			{
 				name: "street",
 				type: "text",
 				label: "Rue",
-				maxLength: 140,
+				maxLength: 150,
 				required: true,
 			},
 			{

@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faXmark } from "@fortawesome/free-solid-svg-icons";
 import SearchCard from "./SearchCard";
 
 function SearchBar({ entityType }) {
@@ -9,9 +9,14 @@ function SearchBar({ entityType }) {
 	const [datas, setDatas] = useState(null);
 	const [error, setError] = useState(null);
 	const [loading, setLoading] = useState(false);
+	const [isOpen, setIsOpen] = useState(false);
 
 	function handleChange(e) {
 		setQuery(e.target.value);
+	}
+
+	function handleClick(e) {
+		setIsOpen((prevState) => !prevState);
 	}
 
 	function handlePlaceholder() {
@@ -77,11 +82,12 @@ function SearchBar({ entityType }) {
 
 			if (res.ok) {
 				const { response } = await res.json();
-				console.log(response);
+				setIsOpen(true);
 				setDatas(response);
 			} else {
 				const { message } = await res.json();
 				setError(message);
+				setIsOpen(false);
 			}
 		} catch (error) {
 			console.error("error", error);
@@ -107,7 +113,11 @@ function SearchBar({ entityType }) {
 
 			{error && <p>{error}</p>}
 
-			<section className="search-results">
+			<section className={`search-results ${isOpen ? "" : "close"}`}>
+				<button onClick={handleClick}>
+					<FontAwesomeIcon icon={faXmark} />
+				</button>
+
 				{loading && <p>Recherche en cours...</p>}
 
 				{datas &&

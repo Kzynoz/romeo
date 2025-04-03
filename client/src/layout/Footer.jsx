@@ -9,6 +9,7 @@ import {
 	faHandshakeAngle,
 	faNotesMedical,
 	faPlus,
+	faHome,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { toggleSubMenu } from "../features/menuSlice";
@@ -16,7 +17,7 @@ import { toggleSubMenu } from "../features/menuSlice";
 function Footer() {
 	const { isLogged } = useSelector((state) => state.auth);
 	const { isSubMenuOpen } = useSelector((state) => state.menu);
-	const location = useLocation();
+
 	const dispatch = useDispatch();
 
 	function handleClick() {
@@ -41,13 +42,13 @@ function Footer() {
 							</NavLink>
 						</li>
 						<li>
-							<NavLink to="soins" end>
+							<NavLink to="soins">
 								<FontAwesomeIcon icon={faBriefcaseMedical} />
 								<span>Soins</span>
 							</NavLink>
 						</li>
 						<li>
-							<NavLink to="tuteurs" end>
+							<NavLink to="tuteurs">
 								<FontAwesomeIcon icon={faHandshakeAngle} />
 								<span>Tuteurs</span>
 							</NavLink>
@@ -65,9 +66,15 @@ function Footer() {
 									</NavLink>
 								</li>
 								<li>
-									<NavLink to="soins/ajouter" end>
-										<FontAwesomeIcon icon={faNotesMedical} />
-										<span>Ajouter un soin</span>
+									<NavLink to="tuteurs/ajouter" end>
+										<FontAwesomeIcon icon={faHandshakeAngle} />
+										<span>Ajouter un tuteur</span>
+									</NavLink>
+								</li>
+								<li>
+									<NavLink to="maisons-retraite/ajouter" end>
+										<FontAwesomeIcon icon={faHome} />
+										<span>Ajouter un établissement</span>
 									</NavLink>
 								</li>
 							</ul>

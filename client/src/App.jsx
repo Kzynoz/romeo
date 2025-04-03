@@ -2,9 +2,14 @@ import AppRoutes from "./routes/AppRoutes";
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
 import { useLocation } from "react-router-dom";
+import { reset } from "./features/menuSlice";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 function App() {
 	const location = useLocation();
+	const dispatch = useDispatch();
+
 	const path = location.pathname;
 
 	// Génére des id dynmaique en fonction de mon path
@@ -22,6 +27,10 @@ function App() {
 
 		return path.slice(1, path.length);
 	}
+
+	useEffect(() => {
+		dispatch(reset());
+	}, [location]);
 
 	return (
 		<>

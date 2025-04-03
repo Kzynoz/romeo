@@ -4,7 +4,7 @@ import Customer from "../models/customer.model.js";
 import Guardian from "../models/guardian.model.js";
 import crypto from "crypto";
 
-const checkGuardian = async (req, res, next) => {
+/* const checkGuardian = async (req, res, next) => {
 	// à voir
 	// à voir
 	try {
@@ -19,18 +19,27 @@ const checkGuardian = async (req, res, next) => {
 	} catch (error) {
 		next(error);
 	}
-};
+}; */
 
 const getAll = async (req, res, next) => {
-	try {
-		const [response] = await Guardian.getAll();
+	const offset = req.query.offset || "0";
+	const limit = req.query.limit || "10";
 
-		if (response.length) {
-			return res.status(200).json({
-				message: "Tuteurs récupérés avec succès.",
-				response,
-			});
+	try {
+		const [[count]] = await Guardian.countAll();
+
+		if (count.total > 0) {
+			const [response] = await Guardian.getAll({ offset, limit });
+
+			if (response.length) {
+				return res.status(200).json({
+					message: "Tuteurs récupérés avec succès.",
+					response,
+					totalPages: Math.ceil(count.total / limit),
+				});
+			}
 		}
+
 		return res.status(400).json({
 			message: "Aucun tuteurs récupérés.",
 		});
@@ -41,8 +50,11 @@ const getAll = async (req, res, next) => {
 
 const getOne = async (req, res, next) => {
 	const { id } = req.params;
+	const offset = req.query.offset || "0";
+	const limit = req.query.limit || "10";
+
 	try {
-		const [[response]] = await Guardian.getOne(id);
+		const [[response]] = await Guardian.getOne({ id, offset, limit });
 
 		if (!response) {
 			res.status(400).json({
@@ -61,9 +73,7 @@ const getOne = async (req, res, next) => {
 };
 
 const create = async (req, res, next) => {
-	const { customer_detail, guardian_info } = req.body;
 	let connection = null;
-
 	const errors = validationResult(req);
 
 	if (!errors.isEmpty()) {
@@ -73,6 +83,13 @@ const create = async (req, res, next) => {
 		});
 	}
 
+	const customer_detail = {
+		title: req.body.title,
+		firstname: req.body.firstname,
+		lastname: req.body.lastname,
+		phone: req.body.phone || null,
+	};
+
 	try {
 		connection = await pool.getConnection();
 		await connection.beginTransaction();
@@ -81,6 +98,7 @@ const create = async (req, res, next) => {
 			customer_detail
 		);
 		if (existingCustomer) {
+			console.log(existingCustomer);
 			res.status(400).json({ message: "Le tuteur existe déjà." });
 			return;
 		}
@@ -90,8 +108,12 @@ const create = async (req, res, next) => {
 			const token = crypto.randomBytes(32).toString("hex");
 
 			const guardian = {
-				...guardian_info,
-				street: `${guardian_info.number} ${guardian_info.street}` || null,
+				relationship: req.body.relationship,
+				email: req.body.email,
+				company: req.body.company || null,
+				street: req.body.street || null,
+				zip_code: req.body.zip_code || null,
+				city: req.body.city || null,
 				customer_id: customer.insertId,
 				token: token,
 			};
@@ -117,6 +139,8 @@ const create = async (req, res, next) => {
 
 const update = async (req, res, next) => {
 	const errors = validationResult(req);
+	const { id } = req.params;
+	let connection = null;
 
 	if (!errors.isEmpty()) {
 		return res.status(400).json({
@@ -125,60 +149,45 @@ const update = async (req, res, next) => {
 		});
 	}
 
-	const { id } = req.params;
-	const customer_detail = req.body.customer_detail || null;
-	const guardian_info = req.body.guardian_info || null;
-	let updatedCustomer,
-		updatedGuardian,
-		connection = null;
+	const customer_detail = {
+		title: req.body.title,
+		firstname: req.body.firstname,
+		lastname: req.body.lastname,
+		phone: req.body.phone || null,
+	};
 
 	try {
-		if (customer_detail && guardian_info) {
-			connection = await pool.getConnection();
-			await connection.beginTransaction();
+		connection = await pool.getConnection();
+		await connection.beginTransaction();
 
-			const [updatedCustomer] = await Customer.updateIsGuardian(
-				customer_detail,
-				id,
-				connection
-			);
+		const [updatedCustomer] = await Customer.updateIsGuardian(
+			customer_detail,
+			id,
+			connection
+		);
 
-			if (updatedCustomer.affectedRows) {
-				guardian_info.street =
-					`${guardian_info.number} ${guardian_info.street}` || null;
+		if (updatedCustomer.affectedRows) {
+			const guardian = {
+				relationship: req.body.relationship,
+				email: req.body.email,
+				company: req.body.company || null,
+				street: req.body.street || null,
+				zip_code: req.body.zip_code || null,
+				city: req.body.city || null,
+			};
 
-				const [updatedGuardian] = await Guardian.update(
-					guardian_info,
-					id,
-					connection
-				);
+			const [updatedGuardian] = await Guardian.update(guardian, id, connection);
 
-				if (updatedGuardian.affectedRows) {
-					await connection.commit();
-					res.status(201).json({ message: "Le tuteur a été mise à jour." });
-					return;
-				}
+			if (updatedGuardian.affectedRows) {
+				await connection.commit();
+				res.status(201).json({ message: "Le tuteur a été mise à jour." });
+				return;
 			}
+
 			await connection.rollback();
 			return res
 				.status(500)
 				.json({ message: "Erreur lors de l'ajout du tuteur." });
-		}
-
-		if (customer_detail && !guardian_info) {
-			[updatedCustomer] = await Customer.updateIsGuardian(customer_detail, id);
-		}
-
-		if (!customer_detail && guardian_info) {
-			guardian_info.street =
-				`${guardian_info.number} ${guardian_info.street}` || null;
-
-			[updatedGuardian] = await Guardian.update(guardian_info, id);
-		}
-
-		if (updatedCustomer?.affectedRows || updatedGuardian?.affectedRows) {
-			res.status(201).json({ message: "Le tuteur a été mise à jour." });
-			return;
 		}
 	} catch (error) {
 		if (connection) await connection.rollback();
@@ -229,4 +238,4 @@ const getBySearch = async (req, res, next) => {
 	}
 };
 
-export { checkGuardian, getAll, getOne, create, update, remove, getBySearch };
+export { getAll, getOne, create, update, remove, getBySearch };

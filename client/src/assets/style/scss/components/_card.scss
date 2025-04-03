@@ -2,6 +2,7 @@
 	aside {
 		@include card();
 		margin: 3em 0;
+		cursor: initial;
 
 		a {
 			margin-top: 1em;

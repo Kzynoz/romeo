@@ -2,10 +2,16 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
-function SearchCard({ result, entityType }) {
+function SearchCard({ result, entityType, onSelect }) {
 	const navigate = useNavigate();
 
 	function handleClick(e) {
+		if (onSelect) {
+			e.preventDefault();
+			onSelect(result);
+			return;
+		}
+
 		if (result?.is_patient === 1) {
 			navigate(`/patients/${result.id}`);
 		} else if (result?.is_patient === 0) {

@@ -38,7 +38,7 @@ function GuardianContact({ datas, isFull }) {
 				</p>
 
 				<address>
-					{datas.address && (
+					{street && city && zipCode && (
 						<p>
 							{street} - {city.toUpperCase()} {zipCode}
 						</p>

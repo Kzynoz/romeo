@@ -64,7 +64,8 @@ header {
 	}
 }
 
-#add-form form {
+#add-form form,
+#update-form {
 	legend {
 		margin-bottom: 1em;
 	}
@@ -76,5 +77,11 @@ header {
 			font-style: normal;
 			color: $primary-color;
 		}
+	}
+}
+
+#modal {
+	button {
+		font-size: 1.2rem;
 	}
 }

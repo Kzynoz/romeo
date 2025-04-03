@@ -12,17 +12,10 @@ function validateContact(contact) {
 	return null;
 }
 
-function validateNumber(number) {
-	if (!number) return "Le numéro de rue est obligatoire.";
-	if (number.length > 10)
-		return "Le numéro de rue ne peut pas dépasser 10 caractères.";
-	return null;
-}
-
 function validateStreet(street) {
 	if (!street) return "Le nom de la rue est obligatoire.";
-	if (street.length > 140)
-		return "Le nom de la rue ne peut pas dépasser 140 caractères.";
+	if (street.length > 145)
+		return "Le nom de la rue ne peut pas dépasser 150 caractères.";
 	return null;
 }
 
@@ -40,13 +33,12 @@ function validateZipCode(zip_code) {
 	return null;
 }
 
-export function validateForm(formData) {
+export function retirementHomeValidator(formData) {
 	const errors = {};
 
 	const validations = [
 		{ field: "name", validate: validateName },
 		{ field: "contact", validate: validateContact },
-		{ field: "number", validate: validateNumber },
 		{ field: "street", validate: validateStreet },
 		{ field: "city", validate: validateCity },
 		{ field: "zip_code", validate: validateZipCode },

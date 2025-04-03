@@ -1,13 +1,23 @@
 import pool from "../config/db.js";
 
 class RetirementHome {
-	static async getAll() {
+	static async getAll(offset, limit) {
 		const SELECT_ALL = `SELECT rh.id, name, COUNT(c.id) AS patients_count
                         FROM retirement_home rh
                         LEFT JOIN customer c ON rh.id = c.retirement_home_id
                         GROUP BY rh.id
-						ORDER BY name`;
-		return await pool.query(SELECT_ALL);
+						ORDER BY name
+						LIMIT ?
+                        OFFSET ?`;
+
+		return await pool.execute(SELECT_ALL, [limit, offset]);
+	}
+
+	static async countAll() {
+		const COUNT = `SELECT COUNT(retirement_home.id) AS total 
+                         FROM retirement_home`;
+
+		return await pool.query(COUNT);
 	}
 
 	static async getOne(id) {
@@ -46,14 +56,13 @@ class RetirementHome {
 		return await pool.execute(DELETE_RH, [id]);
 	}
 
-	// à refaire
 	static async update({ id, name, contact, street, city, zip_code }) {
 		const UPDATE_RH = `UPDATE retirement_home 
-                       SET name = IFNULL(?,name), 
-                       contact = IFNULL(?,contact), 
-                       street = IFNULL(?,street), 
-                       city = IFNULL(?,city), 
-                       zip_code = IFNULL(?,zip_code) 
+                       SET name = ?, 
+                       contact = ?, 
+                       street = ?, 
+                       city = ?, 
+                       zip_code = ? 
                        WHERE id = ?`;
 
 		return await pool.execute(UPDATE_RH, [
@@ -67,7 +76,11 @@ class RetirementHome {
 	}
 
 	static async findBySearch(search) {
-		const SELECT_ALL = "SELECT id, name FROM retirement_home WHERE name LIKE ?";
+		const SELECT_ALL = `SELECT id, name 
+							FROM retirement_home 
+							WHERE name LIKE ?
+							ORDER BY name
+							LIMIT 5`;
 		return await pool.execute(SELECT_ALL, [search]);
 	}
 }
