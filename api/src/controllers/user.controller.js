@@ -1,3 +1,4 @@
+import Auth from "../models/auth.model.js";
 import Care from "../models/care.model.js";
 import Customer from "../models/customer.model.js";
 import RetirementHome from "../models/retirement_home.model.js";
@@ -25,8 +26,6 @@ const getBySearch = async (req, res, next) => {
 			patients: patient.length ? patient : null,
 			guardians: guardian.length ? guardian : null,
 		};
-
-		console.log(response);
 
 		if (
 			response.care ||

@@ -107,5 +107,9 @@
 #home {
 	.search-bar {
 		margin: 3em 0 5em 0;
+
+		@media (min-width: $breakpoint-lg) {
+			grid-column: 2 span;
+		}
 	}
 }

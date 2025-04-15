@@ -32,6 +32,13 @@ header {
 		font-size: 1.6rem;
 		color: $primary-color;
 	}
+
+	nav a,
+	nav button {
+		font-size: 1.5rem;
+		font-weight: 500;
+		letter-spacing: 0.1rem;
+	}
 }
 
 .row-guardian {
@@ -65,7 +72,8 @@ header {
 }
 
 #add-form form,
-#update-form {
+#update-form,
+#login {
 	legend {
 		margin-bottom: 1em;
 	}
@@ -83,5 +91,59 @@ header {
 #modal {
 	button {
 		font-size: 1.2rem;
+	}
+}
+
+.date-desktop {
+	display: none;
+}
+
+@media (min-width: $breakpoint-lg) {
+	#home aside p strong {
+		font-size: 3.5rem;
+		line-height: 1.2;
+		color: $primary-color;
+	}
+
+	.link-desktop {
+		font-size: 1.2rem;
+		font-weight: 500;
+	}
+
+	header nav button .svg-inline--fa {
+		color: $primary-color;
+		height: 1.5em;
+	}
+
+	.date-desktop {
+		font-weight: 700;
+		color: $primary-color;
+		opacity: 0.5;
+		position: absolute;
+		right: 0;
+		top: 0;
+		z-index: -1;
+		display: block;
+		margin-top: 1em;
+
+		span:first-child {
+			width: fit-content;
+			font-size: 25rem;
+			line-height: 0.8;
+			color: transparent;
+			-webkit-text-stroke: 5px $primary-color;
+			text-align: center;
+			display: block;
+		}
+
+		span:nth-child(2) {
+			font-size: 6.5rem;
+			letter-spacing: 1rem;
+			text-transform: uppercase;
+		}
+
+		span:last-child {
+			font-size: 6.5rem;
+		}
 	}
 }

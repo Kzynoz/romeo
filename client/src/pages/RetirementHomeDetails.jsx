@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import RemoveEntity from "./RemoveEntity";
-import { useDispatch, useSelector } from "react-redux";
-import { toggleEditing, toggleModal } from "../features/menuSlice";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 import UpdateEntity from "./UpdateEntity";
+import ManageItem from "./Components/ManageItem";
 
 function RetirementHomeDetails() {
 	const { id } = useParams();
@@ -13,9 +13,7 @@ function RetirementHomeDetails() {
 	const [error, setError] = useState("");
 
 	const { isEditingOpen } = useSelector((state) => state.menu);
-
-	const dispatch = useDispatch();
-	const location = useLocation();
+	const { isAdmin } = useSelector((state) => state.auth);
 
 	useEffect(() => {
 		async function fetchPatient() {
@@ -53,29 +51,14 @@ function RetirementHomeDetails() {
 						<UpdateEntity data={datas} />
 					) : (
 						<>
-							<div className="actions">
-								<RemoveEntity
-									entity={{ id: datas.id, name: datas.name }}
-									link={{
-										url: "retirement-homes",
-										title: "l'établissement",
-									}}
-								/>
-								<button
-									onClick={() => {
-										dispatch(toggleEditing(true));
-									}}
-								>
-									Modifier
-								</button>
-								<button
-									onClick={() => {
-										dispatch(toggleModal(true));
-									}}
-								>
-									Supprimer
-								</button>
-							</div>
+							<ManageItem
+								entity={{ id: datas.id, name: datas.name }}
+								link={{
+									url: "retirement-homes",
+									title: "l'établissement",
+								}}
+							/>
+
 							<article>
 								<header>
 									<h1>{datas.name}</h1>
@@ -99,7 +82,14 @@ function RetirementHomeDetails() {
 											Liste de(s) patients(s) (
 											{datas.patients_count && datas.patients_count})
 										</h2>
-										<button onClick={"ajouter"}>Ajouter</button>
+										{isAdmin && (
+											<button
+												className="add-button"
+												onClick={() => navigate(`/patients/ajouter`)}
+											>
+												Ajouter
+											</button>
+										)}
 									</header>
 
 									{datas.patients ? (
@@ -111,6 +101,13 @@ function RetirementHomeDetails() {
 												<h2>
 													{patient.title} {patient.firstname} {patient.lastname}
 												</h2>
+
+												<Link
+													className="link-desktop"
+													to={`/patients/${patient.id}`}
+												>
+													Consulter
+												</Link>
 											</article>
 										))
 									) : (

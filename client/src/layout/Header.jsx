@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faXmark, faPowerOff } from "@fortawesome/free-solid-svg-icons";
 import logo from "../assets/img/logo-romeo.svg";
 
 import { logout } from "../features/authSlice";
@@ -12,7 +12,9 @@ import { useEffect, useState } from "react";
 function Header() {
 	const { isLogged } = useSelector((state) => state.auth);
 	const { isMenuOpen } = useSelector((state) => state.menu);
-	const [date, setDate] = useState(null);
+	const {
+		infos: { role },
+	} = useSelector((state) => state.auth);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -21,6 +23,12 @@ function Header() {
 
 	const open = <FontAwesomeIcon icon={faBars} />;
 	const close = <FontAwesomeIcon icon={faXmark} />;
+
+	const date = new Date().toLocaleDateString("fr-FR", {
+		day: "numeric",
+		month: "short",
+		year: "numeric",
+	});
 
 	async function handleLogout() {
 		try {
@@ -40,6 +48,7 @@ function Header() {
 		}
 	}
 
+	// Toggle du menu ou fermeture si on clique sur un lien
 	function handleClick(e) {
 		if (e.target.tagName === "A") {
 			dispatch(toggleMenu(false));
@@ -47,16 +56,6 @@ function Header() {
 			dispatch(toggleMenu());
 		}
 	}
-
-	function getDate() {
-		const options = { day: "numeric", month: "short", year: "numeric" };
-		const today = new Date();
-		return today.toLocaleDateString("fr-FR", options);
-	}
-
-	useEffect(() => {
-		setDate(getDate());
-	}, []);
 
 	return (
 		<header>
@@ -89,38 +88,48 @@ function Header() {
 									Patients
 								</NavLink>
 							</li>
-							<li>
-								<NavLink to="soins" onClick={handleClick}>
-									Soins
-								</NavLink>
-							</li>
-							<li>
-								<NavLink to="tuteurs" onClick={handleClick}>
-									Tuteurs
-								</NavLink>
-							</li>
-							<li>
-								<NavLink to="maisons-retraite" onClick={handleClick}>
-									Maisons de retraite
-								</NavLink>
-							</li>
-							<li>
-								<NavLink to={`statistiques/${year}`} onClick={handleClick} end>
-									Statistiques
-								</NavLink>
-							</li>
+
+							{role === "practitioner" && (
+								<>
+									<li>
+										<NavLink to="soins" onClick={handleClick}>
+											Soins
+										</NavLink>
+									</li>
+									<li>
+										<NavLink to="tuteurs" onClick={handleClick}>
+											Tuteurs
+										</NavLink>
+									</li>
+									<li>
+										<NavLink to="maisons-retraite" onClick={handleClick}>
+											Établissements
+										</NavLink>
+									</li>
+									<li>
+										<NavLink
+											to={`statistiques/${year}`}
+											onClick={handleClick}
+											end
+										>
+											Statistiques
+										</NavLink>
+									</li>
+								</>
+							)}
+
+							{/*  À FAIRE							
 							<li>
 								<NavLink to="profil" onClick={handleClick} end>
 									Profil
 								</NavLink>
-							</li>
+							</li> */}
 						</ul>
 
-						<button onClick={handleLogout}>Déconnexion</button>
-
-						<NavLink to="contact" end>
-							Signaler un bug
-						</NavLink>
+						<button onClick={handleLogout}>
+							<FontAwesomeIcon icon={faPowerOff} />
+							<span>Déconnexion</span>
+						</button>
 					</nav>
 				</>
 			)}

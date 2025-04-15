@@ -1,6 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { setPage } from "../../features/paginationSlice";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
+
 function Pagination() {
 	const dispatch = useDispatch();
 	const { page, totalPages } = useSelector((state) => state.pagination);
@@ -13,7 +16,7 @@ function Pagination() {
 					if (page > 1) dispatch(setPage(page - 1));
 				}}
 			>
-				Précedent
+				<FontAwesomeIcon icon={faAngleLeft} />
 			</button>
 			<p>
 				{page} / {totalPages}
@@ -24,7 +27,7 @@ function Pagination() {
 					if (page < totalPages) dispatch(setPage(page + 1));
 				}}
 			>
-				Suivant
+				<FontAwesomeIcon icon={faAngleRight} />
 			</button>
 		</div>
 	) : null;

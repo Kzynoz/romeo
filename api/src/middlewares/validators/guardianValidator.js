@@ -56,7 +56,7 @@ const validatorCreateGuardian = [
 		.withMessage("L'email ne doit pas dépasser 150 caractères.")
 		.isEmail()
 		.withMessage("L'email doit être valide.")
-		.normalizeEmail(),
+		.normalizeEmail({ gmail_remove_dots: false }),
 	body("street")
 		.optional()
 		.isLength({ max: 150 })
@@ -125,7 +125,7 @@ const validatorUpdateGuardian = [
 		.withMessage("L'email ne doit pas dépasser 150 caractères.")
 		.isEmail()
 		.withMessage("L'email doit être valide.")
-		.normalizeEmail(),
+		.normalizeEmail({ gmail_remove_dots: false }),
 	body("number")
 		.optional()
 		.trim()

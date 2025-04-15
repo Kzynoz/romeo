@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import SearchBar from "./Components/SearchBar/SearchBar";
@@ -12,6 +12,7 @@ function RetirementHome() {
 	const [error, setError] = useState("");
 
 	const { page } = useSelector((state) => state.pagination);
+	const { isAdmin } = useSelector((state) => state.auth);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -58,9 +59,14 @@ function RetirementHome() {
 			<SearchBar entityType={"retirement home"} />
 
 			<section className="wrapper">
-				<button onClick={() => navigate(`/maisons-retraite/ajouter`)}>
-					Ajouter un établissement
-				</button>
+				{isAdmin && (
+					<button
+						className="add-button"
+						onClick={() => navigate(`/maisons-retraite/ajouter`)}
+					>
+						Ajouter un établissement
+					</button>
+				)}
 
 				{error && <p>{error}</p>}
 
@@ -83,6 +89,13 @@ function RetirementHome() {
 										{establishment.patients_count}
 									</span>
 								)}
+
+								<Link
+									className="link-desktop"
+									to={`/maisons-retraite/${establishment.id}`}
+								>
+									Consulter
+								</Link>
 							</article>
 						))}
 

@@ -2,14 +2,13 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import { toggleModal, toggleEditing } from "../features/menuSlice";
 import { setTotalPages, reset } from "../features/paginationSlice";
 
 import CareStatus from "./Components/CareStatus";
 import GuardianContact from "./Components/GuardianContact";
-import RemoveEntity from "./RemoveEntity";
 import FormPatient from "./FormPatient";
 import Pagination from "./Components/Pagination";
+import ManageItem from "./Components/ManageItem";
 
 function PatientDetails() {
 	const { id } = useParams();
@@ -19,6 +18,10 @@ function PatientDetails() {
 
 	const { isEditingOpen } = useSelector((state) => state.menu);
 	const { page } = useSelector((state) => state.pagination);
+	const {
+		isAdmin,
+		infos: { role, id: guardianId },
+	} = useSelector((state) => state.auth);
 
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -28,13 +31,16 @@ function PatientDetails() {
 			const limit = 5;
 			const offset = (page - 1) * limit;
 
+			let URL = `http://localhost:9000/api/v1/patients/${id}?limit=${limit}&offset=${offset}`;
+
+			if (role === "guardian") {
+				URL += `&guardian_id=${guardianId}`;
+			}
+
 			try {
-				const res = await fetch(
-					`http://localhost:9000/api/v1/patients/${id}?limit=${limit}&offset=${offset}`,
-					{
-						credentials: "include",
-					}
-				);
+				const res = await fetch(URL, {
+					credentials: "include",
+				});
 
 				if (res.ok) {
 					const { response } = await res.json();
@@ -48,7 +54,7 @@ function PatientDetails() {
 				}
 			} catch (error) {
 				console.error("error", error);
-				setError(error);
+				setError("Une erreur est survenue, veuillez réessayer plus tard.");
 			}
 		}
 		fetchPatient(page);
@@ -64,38 +70,20 @@ function PatientDetails() {
 
 			{datas && (
 				<>
-					{isEditingOpen ? (
-						<section id="update-form">
-							<FormPatient data={datas} />
-						</section>
+					{isEditingOpen && isAdmin ? (
+						<FormPatient data={datas} />
 					) : (
 						<>
-							<div className="actions">
-								<RemoveEntity
-									entity={{
-										id: datas.id,
-										name: `${datas.title} ${datas.firstname} ${datas.lastname}`,
-									}}
-									link={{
-										url: "patients",
-										title: "le patient",
-									}}
-								/>
-								<button
-									onClick={() => {
-										dispatch(toggleEditing(true));
-									}}
-								>
-									Modifier
-								</button>
-								<button
-									onClick={() => {
-										dispatch(toggleModal(true));
-									}}
-								>
-									Supprimer
-								</button>
-							</div>
+							<ManageItem
+								entity={{
+									id: datas.id,
+									name: `${datas.title} ${datas.firstname} ${datas.lastname}`,
+								}}
+								link={{
+									url: "guardians",
+									title: "le tuteur",
+								}}
+							/>
 							<article>
 								<header>
 									<h1>
@@ -114,18 +102,22 @@ function PatientDetails() {
 									)}
 								</header>
 
-								{datas.guardian && (
+								{datas.guardian && role !== "guardian" && (
 									<GuardianContact datas={datas.guardian} isFull={true} />
 								)}
 
 								<aside className="wrapper">
 									<header>
 										<h2>Liste de(s) soin(s) ({datas.care_count})</h2>
-										<button
-											onClick={() => navigate(`/patients/${id}/soin/ajouter`)}
-										>
-											Ajouter un soin
-										</button>
+
+										{isAdmin && (
+											<button
+												className="add-button"
+												onClick={() => navigate(`/patients/${id}/soin/ajouter`)}
+											>
+												Ajouter un soin
+											</button>
+										)}
 									</header>
 
 									{datas.all_cares ? (

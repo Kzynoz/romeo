@@ -49,8 +49,6 @@ export const formCare = {
 				maxLength: 7,
 				required: true,
 			},
-
-			// dynamique avec un fetch de la bdd
 			{
 				name: "complements",
 				type: "textarea",

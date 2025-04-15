@@ -205,85 +205,87 @@ function Form({ formStructure, initialFormData, isUpdated }) {
 	}
 
 	return (
-		<form onSubmit={handleSubmit}>
-			{Object.entries(formStructure.structure).map(([section, fields]) => (
-				<fieldset key={section}>
-					<legend>
-						{section
-							.replace(/_/g, " ")
-							.replace(/\b\w/g, (char) => char.toUpperCase())}
-					</legend>
+		<>
+			<form onSubmit={handleSubmit}>
+				{Object.entries(formStructure.structure).map(([section, fields]) => (
+					<fieldset key={section}>
+						<legend>
+							{section
+								.replace(/_/g, " ")
+								.replace(/\b\w/g, (char) => char.toUpperCase())}
+						</legend>
 
-					{fields.map(
-						({ name, label, type, maxLength, required, options }, index) => (
-							<label
-								key={name + index}
-								htmlFor={name}
-								className={errors[name] ? "error" : ""}
-							>
-								{label} :
-								{type === "select" ? (
-									<select
-										id={name}
-										name={name}
-										required={required}
-										value={formData[name]}
-										onChange={handleChange}
-									>
-										{options &&
-											options.map((option) => (
-												<option key={option.value} value={option.value}>
-													{option.label}
-												</option>
-											))}
-									</select>
-								) : type === "radio" ? (
-									options &&
-									options.map((option) => (
-										<label key={option.value}>
-											<input
-												type="radio"
-												id={name}
-												name={name}
-												value={option.value}
-												required={required}
-												onChange={handleChange}
-												checked={formData[name] === option.value}
-											/>
-											{option.label}
-										</label>
-									))
-								) : type === "textarea" ? (
-									<textarea
-										id={name}
-										name={name}
-										maxLength={maxLength}
-										required={required}
-										value={formData[name]}
-										onChange={handleChange}
-									/>
-								) : (
-									<input
-										type={type}
-										id={name}
-										name={name}
-										maxLength={maxLength}
-										required={required}
-										value={formData[name]}
-										onChange={handleChange}
-									/>
-								)}
-								{errors[name] && <p>{errors[name]}</p>}
-							</label>
-						)
-					)}
-				</fieldset>
-			))}
+						{fields.map(
+							({ name, label, type, maxLength, required, options }, index) => (
+								<label
+									key={name + index}
+									htmlFor={name}
+									className={errors[name] ? "error" : undefined}
+								>
+									{label} :
+									{type === "select" ? (
+										<select
+											id={name}
+											name={name}
+											required={required}
+											value={formData[name]}
+											onChange={handleChange}
+										>
+											{options &&
+												options.map((option) => (
+													<option key={option.value} value={option.value}>
+														{option.label}
+													</option>
+												))}
+										</select>
+									) : type === "radio" ? (
+										options &&
+										options.map((option) => (
+											<label key={option.value}>
+												<input
+													type="radio"
+													id={name}
+													name={name}
+													value={option.value}
+													required={required}
+													onChange={handleChange}
+													checked={formData[name] === option.value}
+												/>
+												{option.label}
+											</label>
+										))
+									) : type === "textarea" ? (
+										<textarea
+											id={name}
+											name={name}
+											maxLength={maxLength}
+											required={required}
+											value={formData[name]}
+											onChange={handleChange}
+										/>
+									) : (
+										<input
+											type={type}
+											id={name}
+											name={name}
+											maxLength={maxLength}
+											required={required}
+											value={formData[name]}
+											onChange={handleChange}
+										/>
+									)}
+									{errors[name] && <p>{errors[name]}</p>}
+								</label>
+							)
+						)}
+					</fieldset>
+				))}
 
-			<button type="submit">{isUpdated ? "Modifier" : "Ajouter"}</button>
+				<button type="submit">{isUpdated ? "Modifier" : "Ajouter"}</button>
 
-			{message && <p className={message.status}>{message.text}</p>}
-		</form>
+				{message && <p className={message.status}>{message.text}</p>}
+			</form>
+		</>
 	);
 }
 

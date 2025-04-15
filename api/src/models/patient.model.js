@@ -12,15 +12,19 @@ class Patient {
 		return await pool.execute(SELECT_PATIENT, [title, firstname, lastname]);
 	}
 
-	static async countAll() {
+	static async countAll(guardian_id) {
 		const COUNT = `SELECT COUNT(customer.id) AS total 
                          FROM customer
-                         WHERE is_patient = 1`;
+                         WHERE is_patient = 1 ${
+														guardian_id ? "AND guardian_id = ?" : ""
+													}`;
 
-		return await pool.query(COUNT);
+		const params = guardian_id ? [guardian_id] : [];
+
+		return await pool.execute(COUNT, params);
 	}
 
-	static async getOne(offset, limit, id) {
+	static async getOne({ offset, limit, id, guardian_id }) {
 		const SELECT_PATIENT = `SELECT
                               c.id,
                               c.title,
@@ -78,12 +82,17 @@ class Patient {
                             LEFT JOIN retirement_home rh ON c.retirement_home_id = rh.id
                             LEFT JOIN customer gc ON c.guardian_id = gc.id
                             WHERE c.is_patient = 1 
-                            AND c.id = ?;`;
+                            AND c.id = ?
+                            ${guardian_id ? "AND c.guardian_id = ?" : ""};`;
 
-		return await pool.execute(SELECT_PATIENT, [limit, offset, id]);
+		const params = guardian_id
+			? [limit, offset, id, guardian_id]
+			: [limit, offset, id];
+
+		return await pool.execute(SELECT_PATIENT, params);
 	}
 
-	static async gettAllWithLatestCare(offset, limit) {
+	static async gettAllWithLatestCare({ offset, limit, guardian_id }) {
 		const SELECT_ALL = `SELECT
                           c.id,
                           c.title,
@@ -114,12 +123,17 @@ class Patient {
                                 FROM care their_care 
                                 WHERE their_care.customer_id = c.id
                             )
-                        WHERE c.is_patient = 1
+                        WHERE c.is_patient = 1  ${
+													guardian_id ? "AND c.guardian_id = ?" : ""
+												}
                         ORDER BY care.invoice_paid DESC, care.invoice_send DESC
                         LIMIT ?
                         OFFSET ?`;
 
-		return await pool.execute(SELECT_ALL, [limit, offset]);
+		const params = guardian_id ? [guardian_id, limit, offset] : [limit, offset];
+		console.log("params", params);
+
+		return await pool.execute(SELECT_ALL, params);
 	}
 
 	static async insert({

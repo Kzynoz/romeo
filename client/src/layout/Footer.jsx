@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -7,9 +7,9 @@ import {
 	faUser,
 	faBriefcaseMedical,
 	faHandshakeAngle,
-	faNotesMedical,
 	faPlus,
 	faHome,
+	faUserGear,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { toggleSubMenu } from "../features/menuSlice";
@@ -17,6 +17,11 @@ import { toggleSubMenu } from "../features/menuSlice";
 function Footer() {
 	const { isLogged } = useSelector((state) => state.auth);
 	const { isSubMenuOpen } = useSelector((state) => state.menu);
+	const { isAdmin } = useSelector((state) => state.auth);
+
+	const {
+		infos: { role },
+	} = useSelector((state) => state.auth);
 
 	const dispatch = useDispatch();
 
@@ -41,44 +46,62 @@ function Footer() {
 								<span>Patients</span>
 							</NavLink>
 						</li>
-						<li>
-							<NavLink to="soins">
-								<FontAwesomeIcon icon={faBriefcaseMedical} />
-								<span>Soins</span>
-							</NavLink>
-						</li>
-						<li>
-							<NavLink to="tuteurs">
-								<FontAwesomeIcon icon={faHandshakeAngle} />
-								<span>Tuteurs</span>
-							</NavLink>
-						</li>
-						<li className={`add-menu ${isSubMenuOpen ? "active" : ""}`}>
-							<button onClick={handleClick}>
-								<FontAwesomeIcon icon={faPlus} />
-							</button>
 
-							<ul>
+						{/* À FAIRE SI JAMAIS						
+						{role === "guardian" && (
+							<li>
+								<NavLink to="profil">
+									<FontAwesomeIcon icon={faUserGear} />
+									<span>Profil</span>
+								</NavLink>
+							</li>
+						)} */}
+
+						{role === "practitioner" && (
+							<>
 								<li>
-									<NavLink to="patients/ajouter" end>
-										<FontAwesomeIcon icon={faUser} />
-										<span>Ajouter un patient</span>
+									<NavLink to="soins">
+										<FontAwesomeIcon icon={faBriefcaseMedical} />
+										<span>Soins</span>
 									</NavLink>
 								</li>
 								<li>
-									<NavLink to="tuteurs/ajouter" end>
+									<NavLink to="tuteurs">
 										<FontAwesomeIcon icon={faHandshakeAngle} />
-										<span>Ajouter un tuteur</span>
+										<span>Tuteurs</span>
 									</NavLink>
 								</li>
-								<li>
-									<NavLink to="maisons-retraite/ajouter" end>
-										<FontAwesomeIcon icon={faHome} />
-										<span>Ajouter un établissement</span>
-									</NavLink>
-								</li>
-							</ul>
-						</li>
+							</>
+						)}
+
+						{isAdmin && (
+							<li className={`add-menu ${isSubMenuOpen ? "active" : ""}`}>
+								<button onClick={handleClick}>
+									<FontAwesomeIcon icon={faPlus} />
+								</button>
+
+								<ul>
+									<li>
+										<NavLink to="patients/ajouter" end>
+											<FontAwesomeIcon icon={faUser} />
+											<span>Ajouter un patient</span>
+										</NavLink>
+									</li>
+									<li>
+										<NavLink to="tuteurs/ajouter" end>
+											<FontAwesomeIcon icon={faHandshakeAngle} />
+											<span>Ajouter un tuteur</span>
+										</NavLink>
+									</li>
+									<li>
+										<NavLink to="maisons-retraite/ajouter" end>
+											<FontAwesomeIcon icon={faHome} />
+											<span>Ajouter un établissement</span>
+										</NavLink>
+									</li>
+								</ul>
+							</li>
+						)}
 					</ul>
 				</nav>
 			)}

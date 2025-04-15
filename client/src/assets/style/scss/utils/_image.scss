@@ -9,5 +9,10 @@
 		background-size: contain;
 		background-repeat: no-repeat;
 		background-position: right top;
+
+		@media (min-width: $breakpoint-lg) {
+			position: relative;
+			background-position: 72% top;
+		}
 	}
 }

@@ -47,7 +47,7 @@ class Care {
 		return await pool.execute(SELECT_ALL, [limit, offset]);
 	}
 
-	static async getOne({ patientId, id }) {
+	static async getOne({ patientId, id, guardian_id }) {
 		const SELECT_CARE = `SELECT
                           c.id,
                           c.title,
@@ -92,9 +92,12 @@ class Care {
                         LEFT JOIN customer gc ON c.guardian_id = gc.id
                         WHERE c.id = ? 
                         AND c.is_patient = 1
-                        AND care.id = ?`;
+                        AND care.id = ?
+                        ${guardian_id ? "AND c.guardian_id = ?" : ""};`;
 
-		return await pool.execute(SELECT_CARE, [patientId, id]);
+		const params = guardian_id ? [patientId, id, guardian_id] : [patientId, id];
+
+		return await pool.execute(SELECT_CARE, params);
 	}
 
 	static async displayInvoice(id) {

@@ -1,0 +1,60 @@
+.actions {
+	display: flex;
+	gap: 1rem;
+	margin-bottom: 2em;
+	justify-content: flex-end;
+
+	.update-button {
+		@include button(transparent, $primary-color);
+		font-size: 1rem;
+		border: 2px solid $primary-color;
+	}
+
+	.delete-button {
+		@include button($unpaid);
+		font-size: 1rem;
+	}
+
+	.back-button {
+		margin-right: auto;
+		background-color: $secondary-color;
+
+		&:hover {
+			background-color: $primary-color;
+		}
+	}
+}
+
+.close-button,
+.back-button {
+	background-color: $primary-color;
+	padding: 1rem;
+	border-radius: 3rem;
+	color: $white;
+	aspect-ratio: 1;
+	transition: background-color 0.3s ease-out;
+
+	.svg-inline--fa {
+		aspect-ratio: 1;
+	}
+
+	&:hover {
+		background-color: $secondary-color;
+	}
+}
+
+.add-button {
+	@include button();
+	font-size: 1rem;
+	margin: 1em 0;
+}
+
+.link-desktop {
+	display: none;
+
+	@media (min-width: $breakpoint-lg) {
+		display: inline-block;
+		@include button($secondary-color);
+		margin-top: 2em;
+	}
+}

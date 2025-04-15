@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import CareStatus from "./Components/CareStatus";
 import GuardianContact from "./Components/GuardianContact";
 import UpdateEntity from "./UpdateEntity";
 
-import { toggleEditing, toggleModal } from "../features/menuSlice";
-import RemoveEntity from "./RemoveEntity";
+import ManageItem from "./Components/ManageItem";
 
 function CareDetails() {
 	const { id, idSoin } = useParams();
@@ -16,21 +15,27 @@ function CareDetails() {
 	const [error, setError] = useState("");
 
 	const { isEditingOpen } = useSelector((state) => state.menu);
-	const dispatch = useDispatch();
+	const {
+		isAdmin,
+		infos: { role, id: guardianId },
+	} = useSelector((state) => state.auth);
 
 	useEffect(() => {
-		async function fetchPatients() {
+		async function fetchCare() {
+			let URL = `http://localhost:9000/api/v1/patients/${id}/care/${idSoin}`;
+
+			if (role === "guardian") {
+				URL += `?guardian_id=${guardianId}`;
+			}
+
 			try {
-				const res = await fetch(
-					`http://localhost:9000/api/v1/patients/${id}/care/${idSoin}`,
-					{
-						credentials: "include",
-					}
-				);
+				const res = await fetch(URL, {
+					credentials: "include",
+				});
 
 				if (res.ok) {
 					const { response } = await res.json();
-					console.log("response care", response);
+
 					setDatas(response);
 				} else {
 					const { message } = await res.json();
@@ -41,7 +46,7 @@ function CareDetails() {
 				setError(error);
 			}
 		}
-		fetchPatients();
+		fetchCare();
 	}, [isEditingOpen]);
 
 	return (
@@ -50,39 +55,23 @@ function CareDetails() {
 
 			{datas && (
 				<>
-					{isEditingOpen ? (
+					{isEditingOpen && isAdmin ? (
 						<UpdateEntity data={datas} />
 					) : (
 						<>
-							<div className="actions">
-								<RemoveEntity
-									entity={{
-										id: datas.id,
-										careId: datas.care.id,
-										name: `soin du ${new Date(
-											datas.care.performed_at
-										).toLocaleDateString("fr-FR")}`,
-									}}
-									link={{
-										url: "care",
-										title: "le soin",
-									}}
-								/>
-								<button
-									onClick={() => {
-										dispatch(toggleEditing(true));
-									}}
-								>
-									Modifier
-								</button>
-								<button
-									onClick={() => {
-										dispatch(toggleModal(true));
-									}}
-								>
-									Supprimer
-								</button>
-							</div>
+							<ManageItem
+								entity={{
+									id: datas.id,
+									careId: datas.care.id,
+									name: `soin du ${new Date(
+										datas.care.performed_at
+									).toLocaleDateString("fr-FR")}`,
+								}}
+								link={{
+									url: "care",
+									title: "le soin",
+								}}
+							/>
 							<article>
 								<header>
 									<h1>
@@ -102,7 +91,8 @@ function CareDetails() {
 										</address>
 									)}
 								</header>
-								{datas.guardian && (
+
+								{datas.guardian && role !== "guardian" && (
 									<GuardianContact datas={datas.guardian} isFull={true} />
 								)}
 

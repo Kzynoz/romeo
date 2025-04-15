@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import CareStatus from "./Components/CareStatus";
@@ -83,10 +83,18 @@ function Care() {
 								<p>
 									<strong>Praticien:</strong> {data.practitioner.alias}
 								</p>
+
 								<CareStatus
 									invoice_paid={data.care.invoice_paid}
 									invoice_send={data.care.invoice_send}
 								/>
+
+								<Link
+									className="link-desktop"
+									to={`/patients/${data.patient.id}/soin/${data.care.id}`}
+								>
+									Consulter
+								</Link>
 							</article>
 						))}
 

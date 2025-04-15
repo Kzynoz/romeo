@@ -30,9 +30,12 @@ const getAll = async (req, res, next) => {
 
 const getOneCare = async (req, res, next) => {
 	const { patientId, id } = req.params;
+	const guardian_id = req.guardian_id;
+
+	console.log("guardian_id from Care", guardian_id);
 
 	try {
-		const [[response]] = await Care.getOne({ patientId, id });
+		const [[response]] = await Care.getOne({ patientId, id, guardian_id });
 
 		if (!response) {
 			res.status(400).json({
@@ -81,8 +84,7 @@ const create = async (req, res, next) => {
 		});
 	}
 
-	/* 	const { care, patient_id, practitioner_id } = req.body; */
-	const id = req.params.id || req.body.patient_id; // si deuxieme route
+	const id = req.params.id || req.body.patient_id;
 	const date = new Date(req.body.performed_at).toLocaleDateString("fr-CA");
 
 	try {
@@ -134,7 +136,8 @@ const update = async (req, res, next) => {
 		});
 	}
 
-	const careDate = new Date(req.body.performed_at).toISOString().split("T")[0];
+	// const careDate = new Date(req.body.performed_at).toISOString().split("T")[0];
+	const careDate = new Date(req.body.performed_at).toLocaleDateString("fr-CA");
 
 	const updatedCare = {
 		performed_at: careDate,

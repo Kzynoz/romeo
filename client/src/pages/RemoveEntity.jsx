@@ -9,8 +9,6 @@ function RemoveEntity({ entity, link }) {
 	const { id, idSoin } = useParams();
 	const navigate = useNavigate();
 
-	console.log("log", entity, link);
-
 	const [isVerifying, setIsVerifying] = useState(true);
 	const [message, setMessage] = useState("");
 	const [formData, setFormData] = useState({
@@ -55,12 +53,12 @@ function RemoveEntity({ entity, link }) {
 						navigate("/tuteurs");
 					}
 
-					if (path.includes(`/patients/${id}/soin`)) {
-						navigate(`/patients/${id}`);
+					if (path === `/patients/${id}`) {
+						navigate(`/patients`);
 					}
 
-					if (path.includes(`/patients/${id}`)) {
-						navigate(`/patients`);
+					if (path.includes(`/patients/${id}/soin`)) {
+						navigate(`/patients/${id}`);
 					}
 
 					dispatch(toggleModal(false));
@@ -86,6 +84,8 @@ function RemoveEntity({ entity, link }) {
 		if (!isValid) {
 			return setIsVerifying(false);
 		}
+
+		console.log("form data", formData.name, "entity", entity);
 	}, []);
 
 	return (

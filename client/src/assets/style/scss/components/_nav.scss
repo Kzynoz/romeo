@@ -1,4 +1,4 @@
-header {
+#root > header {
 	.burger-menu {
 		padding: 1rem;
 		cursor: pointer;
@@ -6,6 +6,10 @@ header {
 
 		.svg-inline--fa {
 			height: 2rem;
+		}
+
+		@media (min-width: $breakpoint-lg) {
+			display: none;
 		}
 	}
 
@@ -20,14 +24,73 @@ header {
 		flex-wrap: wrap;
 		flex-direction: column;
 		align-items: center;
-		justify-content: space-between;
+		justify-content: center;
 		padding: 2rem;
 		transform: translateX(100vw);
 		transition: transform 0.3s ease-out;
 		opacity: 0;
 
+		@media (min-width: $breakpoint-lg) {
+			position: initial;
+			height: initial;
+			width: 100%;
+			transform: translateX(0);
+			opacity: 1;
+			padding: 0;
+			flex-direction: row;
+			background-color: initial;
+			flex-wrap: nowrap;
+			justify-content: flex-end;
+			gap: 1em;
+
+			ul {
+				display: flex;
+				gap: 3rem;
+			}
+		}
+
 		li {
-			margin: 2rem 0;
+			margin: 3rem 0;
+
+			a {
+				color: $white;
+
+				&.active {
+					color: $secondary-color;
+					position: relative;
+
+					@media (min-width: $breakpoint-lg) {
+						&::after {
+							content: "";
+							display: block;
+							width: 100%;
+							height: 2px;
+							background-color: $primary-color;
+							position: absolute;
+							bottom: -1rem;
+						}
+					}
+				}
+
+				@media (min-width: $breakpoint-lg) {
+					color: $secondary-color;
+
+					&.active,
+					&:hover {
+						color: $primary-color;
+					}
+				}
+			}
+		}
+
+		button {
+			color: $white;
+
+			@media (min-width: $breakpoint-lg) {
+				span {
+					display: none;
+				}
+			}
 		}
 
 		&.active {
@@ -39,6 +102,15 @@ header {
 	.current-date {
 		margin: auto;
 		margin-right: 1rem;
+
+		@media (min-width: $breakpoint-lg) {
+			display: none;
+		}
+	}
+
+	@media (min-width: $breakpoint-lg) {
+		max-width: 80vw;
+		width: 100%;
 	}
 }
 
@@ -54,6 +126,10 @@ footer {
 		bottom: 3em;
 		left: 1rem;
 		right: 1rem;
+
+		@media (min-width: $breakpoint-lg) {
+			display: none;
+		}
 
 		> ul {
 			display: flex;
@@ -104,6 +180,11 @@ footer {
 				transform: translate(-50%, -50%);
 				z-index: 3;
 
+				@media (min-width: $breakpoint-md) {
+					position: initial;
+					transform: initial;
+				}
+
 				button {
 					background-color: $primary-color;
 					padding: 1.5rem;
@@ -136,6 +217,13 @@ footer {
 					opacity: 0;
 					box-shadow: $shadow;
 
+					@media (min-width: $breakpoint-md) {
+						left: initial;
+						right: 5vw;
+						transform: translate(0, 100vw);
+						width: 30vw;
+					}
+
 					a {
 						color: white;
 						white-space: nowrap;
@@ -157,6 +245,10 @@ footer {
 					ul {
 						transform: translate(-50%, 0);
 						opacity: 1;
+
+						@media (min-width: $breakpoint-md) {
+							transform: translate(0, -7vh);
+						}
 					}
 				}
 			}

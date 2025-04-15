@@ -1,0 +1,2036 @@
+/*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
+/* Document
+   ========================================================================== */
+/**
+ * 1. Correct the line height in all browsers.
+ * 2. Prevent adjustments of font size after orientation changes in iOS.
+ */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap");
+html {
+  line-height: 1.15; /* 1 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+  font-size: 62.5%;
+}
+
+/* Sections
+     ========================================================================== */
+/**
+   * Remove the margin in all browsers.
+   */
+body {
+  margin: 0;
+}
+
+/**
+   * Render the `main` element consistently in IE.
+   */
+main {
+  display: block;
+}
+
+/**
+   * Correct the font size and margin on `h1` elements within `section` and
+   * `article` contexts in Chrome, Firefox, and Safari.
+   */
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+/* Grouping content
+     ========================================================================== */
+/**
+   * 1. Add the correct box sizing in Firefox.
+   * 2. Show the overflow in Edge and IE.
+   */
+hr {
+  box-sizing: content-box; /* 1 */
+  height: 0; /* 1 */
+  overflow: visible; /* 2 */
+}
+
+/**
+   * 1. Correct the inheritance and scaling of font size in all browsers.
+   * 2. Correct the odd `em` font sizing in all browsers.
+   */
+pre {
+  font-family: monospace, monospace; /* 1 */
+  font-size: 1em; /* 2 */
+}
+
+/* Text-level semantics
+     ========================================================================== */
+/**
+   * Remove the gray background on active links in IE 10.
+   */
+a {
+  background-color: transparent;
+}
+
+/**
+   * 1. Remove the bottom border in Chrome 57-
+   * 2. Add the correct text decoration in Chrome, Edge, IE, Opera, and Safari.
+   */
+abbr[title] {
+  border-bottom: none; /* 1 */
+  text-decoration: underline; /* 2 */
+  -webkit-text-decoration: underline dotted;
+          text-decoration: underline dotted; /* 2 */
+}
+
+/**
+   * Add the correct font weight in Chrome, Edge, and Safari.
+   */
+b,
+strong {
+  font-weight: bolder;
+}
+
+/**
+   * 1. Correct the inheritance and scaling of font size in all browsers.
+   * 2. Correct the odd `em` font sizing in all browsers.
+   */
+code,
+kbd,
+samp {
+  font-family: monospace, monospace; /* 1 */
+  font-size: 1em; /* 2 */
+}
+
+/**
+   * Add the correct font size in all browsers.
+   */
+small {
+  font-size: 80%;
+}
+
+/**
+   * Prevent `sub` and `sup` elements from affecting the line height in
+   * all browsers.
+   */
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+sup {
+  top: -0.5em;
+}
+
+/* Embedded content
+     ========================================================================== */
+/**
+   * Remove the border on images inside links in IE 10.
+   */
+img {
+  border-style: none;
+}
+
+/* Forms
+     ========================================================================== */
+/**
+   * 1. Change the font styles in all browsers.
+   * 2. Remove the margin in Firefox and Safari.
+   */
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit; /* 1 */
+  font-size: 100%; /* 1 */
+  line-height: 1.15; /* 1 */
+  margin: 0; /* 2 */
+}
+
+/**
+   * Show the overflow in IE.
+   * 1. Show the overflow in Edge.
+   */
+button,
+input {
+  /* 1 */
+  overflow: visible;
+}
+
+/**
+   * Remove the inheritance of text transform in Edge, Firefox, and IE.
+   * 1. Remove the inheritance of text transform in Firefox.
+   */
+button,
+select {
+  /* 1 */
+  text-transform: none;
+}
+
+/**
+   * Correct the inability to style clickable types in iOS and Safari.
+   */
+button,
+[type=button],
+[type=reset],
+[type=submit] {
+  -webkit-appearance: button;
+}
+
+/**
+   * Remove the inner border and padding in Firefox.
+   */
+button::-moz-focus-inner,
+[type=button]::-moz-focus-inner,
+[type=reset]::-moz-focus-inner,
+[type=submit]::-moz-focus-inner {
+  border-style: none;
+  padding: 0;
+}
+
+/**
+   * Restore the focus styles unset by the previous rule.
+   */
+button:-moz-focusring,
+[type=button]:-moz-focusring,
+[type=reset]:-moz-focusring,
+[type=submit]:-moz-focusring {
+  outline: 1px dotted black;
+}
+
+/**
+   * Correct the padding in Firefox.
+   */
+fieldset {
+  padding: 0.35em 0.75em 0.625em;
+}
+
+/**
+   * 1. Correct the text wrapping in Edge and IE.
+   * 2. Correct the color inheritance from `fieldset` elements in IE.
+   * 3. Remove the padding so developers are not caught out when they zero out
+   *    `fieldset` elements in all browsers.
+   */
+legend {
+  box-sizing: border-box; /* 1 */
+  color: inherit; /* 2 */
+  display: table; /* 1 */
+  max-width: 100%; /* 1 */
+  padding: 0; /* 3 */
+  white-space: normal; /* 1 */
+}
+
+/**
+   * Add the correct vertical alignment in Chrome, Firefox, and Opera.
+   */
+progress {
+  vertical-align: baseline;
+}
+
+/**
+   * Remove the default vertical scrollbar in IE 10+.
+   */
+textarea {
+  overflow: auto;
+}
+
+/**
+   * 1. Add the correct box sizing in IE 10.
+   * 2. Remove the padding in IE 10.
+   */
+[type=checkbox],
+[type=radio] {
+  box-sizing: border-box; /* 1 */
+  padding: 0; /* 2 */
+}
+
+/**
+   * Correct the cursor style of increment and decrement buttons in Chrome.
+   */
+[type=number]::-webkit-inner-spin-button,
+[type=number]::-webkit-outer-spin-button {
+  height: auto;
+}
+
+/**
+   * 1. Correct the odd appearance in Chrome and Safari.
+   * 2. Correct the outline style in Safari.
+   */
+[type=search] {
+  -webkit-appearance: textfield; /* 1 */
+  outline-offset: -2px; /* 2 */
+}
+
+/**
+   * Remove the inner padding in Chrome and Safari on macOS.
+   */
+[type=search]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+/**
+   * 1. Correct the inability to style clickable types in iOS and Safari.
+   * 2. Change font properties to `inherit` in Safari.
+   */
+::-webkit-file-upload-button {
+  -webkit-appearance: button; /* 1 */
+  font: inherit; /* 2 */
+}
+
+/* Interactive
+     ========================================================================== */
+/*
+   * Add the correct display in Edge, IE 10+, and Firefox.
+   */
+details {
+  display: block;
+}
+
+/*
+   * Add the correct display in all browsers.
+   */
+summary {
+  display: list-item;
+}
+
+/* Misc
+     ========================================================================== */
+/**
+   * Add the correct display in IE 10+.
+   */
+template {
+  display: none;
+}
+
+/**
+   * Add the correct display in IE 10.
+   */
+[hidden] {
+  display: none;
+}
+
+button {
+  all: unset;
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+body {
+  font-size: 1.4rem;
+  color: #051b33;
+  font-family: "Poppins", sans-serif;
+}
+body h2,
+body legend {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #5b80fa;
+  margin: 0;
+}
+body h2 .society,
+body legend .society {
+  font-size: 1.4rem;
+  color: #051b33;
+}
+body h1 {
+  margin-bottom: 0px;
+}
+body h1 + p {
+  font-size: 1.8rem;
+}
+
+header .current-date {
+  font-size: 1.6rem;
+  color: #5b80fa;
+}
+header nav a,
+header nav button {
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 0.1rem;
+}
+
+.row-guardian h2 + p > strong {
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.row-contact h2 + p {
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+#patients-details h1 > span,
+#soins-details h1 > span,
+#tuteurs-details h1 > span {
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2rem;
+  display: block;
+  font-weight: 400;
+}
+
+#soins-details .price {
+  font-size: 2rem;
+}
+
+#add-form form legend,
+#update-form legend,
+#login legend {
+  margin-bottom: 1em;
+}
+#add-form form label,
+#update-form label,
+#login label {
+  font-weight: 700;
+}
+#add-form form label input,
+#update-form label input,
+#login label input {
+  font-style: normal;
+  color: #5b80fa;
+}
+
+#modal button {
+  font-size: 1.2rem;
+}
+
+.date-desktop {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  #home aside p strong {
+    font-size: 3.5rem;
+    line-height: 1.2;
+    color: #5b80fa;
+  }
+  .link-desktop {
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+  header nav button .svg-inline--fa {
+    color: #5b80fa;
+    height: 1.5em;
+  }
+  .date-desktop {
+    font-weight: 700;
+    color: #5b80fa;
+    opacity: 0.5;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: -1;
+    display: block;
+    margin-top: 1em;
+  }
+  .date-desktop span:first-child {
+    width: -moz-fit-content;
+    width: fit-content;
+    font-size: 25rem;
+    line-height: 0.8;
+    color: transparent;
+    -webkit-text-stroke: 5px #5b80fa;
+    text-align: center;
+    display: block;
+  }
+  .date-desktop span:nth-child(2) {
+    font-size: 6.5rem;
+    letter-spacing: 1rem;
+    text-transform: uppercase;
+  }
+  .date-desktop span:last-child {
+    font-size: 6.5rem;
+  }
+}
+body {
+  min-height: 100vh;
+  overflow-x: clip;
+  background-color: #eff3f6;
+  background-image: radial-gradient(ellipse 140vw 30vh at top left, rgb(194, 213, 243) 0%, rgb(194, 213, 243) 50%, rgba(194, 213, 243, 0) 100%), radial-gradient(ellipse 160vw 50vh at bottom right, rgb(194, 213, 243) 0%, rgb(194, 213, 243) 50%, rgba(194, 213, 243, 0) 100%);
+}
+body p {
+  margin: 1rem 0;
+  line-height: 1.5;
+}
+@media (min-width: 768px) {
+  body {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+address {
+  font-style: normal;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+@media (min-width: 768px) {
+  #root {
+    width: 90vw;
+  }
+}
+@media (min-width: 1024px) {
+  #root {
+    width: 100%;
+    align-items: center;
+  }
+}
+#root .container {
+  flex: 1;
+  margin: 1em 2em;
+}
+@media (min-width: 1024px) {
+  #root .container {
+    margin: 0;
+  }
+}
+#root .rubriques {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2em;
+}
+@media (min-width: 768px) {
+  #root .rubriques {
+    grid-template-columns: repeat(3, 1fr);
+    grid-column: 2 span;
+    margin-right: 3em;
+  }
+}
+#root > header {
+  margin: 1em 2em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media (min-width: 1024px) {
+  main {
+    max-width: 1024px;
+    width: 100%;
+  }
+}
+#home > header p {
+  background-color: #eff3f6;
+}
+@media (min-width: 1024px) {
+  #home > header p {
+    background-color: initial;
+  }
+}
+@media (min-width: 1024px) {
+  #home {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1em;
+  }
+  #home > header {
+    grid-column: span 3;
+  }
+}
+
+.logo img {
+  width: 200px;
+}
+
+#home > header {
+  padding-top: 14em;
+  background-image: url(../../img/mascotte-romeo.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: right top;
+}
+@media (min-width: 1024px) {
+  #home > header {
+    position: relative;
+    background-position: 72% top;
+  }
+}
+
+#soins .wrapper article, #tuteurs .wrapper article,
+#maisons-retraite .wrapper article, #patients .wrapper article {
+  background-color: white;
+  color: #051b33;
+  padding: 2em;
+  box-shadow: 0px 3px 6px rgba(31, 31, 31, 0.2);
+  border-radius: 1.5em;
+  text-align: center;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: auto;
+  text-align: left;
+  align-items: center;
+  margin: 1rem 0;
+}
+@media (min-width: 1024px) {
+  #soins .wrapper article, #tuteurs .wrapper article,
+  #maisons-retraite .wrapper article, #patients .wrapper article {
+    cursor: initial;
+  }
+}
+#soins .wrapper article h2, #tuteurs .wrapper article h2,
+#maisons-retraite .wrapper article h2, #patients .wrapper article h2 {
+  color: #5b80fa;
+  text-align: center;
+}
+#soins .wrapper article h2, #tuteurs .wrapper article h2,
+#maisons-retraite .wrapper article h2, #patients .wrapper article h2 {
+  text-align: left;
+  grid-column: 1/2;
+  grid-row: 1;
+}
+#soins .wrapper article p, #tuteurs .wrapper article p,
+#maisons-retraite .wrapper article p, #patients .wrapper article p {
+  grid-column: 1/2;
+  grid-row: 2;
+}
+#soins .wrapper article aside, #tuteurs .wrapper article aside,
+#maisons-retraite .wrapper article aside, #patients .wrapper article aside {
+  grid-column: 2/3;
+  grid-row: 1/3;
+  justify-self: end;
+}
+
+#patients-details .wrapper article,
+#tuteurs-details .wrapper article,
+#maisons-retraite-details .wrapper article,
+#statistiques .wrapper article {
+  background-color: white;
+  color: #051b33;
+  padding: 2em;
+  box-shadow: 0px 3px 6px rgba(31, 31, 31, 0.2);
+  border-radius: 1.5em;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 1rem 0;
+}
+@media (min-width: 1024px) {
+  #patients-details .wrapper article,
+  #tuteurs-details .wrapper article,
+  #maisons-retraite-details .wrapper article,
+  #statistiques .wrapper article {
+    cursor: initial;
+  }
+}
+#patients-details .wrapper article h2,
+#tuteurs-details .wrapper article h2,
+#maisons-retraite-details .wrapper article h2,
+#statistiques .wrapper article h2 {
+  color: #5b80fa;
+  text-align: center;
+}
+
+.row-guardian {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 2em;
+  -moz-column-gap: 1em;
+       column-gap: 1em;
+}
+.row-guardian h2 {
+  grid-column: span 2;
+  margin-bottom: 1em;
+}
+.row-guardian p {
+  margin: 0;
+}
+.row-guardian p strong {
+  margin-bottom: 1rem;
+  display: block;
+  text-transform: capitalize;
+}
+.row-guardian p span {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.row-guardian p span .svg-inline--fa {
+  color: #5b80fa;
+  height: 2rem;
+}
+.row-guardian address {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-style: normal;
+}
+.row-guardian address a {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+.row-guardian address a .svg-inline--fa {
+  color: #5b80fa;
+  height: 2rem;
+}
+
+.society {
+  margin-left: 0.5rem;
+  font-style: italic;
+}
+.society::before {
+  content: "- ";
+}
+
+#soins-details > article header {
+  background-color: #5b80fa;
+  color: white;
+  padding: 2em;
+  box-shadow: 0px 3px 6px rgba(31, 31, 31, 0.2);
+  border-radius: 1.5em;
+  text-align: center;
+  cursor: pointer;
+  text-align: left;
+  cursor: initial;
+}
+@media (min-width: 1024px) {
+  #soins-details > article header {
+    cursor: initial;
+  }
+}
+#soins-details > article header h2 {
+  color: #5b80fa;
+  text-align: center;
+}
+#soins-details > article header h1 {
+  margin-top: 0;
+  text-transform: capitalize;
+}
+#soins-details > article .care-details {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  color: #051b33;
+  padding: 2em;
+  box-shadow: 0px 3px 6px rgba(31, 31, 31, 0.2);
+  border-radius: 1.5em;
+  text-align: center;
+  cursor: pointer;
+  text-align: left;
+  cursor: initial;
+}
+@media (min-width: 1024px) {
+  #soins-details > article .care-details {
+    cursor: initial;
+  }
+}
+#soins-details > article .care-details h2 {
+  color: #5b80fa;
+  text-align: center;
+}
+#soins-details > article .care-details .complements > strong {
+  display: block;
+  text-decoration: underline;
+}
+#soins-details > article .care-details p {
+  flex-basis: 100%;
+}
+#soins-details > article .care-details h2 {
+  flex-basis: 50%;
+  margin: auto;
+  margin-left: 0;
+  text-align: left;
+}
+#soins-details > article .care-details + span {
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+#maisons-retraite-details .row-contact {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 2em;
+  -moz-column-gap: 1em;
+       column-gap: 1em;
+}
+#maisons-retraite-details .row-contact h2 {
+  grid-column: span 2;
+  margin-bottom: 1em;
+}
+#maisons-retraite-details .row-contact p {
+  margin: 0;
+}
+#maisons-retraite-details .row-contact address {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-style: normal;
+}
+#maisons-retraite-details .row-contact address a {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+#maisons-retraite-details .row-contact address a .svg-inline--fa {
+  color: #5b80fa;
+  height: 2rem;
+}
+#maisons-retraite-details > article > header {
+  background-color: #5b80fa;
+  color: white;
+  padding: 2em;
+  box-shadow: 0px 3px 6px rgba(31, 31, 31, 0.2);
+  border-radius: 1.5em;
+  text-align: center;
+  cursor: pointer;
+  text-align: left;
+  cursor: initial;
+}
+@media (min-width: 1024px) {
+  #maisons-retraite-details > article > header {
+    cursor: initial;
+  }
+}
+#maisons-retraite-details > article > header h2 {
+  color: #5b80fa;
+  text-align: center;
+}
+#maisons-retraite-details > article > header h1 {
+  margin-top: 0;
+  text-transform: capitalize;
+}
+
+#add-form section,
+#update-form section,
+#login section {
+  margin-top: 2em;
+}
+#add-form header,
+#update-form header,
+#login header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1em 0;
+}
+#add-form header h1,
+#update-form header h1,
+#login header h1 {
+  margin-top: 0;
+}
+#add-form a,
+#update-form a,
+#login a {
+  text-decoration: underline;
+}
+#add-form form,
+#update-form form,
+#login form {
+  background-color: white;
+  color: #051b33;
+  padding: 2em;
+  box-shadow: 0px 3px 6px rgba(31, 31, 31, 0.2);
+  border-radius: 1.5em;
+  text-align: center;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1em;
+}
+@media (min-width: 1024px) {
+  #add-form form,
+  #update-form form,
+  #login form {
+    cursor: initial;
+  }
+}
+#add-form form h2,
+#update-form form h2,
+#login form h2 {
+  color: #5b80fa;
+  text-align: center;
+}
+#add-form form fieldset,
+#update-form form fieldset,
+#login form fieldset {
+  padding: 0;
+  border: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  flex-basis: 100%;
+  margin: 1em 0;
+}
+#add-form form fieldset label,
+#update-form form fieldset label,
+#login form fieldset label {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+#add-form form fieldset label input,
+#add-form form fieldset label select,
+#add-form form fieldset label textarea,
+#update-form form fieldset label input,
+#update-form form fieldset label select,
+#update-form form fieldset label textarea,
+#login form fieldset label input,
+#login form fieldset label select,
+#login form fieldset label textarea {
+  padding: 1.5rem 2rem;
+  border: 1px solid #5b80fa;
+  width: 100%;
+  border-radius: 3rem;
+}
+#add-form form fieldset label input:focus-visible,
+#add-form form fieldset label select:focus-visible,
+#add-form form fieldset label textarea:focus-visible,
+#update-form form fieldset label input:focus-visible,
+#update-form form fieldset label select:focus-visible,
+#update-form form fieldset label textarea:focus-visible,
+#login form fieldset label input:focus-visible,
+#login form fieldset label select:focus-visible,
+#login form fieldset label textarea:focus-visible {
+  padding: 1.5rem 2rem;
+  padding-inline: 1.5rem 2rem;
+  outline-offset: 0;
+  outline: 0;
+}
+#add-form form fieldset label textarea,
+#update-form form fieldset label textarea,
+#login form fieldset label textarea {
+  max-width: 0;
+  width: 100%;
+  min-width: 100%;
+  min-height: 100px;
+}
+#add-form form fieldset label.error input,
+#update-form form fieldset label.error input,
+#login form fieldset label.error input {
+  border: 1px solid red;
+}
+#add-form form fieldset label[for=title],
+#update-form form fieldset label[for=title],
+#login form fieldset label[for=title] {
+  flex-direction: row;
+  gap: 1em;
+}
+#add-form form fieldset label[for=title] label,
+#update-form form fieldset label[for=title] label,
+#login form fieldset label[for=title] label {
+  align-content: flex-start;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+#add-form form fieldset label[for=title] label input,
+#update-form form fieldset label[for=title] label input,
+#login form fieldset label[for=title] label input {
+  width: initial;
+}
+#add-form form button[type=submit],
+#update-form form button[type=submit],
+#login form button[type=submit] {
+  background-color: #5b80fa;
+  color: white;
+  padding: 1em 2em;
+  border-radius: 1.5em;
+  text-align: center;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.1rem;
+  transition: background-color 0.2s ease-in;
+}
+#add-form form button[type=submit]:hover,
+#update-form form button[type=submit]:hover,
+#login form button[type=submit]:hover {
+  background-color: #051b33;
+}
+@media (min-width: 1024px) {
+  #add-form form button[type=submit],
+  #update-form form button[type=submit],
+  #login form button[type=submit] {
+    padding: 1em;
+  }
+}
+#add-form form p.error,
+#update-form form p.error,
+#login form p.error {
+  color: red;
+  font-weight: initial;
+  margin: 0;
+}
+#add-form form p.success,
+#update-form form p.success,
+#login form p.success {
+  text-align: center;
+  color: limegreen;
+}
+
+.error p {
+  color: red;
+  font-weight: initial;
+  margin: 0;
+}
+
+.success {
+  text-align: center;
+  color: limegreen;
+}
+
+button[type=submit] + .success,
+button[type=submit] + .error {
+  text-align: center;
+  flex-basis: 100%;
+}
+
+#login {
+  display: flex;
+  background-image: url(/src/assets/img/mascotte-romeo.svg);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+}
+#login label {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex-basis: 100%;
+}
+#login label input {
+  padding: 1.5rem 2rem;
+  border: 1px solid #5b80fa;
+  width: 100%;
+  border-radius: 3rem;
+}
+#login + footer {
+  margin: 0;
+}
+
+#login form + button {
+  text-decoration: underline;
+}
+
+#root > header .burger-menu {
+  padding: 1rem;
+  cursor: pointer;
+  z-index: 100;
+}
+#root > header .burger-menu .svg-inline--fa {
+  height: 2rem;
+}
+@media (min-width: 1024px) {
+  #root > header .burger-menu {
+    display: none;
+  }
+}
+#root > header nav {
+  position: fixed;
+  inset: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: #5b80fa;
+  z-index: 99;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  transform: translateX(100vw);
+  transition: transform 0.3s ease-out;
+  opacity: 0;
+}
+@media (min-width: 1024px) {
+  #root > header nav {
+    position: initial;
+    height: initial;
+    width: 100%;
+    transform: translateX(0);
+    opacity: 1;
+    padding: 0;
+    flex-direction: row;
+    background-color: initial;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    gap: 1em;
+  }
+  #root > header nav ul {
+    display: flex;
+    gap: 3rem;
+  }
+}
+#root > header nav li {
+  margin: 3rem 0;
+}
+#root > header nav li a {
+  color: white;
+}
+#root > header nav li a.active {
+  color: #051b33;
+  position: relative;
+}
+@media (min-width: 1024px) {
+  #root > header nav li a.active::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: #5b80fa;
+    position: absolute;
+    bottom: -1rem;
+  }
+}
+@media (min-width: 1024px) {
+  #root > header nav li a {
+    color: #051b33;
+  }
+  #root > header nav li a.active, #root > header nav li a:hover {
+    color: #5b80fa;
+  }
+}
+#root > header nav button {
+  color: white;
+}
+@media (min-width: 1024px) {
+  #root > header nav button span {
+    display: none;
+  }
+}
+#root > header nav.active {
+  transform: translateX(0);
+  opacity: 1;
+}
+#root > header .current-date {
+  margin: auto;
+  margin-right: 1rem;
+}
+@media (min-width: 1024px) {
+  #root > header .current-date {
+    display: none;
+  }
+}
+@media (min-width: 1024px) {
+  #root > header {
+    max-width: 80vw;
+    width: 100%;
+  }
+}
+
+footer {
+  margin-top: 8em;
+}
+footer nav {
+  background-color: white;
+  border-radius: 5em;
+  padding: 1rem 0;
+  position: fixed;
+  box-shadow: 0px 3px 6px rgba(31, 31, 31, 0.2);
+  bottom: 3em;
+  left: 1rem;
+  right: 1rem;
+}
+@media (min-width: 1024px) {
+  footer nav {
+    display: none;
+  }
+}
+footer nav > ul {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+footer nav > ul a:not(.add-menu a) {
+  text-decoration: none;
+  color: #5b80fa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 0;
+  padding: 1rem;
+}
+footer nav > ul a:not(.add-menu a) .svg-inline--fa {
+  height: 3rem;
+  margin-bottom: 0.5rem;
+}
+footer nav > ul a:not(.add-menu a)::before {
+  content: "";
+  background-color: #cbe9ff;
+  height: 90%;
+  width: auto;
+  aspect-ratio: 1;
+  border-radius: 100%;
+  position: absolute;
+  z-index: -1;
+  transform: scale(0);
+  transform-origin: center;
+  opacity: 0;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+footer nav > ul a:not(.add-menu a).active::before {
+  opacity: 1;
+  transform: scale(1);
+}
+footer nav > ul .add-menu {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+}
+@media (min-width: 768px) {
+  footer nav > ul .add-menu {
+    position: initial;
+    transform: initial;
+  }
+}
+footer nav > ul .add-menu button {
+  background-color: #5b80fa;
+  padding: 1.5rem;
+  border-radius: 3rem;
+  color: white;
+  box-shadow: 0px 3px 6px rgba(91, 128, 250, 0.5);
+  aspect-ratio: 1;
+  transition: transform 0.3s ease-out;
+}
+footer nav > ul .add-menu button > .svg-inline--fa {
+  height: 2.5rem;
+  aspect-ratio: 1;
+}
+footer nav > ul .add-menu ul {
+  position: fixed;
+  transform: translate(-50%, 100vw);
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 2rem 4rem;
+  background-color: #051b33;
+  bottom: 5em;
+  left: 50%;
+  border-radius: 3rem;
+  gap: 1.5em;
+  opacity: 0;
+  box-shadow: 0px 3px 6px rgba(31, 31, 31, 0.2);
+}
+@media (min-width: 768px) {
+  footer nav > ul .add-menu ul {
+    left: initial;
+    right: 5vw;
+    transform: translate(0, 100vw);
+    width: 30vw;
+  }
+}
+footer nav > ul .add-menu ul a {
+  color: white;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+footer nav > ul .add-menu ul a > .svg-inline--fa {
+  height: 1.5em;
+}
+footer nav > ul .add-menu.active button {
+  transform: rotate(45deg);
+}
+footer nav > ul .add-menu.active ul {
+  transform: translate(-50%, 0);
+  opacity: 1;
+}
+@media (min-width: 768px) {
+  footer nav > ul .add-menu.active ul {
+    transform: translate(0, -7vh);
+  }
+}
+footer nav::before {
+  content: "";
+  background: linear-gradient(180deg, rgba(5, 27, 51, 0) 0%, rgba(5, 27, 51, 0.8) 100%);
+  position: fixed;
+  height: 50vh;
+  width: 100vw;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+  transform: translateY(100%);
+  opacity: 0;
+}
+footer nav.active::before {
+  transform: translateY(0);
+  opacity: 1;
+  transition: transform 0.3s ease-out;
+}
+footer p {
+  text-align: center;
+}
+
+#home aside {
+  background-color: white;
+  color: #051b33;
+  padding: 2em;
+  box-shadow: 0px 3px 6px rgba(31, 31, 31, 0.2);
+  border-radius: 1.5em;
+  text-align: center;
+  cursor: pointer;
+  margin: 3em 0;
+  cursor: initial;
+}
+@media (min-width: 1024px) {
+  #home aside {
+    cursor: initial;
+  }
+}
+#home aside h2 {
+  color: #5b80fa;
+  text-align: center;
+}
+@media (min-width: 768px) {
+  #home aside {
+    margin: 0;
+  }
+}
+@media (min-width: 1024px) {
+  #home aside {
+    grid-column: 1 span;
+  }
+}
+#home aside a {
+  margin-top: 1em;
+  display: inline-block;
+  -webkit-text-decoration: revert;
+          text-decoration: revert;
+}
+@media (min-width: 1024px) {
+  #home aside section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+  }
+  #home aside section p strong {
+    display: block;
+  }
+  #home aside section h2 + p {
+    position: relative;
+  }
+  #home aside section h2 + p::after {
+    content: "";
+    height: 2px;
+    width: 30%;
+    background-color: #5b80fa;
+    position: absolute;
+    bottom: -2em;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+#home .rubriques article {
+  background-color: #5b80fa;
+  color: white;
+  padding: 2em;
+  box-shadow: 0px 3px 6px rgba(91, 128, 250, 0.5);
+  border-radius: 1.5em;
+  text-align: center;
+  cursor: pointer;
+  min-width: 0;
+  padding: 2em 0;
+}
+@media (min-width: 1024px) {
+  #home .rubriques article {
+    cursor: initial;
+  }
+}
+#home .rubriques article h2 {
+  color: white;
+  text-align: center;
+}
+#home .rubriques article .svg-inline--fa {
+  height: 2.5em;
+}
+#home .rubriques article h2 {
+  margin-top: 1em;
+}
+
+#tuteurs .wrapper article h2,
+#maisons-retraite .wrapper article h2 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+#tuteurs .wrapper article > span,
+#maisons-retraite .wrapper article > span {
+  grid-column: 2/3;
+  grid-row: 1/3;
+  align-self: center;
+  text-align: center;
+  justify-self: end;
+}
+#tuteurs .wrapper article > span strong,
+#maisons-retraite .wrapper article > span strong {
+  display: block;
+}
+
+#soins .wrapper h3 {
+  grid-column: 1/2;
+  grid-row: 2;
+}
+#soins .wrapper h3 + p {
+  grid-column: 2/3;
+  grid-row: 2;
+  text-transform: capitalize;
+}
+
+#patients-details > article > header,
+#tuteurs-details > article > header,
+#maisons-retraite > article > header {
+  background-color: #5b80fa;
+  color: white;
+  padding: 2em;
+  box-shadow: 0px 3px 6px rgba(31, 31, 31, 0.2);
+  border-radius: 1.5em;
+  text-align: center;
+  cursor: pointer;
+  text-align: left;
+  cursor: initial;
+}
+@media (min-width: 1024px) {
+  #patients-details > article > header,
+  #tuteurs-details > article > header,
+  #maisons-retraite > article > header {
+    cursor: initial;
+  }
+}
+#patients-details > article > header h2,
+#tuteurs-details > article > header h2,
+#maisons-retraite > article > header h2 {
+  color: #5b80fa;
+  text-align: center;
+}
+#patients-details > article > header h1,
+#tuteurs-details > article > header h1,
+#maisons-retraite > article > header h1 {
+  margin-top: 0;
+}
+#patients-details .wrapper h2,
+#tuteurs-details .wrapper h2,
+#maisons-retraite .wrapper h2 {
+  margin: 0 0 0 1em;
+}
+
+#statistiques > aside {
+  background-color: white;
+  color: #051b33;
+  padding: 2em;
+  box-shadow: 0px 3px 6px rgba(31, 31, 31, 0.2);
+  border-radius: 1.5em;
+  text-align: center;
+  cursor: pointer;
+  margin: 3em 0;
+}
+@media (min-width: 1024px) {
+  #statistiques > aside {
+    cursor: initial;
+  }
+}
+#statistiques > aside h2 {
+  color: #5b80fa;
+  text-align: center;
+}
+#statistiques > aside .total-income {
+  background-color: #5b80fa;
+  color: white;
+  padding: 2em;
+  box-shadow: 0px 3px 6px rgba(91, 128, 250, 0.5);
+  border-radius: 1.5em;
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 2em;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+@media (min-width: 1024px) {
+  #statistiques > aside .total-income {
+    cursor: initial;
+  }
+}
+#statistiques > aside .total-income h2 {
+  color: white;
+  text-align: center;
+}
+#statistiques > aside .total-income h2,
+#statistiques > aside .total-income h2 + p {
+  flex-basis: 100%;
+}
+
+@media (min-width: 768px) {
+  #tuteurs .wrapper article > span strong,
+  #maisons-retraite .wrapper article > span strong {
+    display: initial;
+    margin-right: 1rem;
+  }
+  #tuteurs .wrapper article h2,
+  #maisons-retraite .wrapper article h2 {
+    margin-bottom: 1rem;
+  }
+  #patients .wrapper,
+  #tuteurs .wrapper,
+  #maisons-retraite .wrapper,
+  #soins .wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1em;
+  }
+  #patients .wrapper button,
+  #tuteurs .wrapper button,
+  #maisons-retraite .wrapper button,
+  #soins .wrapper button {
+    grid-column: span 2;
+    width: -moz-fit-content;
+    width: fit-content;
+  }
+  #patients .wrapper article,
+  #tuteurs .wrapper article,
+  #maisons-retraite .wrapper article,
+  #soins .wrapper article {
+    margin: 0;
+    display: initial;
+  }
+  #patients-details .wrapper,
+  #tuteurs-details .wrapper,
+  #maisons-retraite-details .wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1em;
+  }
+  #patients-details .wrapper header,
+  #tuteurs-details .wrapper header,
+  #maisons-retraite-details .wrapper header {
+    grid-column: span 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #patients-details .wrapper article,
+  #tuteurs-details .wrapper article,
+  #maisons-retraite-details .wrapper article {
+    margin: 0;
+  }
+}
+@media (min-width: 1024px) {
+  #patients .wrapper,
+  #tuteurs .wrapper,
+  #maisons-retraite .wrapper,
+  #soins .wrapper {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  #patients .wrapper article,
+  #tuteurs .wrapper article,
+  #maisons-retraite .wrapper article,
+  #soins .wrapper article {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+  }
+  #patients .wrapper article h2 + p,
+  #tuteurs .wrapper article h2 + p,
+  #maisons-retraite .wrapper article h2 + p,
+  #soins .wrapper article h2 + p {
+    margin-bottom: auto;
+  }
+  #patients .wrapper article aside,
+  #tuteurs .wrapper article aside,
+  #maisons-retraite .wrapper article aside,
+  #soins .wrapper article aside {
+    text-align: center;
+  }
+  #patients .wrapper button,
+  #tuteurs .wrapper button,
+  #maisons-retraite .wrapper button,
+  #soins .wrapper button {
+    grid-column: span 3;
+  }
+  #patients-details > article > header,
+  #tuteurs-details > article > header,
+  #maisons-retraite-details > article > header,
+  #soins-details > article > header {
+    text-align: center;
+  }
+  #patients-details .wrapper,
+  #tuteurs-details .wrapper,
+  #maisons-retraite-details .wrapper,
+  #soins-details .wrapper {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  #patients-details .wrapper header,
+  #tuteurs-details .wrapper header,
+  #maisons-retraite-details .wrapper header,
+  #soins-details .wrapper header {
+    grid-column: span 3;
+  }
+  #patients-details .wrapper article,
+  #tuteurs-details .wrapper article,
+  #maisons-retraite-details .wrapper article,
+  #soins-details .wrapper article {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+.search-bar {
+  margin: 2em 0;
+}
+.search-bar .search-results {
+  background-color: white;
+  overflow-y: scroll;
+  max-height: 30vh;
+  margin-top: 2em;
+  position: relative;
+  padding-top: 2em;
+  display: block;
+}
+.search-bar .search-results article {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  margin: 2rem;
+  position: relative;
+  cursor: pointer;
+}
+.search-bar .search-results article h3 {
+  color: #5b80fa;
+}
+.search-bar .search-results article p:first-of-type {
+  margin-left: 2rem;
+  margin-right: auto;
+}
+.search-bar .search-results article:not(:last-child)::after {
+  content: "";
+  width: 100%;
+  position: absolute;
+  height: 1px;
+  background-color: #051b33;
+  opacity: 0.3;
+  bottom: -0.75em;
+  left: 0;
+}
+.search-bar .search-results button {
+  position: absolute;
+  background-color: #5b80fa;
+  padding: 1rem;
+  border-radius: 3rem;
+  color: white;
+  aspect-ratio: 1;
+  transition: box-shadow 0.3s ease-out;
+  top: 0.5rem;
+  right: 0.5rem;
+}
+.search-bar .search-results button .svg-inline--fa {
+  height: 1.5rem;
+  aspect-ratio: 1;
+  transition: transform 0.3s ease-out;
+}
+.search-bar .search-results.close {
+  display: none;
+}
+.search-bar form {
+  position: relative;
+}
+.search-bar form input[type=search] {
+  padding: 1.5rem 2rem;
+  border: 1px solid #5b80fa;
+  width: 100%;
+  border-radius: 3rem;
+  color: #051b33;
+  font-style: italic;
+}
+.search-bar form input[type=search]:focus-visible {
+  padding: 1.5rem 2rem;
+  padding-inline: 1.5rem 2rem;
+  outline-offset: 0;
+  outline: 0;
+}
+.search-bar form input[type=search]::-moz-placeholder {
+  font-style: italic;
+}
+.search-bar form input[type=search]::placeholder {
+  font-style: italic;
+}
+.search-bar form input[type=search]::-webkit-search-cancel-button {
+  margin-right: 3em;
+}
+.search-bar form button {
+  position: absolute;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.search-bar form button .svg-inline--fa {
+  color: #5b80fa;
+  height: 2rem;
+}
+
+#home .search-bar {
+  margin: 3em 0 5em 0;
+}
+@media (min-width: 1024px) {
+  #home .search-bar {
+    grid-column: 2 span;
+  }
+}
+
+.care-type {
+  background-color: #5b80fa;
+  padding: 0.5rem 1rem;
+  color: white;
+  font-weight: 500;
+  width: -moz-fit-content;
+  width: fit-content;
+  min-width: 7em;
+  text-align: center;
+  border-radius: 1rem;
+}
+.care-type::first-letter {
+  text-transform: uppercase;
+}
+.care-type.soin {
+  background-color: #051b33;
+}
+
+.status {
+  background-color: #5b80fa;
+  padding: 0.5rem 1rem;
+  color: white;
+  font-weight: 500;
+  width: -moz-fit-content;
+  width: fit-content;
+  min-width: 7em;
+  text-align: center;
+  border-radius: 1rem;
+}
+.status::first-letter {
+  text-transform: uppercase;
+}
+.status.en-attente {
+  background-color: #d3d3d3;
+  color: #051b33;
+}
+.status.acquitte {
+  background-color: #28a745;
+}
+.status.impaye {
+  background-color: #dc3545;
+}
+
+#modal {
+  position: fixed;
+  z-index: 101;
+  display: flex;
+  opacity: 0;
+  inset: 0;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  transform: translateY(-100vh);
+  transition: transform 0.3s ease-out;
+  background: linear-gradient(180deg, rgba(5, 27, 51, 0) 0%, rgba(5, 27, 51, 0.8) 100%);
+}
+#modal div {
+  background-color: white;
+  color: #051b33;
+  padding: 2em;
+  box-shadow: 0px 3px 6px rgba(31, 31, 31, 0.2);
+  border-radius: 1.5em;
+  text-align: center;
+  cursor: pointer;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+  position: relative;
+  cursor: initial;
+}
+@media (min-width: 1024px) {
+  #modal div {
+    cursor: initial;
+  }
+}
+#modal div h2 {
+  color: #5b80fa;
+  text-align: center;
+}
+#modal div p {
+  margin: 0;
+}
+#modal div form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+}
+#modal div form input {
+  padding: 1.5rem 2rem;
+  border: 0;
+  color: #051b33;
+  font-style: normal;
+  font-weight: 600;
+  text-align: center;
+  width: -webkit-fill-available;
+}
+#modal div form button {
+  background-color: #dc3545;
+  color: white;
+  padding: 1em 2em;
+  border-radius: 1.5em;
+  text-align: center;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.1rem;
+  transition: background-color 0.2s ease-in;
+}
+#modal div form button:hover {
+  background-color: #5b80fa;
+  color: white;
+}
+@media (min-width: 1024px) {
+  #modal div form button {
+    padding: 1em;
+  }
+}
+#modal div .close-button {
+  position: absolute;
+  background-color: #5b80fa;
+  padding: 1rem;
+  border-radius: 3rem;
+  color: white;
+  aspect-ratio: 1;
+  transition: box-shadow 0.3s ease-out;
+  top: -1.5rem;
+  right: -1.5rem;
+}
+#modal div .close-button:hover {
+  box-shadow: 0px 3px 6px rgba(91, 128, 250, 0.5);
+}
+#modal div .close-button:hover .svg-inline--fa {
+  transform: rotate(90deg);
+}
+#modal div .close-button .svg-inline--fa {
+  height: 1.5rem;
+  aspect-ratio: 1;
+  transition: transform 0.3s ease-out;
+}
+#modal div .cancel-button {
+  text-decoration: underline;
+  padding: 1.5rem;
+}
+#modal div .error {
+  color: red;
+  font-weight: initial;
+  margin: 0;
+}
+#modal.active {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2em;
+  justify-content: flex-end;
+}
+.actions .update-button {
+  background-color: transparent;
+  color: #5b80fa;
+  padding: 1em 2em;
+  border-radius: 1.5em;
+  text-align: center;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.1rem;
+  transition: background-color 0.2s ease-in;
+  font-size: 1rem;
+  border: 2px solid #5b80fa;
+}
+.actions .update-button:hover {
+  background-color: #5b80fa;
+  color: white;
+}
+@media (min-width: 1024px) {
+  .actions .update-button {
+    padding: 1em;
+  }
+}
+.actions .delete-button {
+  background-color: #dc3545;
+  color: white;
+  padding: 1em 2em;
+  border-radius: 1.5em;
+  text-align: center;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.1rem;
+  transition: background-color 0.2s ease-in;
+  font-size: 1rem;
+}
+.actions .delete-button:hover {
+  background-color: #5b80fa;
+  color: white;
+}
+@media (min-width: 1024px) {
+  .actions .delete-button {
+    padding: 1em;
+  }
+}
+.actions .back-button {
+  margin-right: auto;
+  background-color: #051b33;
+}
+.actions .back-button:hover {
+  background-color: #5b80fa;
+}
+
+.close-button,
+.back-button {
+  background-color: #5b80fa;
+  padding: 1rem;
+  border-radius: 3rem;
+  color: white;
+  aspect-ratio: 1;
+  transition: background-color 0.3s ease-out;
+}
+.close-button .svg-inline--fa,
+.back-button .svg-inline--fa {
+  aspect-ratio: 1;
+}
+.close-button:hover,
+.back-button:hover {
+  background-color: #051b33;
+}
+
+.add-button {
+  background-color: #5b80fa;
+  color: white;
+  padding: 1em 2em;
+  border-radius: 1.5em;
+  text-align: center;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.1rem;
+  transition: background-color 0.2s ease-in;
+  font-size: 1rem;
+  margin: 1em 0;
+}
+.add-button:hover {
+  background-color: #051b33;
+}
+@media (min-width: 1024px) {
+  .add-button {
+    padding: 1em;
+  }
+}
+
+.link-desktop {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .link-desktop {
+    display: inline-block;
+    background-color: #051b33;
+    color: white;
+    padding: 1em 2em;
+    border-radius: 1.5em;
+    text-align: center;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.1rem;
+    transition: background-color 0.2s ease-in;
+    margin-top: 2em;
+  }
+  .link-desktop:hover {
+    background-color: #5b80fa;
+    color: white;
+  }
+}
+@media (min-width: 1024px) and (min-width: 1024px) {
+  .link-desktop {
+    padding: 1em;
+  }
+}
+
+.pagination {
+  display: flex;
+  gap: 1em;
+  margin: 1em;
+  justify-content: center;
+}
+@media (min-width: 768px) {
+  .pagination {
+    grid-column: span 2;
+  }
+}
+@media (min-width: 1024px) {
+  .pagination {
+    grid-column: span 3;
+  }
+}
+.pagination button {
+  background-color: #5b80fa;
+  padding: 1rem;
+  border-radius: 3rem;
+  color: white;
+  aspect-ratio: 1;
+  transition: box-shadow 0.3s ease-out;
+}
+.pagination button .svg-inline--fa {
+  aspect-ratio: 1;
+  height: 1.5rem;
+}
+.pagination button:disabled {
+  cursor: initial;
+  opacity: 0.5;
+}/*# sourceMappingURL=index.css.map */

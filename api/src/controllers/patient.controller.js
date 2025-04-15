@@ -5,12 +5,17 @@ import { validationResult } from "express-validator";
 const getAll = async (req, res, next) => {
 	const offset = req.query.offset || "0";
 	const limit = req.query.limit || "10";
+	const guardian_id = req.guardian_id;
 
 	try {
-		const [[count]] = await Patient.countAll();
+		const [[count]] = await Patient.countAll(guardian_id);
 
 		if (count.total > 0) {
-			const [response] = await Patient.gettAllWithLatestCare(offset, limit);
+			const [response] = await Patient.gettAllWithLatestCare({
+				offset,
+				limit,
+				guardian_id,
+			});
 
 			if (response.length) {
 				return res.status(200).json({
@@ -33,11 +38,15 @@ const getOne = async (req, res, next) => {
 	const { id } = req.params;
 	const offset = req.query.offset || "0";
 	const limit = req.query.limit || "10";
-
-	console.log(offset, limit);
+	const guardian_id = req.guardian_id;
 
 	try {
-		const [[response]] = await Patient.getOne(offset, limit, id);
+		const [[response]] = await Patient.getOne({
+			offset,
+			limit,
+			id,
+			guardian_id,
+		});
 
 		if (!response) {
 			res.status(400).json({

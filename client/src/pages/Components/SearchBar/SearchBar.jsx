@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faXmark } from "@fortawesome/free-solid-svg-icons";
 import SearchCard from "./SearchCard";
+import { useSelector } from "react-redux";
 
 function SearchBar({ entityType }) {
 	const [query, setQuery] = useState("");
@@ -10,6 +11,10 @@ function SearchBar({ entityType }) {
 	const [error, setError] = useState(null);
 	const [loading, setLoading] = useState(false);
 	const [isOpen, setIsOpen] = useState(false);
+
+	const {
+		infos: { role },
+	} = useSelector((state) => state.auth);
 
 	function handleChange(e) {
 		setQuery(e.target.value);
@@ -95,6 +100,10 @@ function SearchBar({ entityType }) {
 		} finally {
 			setLoading(false);
 		}
+	}
+
+	if (role === "guardian") {
+		return null;
 	}
 
 	return (

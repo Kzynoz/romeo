@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import { toggleEditing, toggleModal } from "../features/menuSlice";
 import { setTotalPages, reset } from "../features/paginationSlice";
 
-import RemoveEntity from "./RemoveEntity";
 import UpdateEntity from "./UpdateEntity";
 import GuardianContact from "./Components/GuardianContact";
 import Pagination from "./Components/Pagination";
+import ManageItem from "./Components/ManageItem";
 
 function GuardianDetails() {
 	const { id } = useParams();
@@ -18,6 +17,7 @@ function GuardianDetails() {
 
 	const { isEditingOpen } = useSelector((state) => state.menu);
 	const { page } = useSelector((state) => state.pagination);
+	const { isAdmin } = useSelector((state) => state.auth);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -69,32 +69,16 @@ function GuardianDetails() {
 						<UpdateEntity data={datas.guardian} />
 					) : (
 						<>
-							<div className="actions">
-								<RemoveEntity
-									entity={{
-										id: datas.guardian.details.id,
-										name: `${datas.guardian.details.title} ${datas.guardian.details.firstname} ${datas.guardian.details.lastname}`,
-									}}
-									link={{
-										url: "guardians",
-										title: "le tuteur",
-									}}
-								/>
-								<button
-									onClick={() => {
-										dispatch(toggleEditing(true));
-									}}
-								>
-									Modifier
-								</button>
-								<button
-									onClick={() => {
-										dispatch(toggleModal(true));
-									}}
-								>
-									Supprimer
-								</button>
-							</div>
+							<ManageItem
+								entity={{
+									id: datas.guardian.details.id,
+									name: `${datas.guardian.details.title} ${datas.guardian.details.firstname} ${datas.guardian.details.lastname}`,
+								}}
+								link={{
+									url: "guardians",
+									title: "le tuteur",
+								}}
+							/>
 							<article>
 								<header>
 									<h1>
@@ -112,7 +96,14 @@ function GuardianDetails() {
 								<aside className="wrapper">
 									<header>
 										<h2>Liste de(s) tutelle(s) ({datas.guardianship_count})</h2>
-										<button onClick={"ajouter"}>Ajouter</button>
+										{isAdmin && (
+											<button
+												className="add-button"
+												onClick={() => navigate(`/patients/ajouter`)}
+											>
+												Ajouter
+											</button>
+										)}
 									</header>
 
 									{datas.patients ? (
@@ -131,6 +122,13 @@ function GuardianDetails() {
 															{patient.retirement_home}
 														</p>
 													)}
+
+													<Link
+														className="link-desktop"
+														to={`/patients/${patient.id}`}
+													>
+														Consulter
+													</Link>
 												</article>
 											))}
 

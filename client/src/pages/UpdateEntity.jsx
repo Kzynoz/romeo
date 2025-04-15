@@ -2,18 +2,31 @@ import Form from "./Components/Form.jsx";
 import { formRetirementHome } from "../utils/formStructure/formRetirementHome.js";
 import { formGuardian } from "../utils/formStructure/formGuardian.js";
 import { formCare } from "../utils/formStructure/formCare.js";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 function UpdateEntity({ data }) {
 	const { id, idSoin } = useParams();
+	const navigate = useNavigate();
 	const location = useLocation();
 	const path = location.pathname;
 
 	const [formSetting, setFormSetting] = useState(null);
 	const [formData, setFormData] = useState({});
 	const [isVerifying, setIsVerifying] = useState(false);
+
+	function handleRedirection() {
+		const segments = path.split("/").filter(Boolean);
+
+		if (segments.length === 2) {
+			navigate(`/${segments[0]}`);
+		} else if (segments.length > 2) {
+			navigate(`/${segments[0]}/${segments[1]}`);
+		}
+	}
 
 	useEffect(() => {
 		function handleRoute() {
@@ -83,8 +96,6 @@ function UpdateEntity({ data }) {
 					const date = new Date(data.care.performed_at).toLocaleDateString(
 						"fr-CA"
 					);
-					console.log("raw date", data.care.performed_at);
-					console.log("form update date", date);
 
 					const filtredData = {
 						performed_at: date,
@@ -101,7 +112,6 @@ function UpdateEntity({ data }) {
 			}
 		}
 		handleRoute();
-		console.log(data);
 	}, [path, id, data]);
 
 	if (isVerifying) {
@@ -115,7 +125,18 @@ function UpdateEntity({ data }) {
 			) : (
 				<>
 					<section id="update-form">
-						<h1>Modifier {formSetting.title}</h1>
+						<header>
+							<h1>Modifier {formSetting.title}</h1>
+							<button
+								className="close-button"
+								onClick={() => {
+									handleRedirection();
+								}}
+							>
+								<FontAwesomeIcon icon={faXmark} />
+							</button>
+						</header>
+
 						<Form
 							formStructure={formSetting.form}
 							initialFormData={formData}

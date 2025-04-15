@@ -6,6 +6,7 @@ import { login, logout } from "../features/authSlice";
 function ProtectedRoute() {
 	const dispatch = useDispatch();
 	const { isLogged } = useSelector((state) => state.auth);
+
 	const [isVerifying, setIsVerifying] = useState(true);
 
 	useEffect(() => {
@@ -22,6 +23,7 @@ function ProtectedRoute() {
 				const resJSON = await res.json();
 
 				if (res.ok) {
+					console.log(resJSON.user);
 					dispatch(login(resJSON.user));
 				} else {
 					dispatch(logout());

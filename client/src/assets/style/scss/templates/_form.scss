@@ -1,7 +1,23 @@
 #add-form,
-#update-form {
+#update-form,
+#login {
 	section {
 		margin-top: 2em;
+	}
+
+	header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin: 1em 0;
+
+		h1 {
+			margin-top: 0;
+		}
+	}
+
+	a {
+		text-decoration: underline;
 	}
 
 	form {
@@ -27,7 +43,9 @@
 				flex-direction: column;
 				gap: 1rem;
 
-				input {
+				input,
+				select,
+				textarea {
 					padding: 1.5rem 2rem;
 					border: 1px solid #5b80fa;
 					width: 100%;
@@ -41,9 +59,31 @@
 					}
 				}
 
+				textarea {
+					max-width: 0;
+					width: 100%;
+					min-width: 100%;
+					min-height: 100px;
+				}
+
 				&.error {
 					input {
 						border: 1px solid red;
+					}
+				}
+			}
+
+			label[for="title"] {
+				flex-direction: row;
+				gap: 1em;
+
+				label {
+					align-content: flex-start;
+					flex-wrap: wrap;
+					flex-direction: row;
+
+					input {
+						width: initial;
 					}
 				}
 			}
@@ -85,4 +125,38 @@ button[type="submit"] {
 		text-align: center;
 		flex-basis: 100%;
 	}
+}
+
+#login {
+	display: flex;
+	background-image: url(/src/assets/img/mascotte-romeo.svg);
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 1em;
+
+	label {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		flex-basis: 100%;
+
+		input {
+			padding: 1.5rem 2rem;
+			border: 1px solid #5b80fa;
+			width: 100%;
+			border-radius: 3rem;
+		}
+	}
+
+	& + footer {
+		margin: 0;
+	}
+}
+
+#login form + button {
+	text-decoration: underline;
 }

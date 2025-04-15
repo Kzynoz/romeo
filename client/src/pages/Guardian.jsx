@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import SearchBar from "./Components/SearchBar/SearchBar";
@@ -12,6 +12,7 @@ function Guardian() {
 	const [error, setError] = useState("");
 
 	const { page } = useSelector((state) => state.pagination);
+	const { isAdmin } = useSelector((state) => state.auth);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -55,9 +56,14 @@ function Guardian() {
 			</header>
 			<SearchBar entityType={"guardian"} />
 			<section className="wrapper">
-				<button onClick={() => navigate(`/tuteurs/ajouter`)}>
-					Ajouter un tuteur
-				</button>
+				{isAdmin && (
+					<button
+						className="add-button"
+						onClick={() => navigate(`/tuteurs/ajouter`)}
+					>
+						Ajouter un tuteur
+					</button>
+				)}
 
 				{error && <p>{error}</p>}
 
@@ -83,6 +89,10 @@ function Guardian() {
 										{guardian.guardianship_count}
 									</span>
 								)}
+
+								<Link className="link-desktop" to={`/tuteurs/${guardian.id}`}>
+									Consulter
+								</Link>
 							</article>
 						))}
 

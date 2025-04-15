@@ -12,6 +12,10 @@
 	text-align: center;
 	cursor: pointer;
 
+	@media (min-width: $breakpoint-lg) {
+		cursor: initial;
+	}
+
 	h2 {
 		color: $title-color;
 		text-align: center;
@@ -52,4 +56,18 @@
 	text-transform: uppercase;
 	font-weight: 600;
 	letter-spacing: 0.1rem;
+	transition: background-color 0.2s ease-in;
+
+	&:hover {
+		@if $background == $primary-color {
+			background-color: $secondary-color;
+		} @else {
+			background-color: $primary-color;
+			color: $white;
+		}
+	}
+
+	@media (min-width: $breakpoint-lg) {
+		padding: 1em;
+	}
 }
