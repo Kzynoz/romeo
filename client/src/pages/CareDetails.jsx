@@ -35,7 +35,7 @@ function CareDetails() {
 
 				if (res.ok) {
 					const { response } = await res.json();
-
+					console.log(response);
 					setDatas(response);
 				} else {
 					const { message } = await res.json();
@@ -98,8 +98,10 @@ function CareDetails() {
 
 								<section className="care-details">
 									<h2>
-										Soin -{" "}
-										{new Date(datas.care.performed_at).toLocaleDateString()}
+										{datas.care.type} du
+										<span>
+											{new Date(datas.care.performed_at).toLocaleDateString()}
+										</span>
 									</h2>
 
 									<CareStatus
@@ -115,12 +117,8 @@ function CareDetails() {
 										</p>
 									)}
 
-									{datas.care.invoice.invoice_generated === 1 ? (
+									{datas.care.invoice.invoice_generated === 1 && (
 										<button onClick={"ajouter"}>Voir la facture</button>
-									) : (
-										<button onClick={"ajouter"}>
-											Générer et envoyer la facture
-										</button>
 									)}
 								</section>
 							</article>

@@ -4,23 +4,6 @@ import Customer from "../models/customer.model.js";
 import Guardian from "../models/guardian.model.js";
 import crypto from "crypto";
 
-/* const checkGuardian = async (req, res, next) => {
-	// à voir
-	// à voir
-	try {
-		const [response] = await Guardian.findGuardian();
-
-		if (response) {
-			return res.status(200).json({
-				message: "Le tuteur existe déjà.",
-				response,
-			});
-		}
-	} catch (error) {
-		next(error);
-	}
-}; */
-
 const getAll = async (req, res, next) => {
 	const offset = req.query.offset || "0";
 	const limit = req.query.limit || "10";
@@ -97,6 +80,7 @@ const create = async (req, res, next) => {
 		const [[existingCustomer]] = await Customer.findCustomerGuardian(
 			customer_detail
 		);
+
 		if (existingCustomer) {
 			console.log(existingCustomer);
 			res.status(400).json({ message: "Le tuteur existe déjà." });

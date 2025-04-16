@@ -1,5 +1,7 @@
 import { validationResult } from "express-validator";
 import Care from "../models/care.model.js";
+import generateInvoicePDF from "../utils/generateInvoicePDF.js";
+import pool from "../config/db.js";
 
 const getAll = async (req, res, next) => {
 	const offset = req.query.offset || "0";
@@ -73,8 +75,7 @@ const getBySearch = async (req, res, next) => {
 	}
 };
 
-// tester avec l'autre route (avec l'id du patient passé en param) + REMPLACER PAR UNE TRANSACTION
-const create = async (req, res, next) => {
+/* const create = async (req, res, next) => {
 	const errors = validationResult(req);
 
 	if (!errors.isEmpty()) {
@@ -95,6 +96,8 @@ const create = async (req, res, next) => {
 			return;
 		}
 
+		const url = `facture-${existingCare.title}-${existingCare.firstname}-${existingCare.lastname}-${date}-${id}`;
+
 		const newCare = {
 			performed_at: date,
 			practitioner_id: req.body.practitioner_id,
@@ -105,6 +108,7 @@ const create = async (req, res, next) => {
 			invoice_paid: 0,
 			invoice_send: 0,
 			customer_id: id,
+			invoice_url: url,
 		};
 
 		const [response] = await Care.insert(newCare, id);
@@ -113,9 +117,11 @@ const create = async (req, res, next) => {
 			const [[getInvoice]] = await Care.displayInvoice(response.insertId);
 
 			if (getInvoice) {
+				await generateInvoicePDF(getInvoice);
+
 				return res.status(200).json({
 					message: "Le soin a été ajouté avec succès.",
-					response: getInvoice,
+					response: getInvoice.invoice_url,
 				});
 			}
 		}
@@ -123,6 +129,100 @@ const create = async (req, res, next) => {
 		res.status(500).json({ message: "Erreur lors de l'ajout du soin." });
 	} catch (error) {
 		next(error);
+	}
+}; */
+
+const create = async (req, res, next) => {
+	let connection = null;
+	const errors = validationResult(req);
+
+	if (!errors.isEmpty()) {
+		return res.status(400).json({
+			message: "Erreur lors de la validation du formulaire.",
+			errors: errors.array(),
+		});
+	}
+
+	const id = req.params.id || req.body.patient_id;
+	const date = new Date(req.body.performed_at).toLocaleDateString("fr-CA");
+
+	try {
+		const [[existingCare]] = await Care.findCare(id, date);
+
+		if (existingCare) {
+			res.status(400).json({ message: "Ce soin pour ce patient existe déjà." });
+			return;
+		}
+
+		connection = await pool.getConnection();
+		await connection.beginTransaction();
+
+		const newCare = {
+			performed_at: date,
+			practitioner_id: req.body.practitioner_id,
+			type: req.body.type,
+			complements: req.body.complements || null,
+			price: req.body.price,
+			invoice_paid: 0,
+			invoice_send: 0,
+			customer_id: id,
+		};
+
+		const [response] = await Care.insert(newCare, id);
+
+		if (response.insertId) {
+			const [[getInvoice]] = await Care.displayInvoice(response.insertId);
+
+			if (!getInvoice) {
+				await connection.rollback();
+				return res
+					.status(500)
+					.json({ message: "Erreur lors de l'ajout du soin." });
+			}
+
+			// sanitize
+			const sanitze = (string) =>
+				string
+					.normalize("NFD")
+					.replace(/[\u0300-\u036f]/g, "")
+					.replace(/\s+/g, "-")
+					.toLowerCase();
+
+			const title = sanitze(getInvoice.title);
+			const firstname = sanitze(getInvoice.firstname);
+			const lastname = sanitze(getInvoice.lastname);
+
+			const url = `${title}-${firstname}-${lastname}_${date}_${id}`;
+
+			const [updateCare] = await Care.update({
+				...newCare,
+				id: response.insertId,
+				invoice_url: url,
+			});
+
+			if (updateCare.affectedRows) {
+				const pdf = await generateInvoicePDF({
+					...getInvoice,
+					invoice_url: url,
+				});
+
+				if (pdf) {
+					await connection.commit();
+					return res.status(200).json({
+						message: "Le soin a été ajouté avec succès.",
+						response: response.insertId,
+					});
+				}
+			}
+		}
+
+		await connection.rollback();
+		res.status(500).json({ message: "Erreur lors de l'ajout du soin." });
+	} catch (error) {
+		if (connection) await connection.rollback();
+		next(error);
+	} finally {
+		if (connection) connection.release();
 	}
 };
 
@@ -136,7 +236,6 @@ const update = async (req, res, next) => {
 		});
 	}
 
-	// const careDate = new Date(req.body.performed_at).toISOString().split("T")[0];
 	const careDate = new Date(req.body.performed_at).toLocaleDateString("fr-CA");
 
 	const updatedCare = {
@@ -146,13 +245,27 @@ const update = async (req, res, next) => {
 		complements: req.body.complements || null,
 		price: req.body.price,
 		id: req.body.care_id,
+		invoice_paid: req.body.invoice_paid,
+		invoice_send: req.body.invoice_send,
 	};
 
 	try {
 		const [response] = await Care.update(updatedCare);
 
 		if (response.affectedRows) {
-			return res.status(201).json({ message: "Soin modifié." });
+			const [[getInvoice]] = await Care.displayInvoice(response.insertId);
+
+			const pdf = await generateInvoicePDF(getInvoice);
+
+			if (pdf) {
+				await connection.commit();
+				return res.status(200).json({
+					message: "Le soin a été ajouté avec succès.",
+					response: response.insertId,
+				});
+			}
+
+			res.status(201).json({ message: "Soin modifié." });
 		}
 		return res
 			.status(400)

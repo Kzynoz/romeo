@@ -4,6 +4,9 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import router from "./router/index.routes.js";
 import morgan from "morgan";
+import path from "path";
+
+import authCheck from "./middlewares/authCheck.js";
 
 const PORT = process.env.PORT || 9000;
 const HOST = process.env.DOMAIN || "localhost";
@@ -24,6 +27,10 @@ app.use(
 
 app.use(cookieParser());
 app.use(express.json());
+
+app.use("/public", express.static(path.join(process.cwd(), "public")));
+
+console.log(process.cwd());
 
 // pour le dev
 app.get("/", (req, res) => {

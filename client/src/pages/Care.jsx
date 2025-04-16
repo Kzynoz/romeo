@@ -71,7 +71,7 @@ function Care() {
 								}
 							>
 								<h2>
-									Soin{" "}
+									{data.care.type}
 									<span>
 										{new Date(data.care.performed_at).toLocaleDateString()}
 									</span>

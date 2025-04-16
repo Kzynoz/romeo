@@ -22,6 +22,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "puppeteer": "^24.6.1"
   }
 }

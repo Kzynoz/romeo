@@ -34,6 +34,7 @@ function Form({ formStructure, initialFormData, isUpdated }) {
 				data[field.name] = initialFormData?.[field.name] || "";
 			});
 		});
+		console.log("generated form", data);
 		return data;
 	}
 
@@ -111,8 +112,6 @@ function Form({ formStructure, initialFormData, isUpdated }) {
 		}
 
 		if (path.includes(`/soin/${idSoin}`) || path.includes("/soin/ajouter")) {
-			console.log("coucou mooonstre");
-
 			// validation des champs
 			const formErrors = careValidator(formData);
 			if (Object.keys(formErrors).length > 0) {
@@ -148,7 +147,6 @@ function Form({ formStructure, initialFormData, isUpdated }) {
 			);
 
 			const resBody = await res.json();
-			console.log(resBody);
 
 			if (res.ok) {
 				setMessage({
@@ -158,13 +156,11 @@ function Form({ formStructure, initialFormData, isUpdated }) {
 
 				if (path.includes(`/patients/${id}/soin/ajouter`)) {
 					return setTimeout(() => {
-						navigate(`/patients/${id}`);
+						navigate(`/patients/${id}/soin/${resBody.response}`);
 					}, 600);
 				}
 
 				const url = path.match(/^\/([^\/]+)\/ajouter$/);
-
-				// GÉNÉRATION DE LA FACTURE LORS DE L'AJOOUT D'UN SOIN
 
 				if (url) {
 					setTimeout(() => {

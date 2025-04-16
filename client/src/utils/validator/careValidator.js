@@ -1,5 +1,4 @@
 function validateType(type) {
-	console.log(type);
 	if (!type) return "Le type de soin est obligatoire.";
 	if (
 		type !== "soin pédicure" &&
@@ -12,12 +11,6 @@ function validateType(type) {
 function validatePerformedAt(date) {
 	if (!date) return "La date du soin est obligatoire.";
 	if (isNaN(new Date(date).getTime())) return "La date est invalide.";
-	return null;
-}
-
-function validatePractitioner(practitioner) {
-	if (practitioner === "choisir") return "Veuillez séléctionner le praticien.";
-	if (!practitioner) return "Le praticien est obligatoire.";
 	return null;
 }
 
@@ -39,15 +32,26 @@ function validateComplements(complements) {
 	return null;
 }
 
+function validateInvoicePaid(invoice) {
+	if (!invoice) return "Le status de paiement de la facture est obligatoire.";
+	return null;
+}
+
+function validateInvoiceSend(invoice) {
+	if (!invoice) return "Le status d'envoie de la facture est obligatoire.";
+	return null;
+}
+
 export function careValidator(formData) {
 	const errors = {};
 
 	const validations = [
 		{ field: "type", validate: validateType },
 		{ field: "performed_at", validate: validatePerformedAt },
-		{ field: "practitioner_id", validate: validatePractitioner },
 		{ field: "price", validate: validatePrice },
 		{ field: "complements", validate: validateComplements },
+		{ field: "invoice_paid", validate: validateInvoicePaid },
+		{ field: "invoice_send", validate: validateInvoiceSend },
 	];
 
 	validations.forEach(({ field, validate }) => {

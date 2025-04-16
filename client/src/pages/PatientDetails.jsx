@@ -130,7 +130,7 @@ function PatientDetails() {
 													}
 												>
 													<h3>
-														Soin{" "}
+														{care.type} du
 														<span>
 															{new Date(care.performed_at).toLocaleDateString()}
 														</span>

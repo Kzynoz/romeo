@@ -73,7 +73,9 @@
 				}
 			}
 
-			label[for="title"] {
+			label[for="title"],
+			label[for="invoice_send"],
+			label[for="invoice_paid"] {
 				flex-direction: row;
 				gap: 1em;
 

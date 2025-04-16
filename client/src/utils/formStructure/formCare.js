@@ -26,23 +26,6 @@ export const formCare = {
 				required: true,
 			},
 			{
-				name: "practitioner_id",
-				type: "select",
-				label: "Réalisé par",
-				options: [
-					{
-						value: "choisir",
-						label: "Voir la liste",
-					},
-					{ value: "4", label: "Margot" },
-					{
-						value: "1",
-						label: "Julien",
-					},
-				],
-				required: true,
-			},
-			{
 				name: "price",
 				type: "text",
 				label: "Prix",
@@ -55,6 +38,28 @@ export const formCare = {
 				label: "Informations complémentaires",
 				maxLength: 150,
 				required: false,
+			},
+		],
+		facturation: [
+			{
+				name: "invoice_send",
+				type: "radio",
+				label: "Facture envoyée",
+				options: [
+					{ value: "0", label: "Non" },
+					{ value: "1", label: "Oui" },
+				],
+				required: true,
+			},
+			{
+				name: "invoice_paid",
+				type: "radio",
+				label: "Facture réglée",
+				options: [
+					{ value: "0", label: "Non" },
+					{ value: "1", label: "Oui" },
+				],
+				required: true,
 			},
 		],
 	},

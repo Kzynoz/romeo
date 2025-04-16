@@ -59,15 +59,16 @@ class Patient {
                                     JSON_OBJECT(
                                         'id', sorted_care.id,
                                         'performed_at', sorted_care.performed_at,
+                                        'type', sorted_care.type,
                                         'invoice_paid', sorted_care.invoice_paid,
                                         'invoice_send', sorted_care.invoice_send
                                     )
                                 )
                                 FROM (
-                                    SELECT care.id, care.performed_at, care.invoice_paid, care.invoice_send
+                                    SELECT care.id, care.performed_at, care.invoice_paid, care.invoice_send, care.type
                                     FROM care
                                     WHERE care.customer_id = c.id
-                                    ORDER BY care.invoice_paid = 0 DESC
+                                    ORDER BY (care.invoice_paid = 0 AND care.invoice_send = 1) DESC, care.performed_at DESC
                                     LIMIT ?
                                     OFFSET ?
                                 ) AS sorted_care

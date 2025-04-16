@@ -20,6 +20,7 @@ class Care {
 	static async getAll(offset, limit) {
 		const SELECT_ALL = `SELECT JSON_OBJECT (
                         	'id',care.id,
+                          'type',care.type,
                         	'performed_at',care.performed_at,
                         	'invoice_send', care.invoice_send,
                         	'invoice_paid', care.invoice_paid) AS care,
@@ -45,6 +46,25 @@ class Care {
                         OFFSET ?`;
 
 		return await pool.execute(SELECT_ALL, [limit, offset]);
+	}
+
+	static async displayInvoice(id) {
+		const SELECT_CARE = `SELECT
+                          c.id,
+                          c.title,
+                          c.lastname,
+                          c.firstname,
+                          care.id AS care_id,
+                          care.performed_at,
+                          care.price,
+                          care.type,
+                          care.complements,
+                          care.invoice_url
+                        FROM customer c
+                        LEFT JOIN care ON care.customer_id = c.id
+                        WHERE care.id = ?`;
+
+		return await pool.execute(SELECT_CARE, [id]);
 	}
 
 	static async getOne({ patientId, id, guardian_id }) {
@@ -80,7 +100,8 @@ class Care {
                             'invoice', JSON_OBJECT (
                             	'invoice_generated',care.invoice_generated,
                                 'invoice_paid',care.invoice_paid,
-                                'invoice_send',care.invoice_send
+                                'invoice_send',care.invoice_send,
+                                'invoice_url',care.invoice_url
                             	)
                         ) AS care,
                         p.alias AS practitioner,
@@ -100,55 +121,6 @@ class Care {
 		return await pool.execute(SELECT_CARE, params);
 	}
 
-	static async displayInvoice(id) {
-		const SELECT_CARE = `SELECT
-                          c.id,
-                          c.title,
-                          c.lastname,
-                          c.firstname,
-                          JSON_OBJECT(
-                          	'details', JSON_OBJECT(
-                            	'id', g.id,
-                            	'customer_id', g.customer_id,
-                            	'title', gc.title,
-                                'firstname', gc.firstname,
-                                'lastname', gc.lastname,
-                                'phone', gc.phone,
-                                'email', g.email
-                          		),
-                            'relationship', g.relationship,
-                            'company', g.company,
-                            'address', JSON_OBJECT(
-                            	'street', g.street,
-                                'city', g.city,
-                                'zip_code', g.zip_code
-                                )
-                         ) AS guardian,
-                         JSON_OBJECT(
-                            'id', care.id,
-                            'performed_at', care.performed_at,
-                            'price', care.price,
-                            'type',care.type,
-                            'complements',care.complements,
-                            'invoice', JSON_OBJECT (
-                            	'invoice_generated',care.invoice_generated,
-                                'invoice_paid',care.invoice_paid,
-                                'invoice_send',care.invoice_send
-                            	)
-                        ) AS care,
-                        p.alias AS practitioner,
-                        rh.name AS retirement_home
-                        FROM customer c
-                        LEFT JOIN practitioner p ON c.practitioner_id = p.id
-                        LEFT JOIN guardian g ON c.guardian_id = g.customer_id 
-                        LEFT JOIN customer gc ON c.guardian_id = gc.id
-                        LEFT JOIN care ON care.customer_id = c.id
-                        LEFT JOIN retirement_home rh ON c.retirement_home_id = rh.id
-                        WHERE c.is_patient = 1 AND care.id = ?`;
-
-		return await pool.execute(SELECT_CARE, [id]);
-	}
-
 	static async insert({
 		performed_at,
 		type,
@@ -156,13 +128,12 @@ class Care {
 		price,
 		invoice_paid,
 		invoice_send,
-		invoice_generated,
 		customer_id,
 		practitioner_id,
 	}) {
 		const INSERT_CARE = `INSERT INTO care 
-                         (performed_at,practitioner_id, customer_id,type,complements,price,invoice_paid,invoice_send,invoice_generated) 
-                         VALUES (?,?,?,?,?,?,?,?,?)`;
+                         (performed_at,practitioner_id, customer_id,type,complements,price,invoice_paid,invoice_send) 
+                         VALUES (?,?,?,?,?,?,?,?)`;
 
 		return await pool.execute(INSERT_CARE, [
 			performed_at,
@@ -173,7 +144,6 @@ class Care {
 			price,
 			invoice_paid,
 			invoice_send,
-			invoice_generated,
 		]);
 	}
 
@@ -197,23 +167,45 @@ class Care {
 		complements,
 		price,
 		type,
+		invoice_paid,
+		invoice_send,
+		invoice_url,
 	}) {
 		const UPDATE_CARE = `UPDATE care 
                           SET performed_at = ?, 
                           price = ?, 
                           type = ?, 
                           complements = ?, 
-                          practitioner_id = ?
+                          practitioner_id = ?,
+                          invoice_paid = ?,
+                          invoice_send = ?
+                          ${invoice_url ? ", invoice_url = ?" : ""}
                          WHERE id = ? `;
 
-		return await pool.execute(UPDATE_CARE, [
-			performed_at,
-			price,
-			type,
-			complements,
-			practitioner_id,
-			id,
-		]);
+		const params = invoice_url
+			? [
+					performed_at,
+					price,
+					type,
+					complements,
+					practitioner_id,
+					invoice_paid,
+					invoice_send,
+					invoice_url,
+					id,
+			  ]
+			: [
+					performed_at,
+					price,
+					type,
+					complements,
+					practitioner_id,
+					invoice_paid,
+					invoice_send,
+					id,
+			  ];
+
+		return await pool.execute(UPDATE_CARE, params);
 	}
 
 	// à stocker dans la BDD

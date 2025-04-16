@@ -103,6 +103,8 @@ function UpdateEntity({ data }) {
 						price: data.care.price,
 						type: data.care.type,
 						complements: data.complements || null,
+						invoice_send: data.care.invoice?.invoice_send ? "1" : "0",
+						invoice_paid: data.care.invoice?.invoice_paid ? "1" : "0",
 					};
 
 					setFormData(filtredData);
