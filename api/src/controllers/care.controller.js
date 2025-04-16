@@ -257,6 +257,7 @@ const update = async (req, res, next) => {
 
 			const pdf = await generateInvoicePDF(getInvoice);
 
+			/* A TESTER !!!!!!!!*/ ////
 			if (pdf) {
 				await connection.commit();
 				return res.status(200).json({
