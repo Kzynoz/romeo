@@ -20,7 +20,7 @@ class Care {
 	static async getAll(offset, limit) {
 		const SELECT_ALL = `SELECT JSON_OBJECT (
                         	'id',care.id,
-                          'type',care.type,
+                            'type',care.type,
                         	'performed_at',care.performed_at,
                         	'invoice_send', care.invoice_send,
                         	'invoice_paid', care.invoice_paid) AS care,
@@ -33,12 +33,14 @@ class Care {
                               'firstname', c.firstname,
                               'lastname',c.lastname) AS patient
                         FROM care
-                        LEFT JOIN practitioner p ON care.practitioner_id = p.id
-                        LEFT JOIN customer c ON  care.customer_id = c.id
+                        LEFT JOIN practitioner p 
+                            ON care.practitioner_id = p.id
+                        LEFT JOIN customer c 
+                            ON  care.customer_id = c.id
                         ORDER BY 
                             CASE 
                                 WHEN care.invoice_paid = 0 AND care.invoice_send = 1 THEN 1
-                                WHEN care.invoice_send = 1 THEN 32
+                                WHEN care.invoice_send = 1 THEN 2
                                 ELSE 3
                             END,
                             care.performed_at DESC
@@ -132,8 +134,8 @@ class Care {
 		practitioner_id,
 	}) {
 		const INSERT_CARE = `INSERT INTO care 
-                         (performed_at,practitioner_id, customer_id,type,complements,price,invoice_paid,invoice_send) 
-                         VALUES (?,?,?,?,?,?,?,?)`;
+                         (performed_at, practitioner_id, customer_id, type,complements, price, invoice_paid, invoice_send) 
+                         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
 		return await pool.execute(INSERT_CARE, [
 			performed_at,

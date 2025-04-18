@@ -2,13 +2,12 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import authReducer from "../features/authSlice";
 import menuReducer from "../features/menuSlice";
-import paginationReducer from "../features/paginationSlice";
 
+// Create the Redux store with auth and menu slices
 const store = configureStore({
 	reducer: {
-		auth: authReducer,
-		menu: menuReducer,
-		pagination: paginationReducer,
+		auth: authReducer, // for authentification
+		menu: menuReducer, // for navigation and modal
 	},
 });
 

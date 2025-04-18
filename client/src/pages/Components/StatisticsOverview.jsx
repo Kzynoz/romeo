@@ -1,10 +1,27 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
 import PropTypes from "prop-types";
 
-function StatistiquesOverview({ data, isFull }) {
-	const [datas, setDatas] = useState("");
+import { useFetchData } from "../../hooks/useFetchData";
 
+/**
+ * Statistics Overview component displays the summarized statistics
+ * 
+ * @params {object} data - Statistics data for the year
+ * @params {bool}	isFull - Boolean flag to determine if full statistics should be shown 
+ * 
+ * @returns - Rendered statistics overview or null if data is not available
+ */
+
+function StatisticsOverview({ data, isFull }) {
+	
+	// Custom hook to fetch data from the given API endpoint
+	const { datas } = useFetchData(
+		"/care/count-this-month"
+	);
+
+	// Calculate the total estimated revenue by reducing the data array
 	const totalEstimatedRevenue =
 		data && data.length > 0
 			? data.reduce(
@@ -12,46 +29,30 @@ function StatistiquesOverview({ data, isFull }) {
 					0
 			  )
 			: 0;
-
+			
+	// Calculate the total paid revenue
 	const totalPaidRevenue =
 		data && data.length > 0
 			? data.reduce((total, income) => total + income.total_revenue_paid, 0)
 			: 0;
-
+			
+	// Calculate the total number of care entries
 	const totalCare =
 		data && data.length > 0
 			? data.reduce((total, income) => total + income.total_entries, 0)
 			: 0;
-
+			
+	// Format the current date to display the month and year
 	const date = new Date().toLocaleDateString("fr-FR", {
 		month: "long",
 		year: "numeric",
 	});
-
-	useEffect(() => {
-		async function fetchTotalCare() {
-			try {
-				const res = await fetch(
-					"http://localhost:9000/api/v1/care/count-this-month",
-					{
-						credentials: "include",
-					}
-				);
-				if (res.ok) {
-					const { response } = await res.json();
-					console.log(response);
-					setDatas(response);
-				}
-			} catch (error) {
-				console.error("error", error);
-			}
-		}
-		fetchTotalCare();
-	}, []);
-
+	
+	// Render the statistics overview if 'datas' is available
 	return datas ? (
 		<aside>
-			{data && (
+		
+		{data && (
 				<section className="total-income">
 					<h2>Récapitulatif de {date.split(" ")[1]}</h2>
 					<p>
@@ -74,6 +75,7 @@ function StatistiquesOverview({ data, isFull }) {
 				</p>
 				<p>
 					Soit un CA prévisionnel de:{" "}
+					
 					<strong>
 						{datas.total_revenue_paid && datas.total_revenue_estimated ? (
 							<>
@@ -85,18 +87,22 @@ function StatistiquesOverview({ data, isFull }) {
 					</strong>
 				</p>
 
+				{/* Render a link to view more detailed statistics if 'isFull' is true */}
 				{isFull && (
+				
 					<Link to={`statistiques/${date.split(" ")[1]}`}>
 						Consulter les statistiques
 					</Link>
 				)}
 			</section>
 		</aside>
-	) : null;
+		) : null;
 }
 
-export default StatistiquesOverview;
-
-StatistiquesOverview.propTypes = {
+StatisticsOverview.propTypes = {
 	isFull: PropTypes.bool.isRequired,
+	data: PropTypes.array.isRequired,
 };
+
+export default StatisticsOverview;
+

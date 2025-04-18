@@ -1,3 +1,10 @@
+/**
+ * Configuration object for the Care form.
+ * The API endpoint to which the form data should be submitted (`url`).
+ * The structure of the form fields, grouped into logical sections (`informations` and `facturation`).
+ * This structure can be used to dynamically generate the create or update form
+ */
+
 export const formCare = {
 	url: "care",
 	structure: {

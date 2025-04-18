@@ -2,12 +2,15 @@ import Patient from "../models/patient.model.js";
 import Customer from "../models/customer.model.js";
 import { validationResult } from "express-validator";
 
+
+
 const getAll = async (req, res, next) => {
 	const offset = req.query.offset || "0";
 	const limit = req.query.limit || "10";
 	const guardian_id = req.guardian_id;
 
 	try {
+		// Count patients of guardian
 		const [[count]] = await Patient.countAll(guardian_id);
 
 		if (count.total > 0) {
@@ -64,7 +67,7 @@ const getOne = async (req, res, next) => {
 	}
 };
 
-const create = async (req, res) => {
+const create = async (req, res, next) => {
 	const errors = validationResult(req);
 
 	if (!errors.isEmpty()) {

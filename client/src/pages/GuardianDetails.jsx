@@ -2,73 +2,49 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import { setTotalPages, reset } from "../features/paginationSlice";
-
 import UpdateEntity from "./UpdateEntity";
 import GuardianContact from "./Components/GuardianContact";
 import Pagination from "./Components/Pagination";
 import ManageItem from "./Components/ManageItem";
 
+import useFetchItem from "../hooks/useFetchItem";
+
 function GuardianDetails() {
+	// Extract the guardian ID from the URL parameters
 	const { id } = useParams();
 
-	const [datas, setDatas] = useState(null);
-	const [error, setError] = useState("");
-
+	// Get state values from Redux
 	const { isEditingOpen } = useSelector((state) => state.menu);
-	const { page } = useSelector((state) => state.pagination);
 	const { isAdmin } = useSelector((state) => state.auth);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	useEffect(() => {
-		async function fetchGuardian(page) {
-			const limit = 5;
-			const offset = (page - 1) * limit;
+	// Custom Hook to fetch data for the specific guardian
+	const { datas, error, totalPages, page, setPage, loading } = useFetchItem({
+		url: `/guardians/${id}`,
+		limit: 5,
+		countKey: "guardianship_count",
+		dependencies: [isEditingOpen],
+	});
 
-			try {
-				const res = await fetch(
-					`http://localhost:9000/api/v1/guardians/${id}?limit=${limit}&offset=${offset}`,
-					{
-						credentials: "include",
-					}
-				);
+    if (loading) {
+        return <p>Chargement...</p>
+    }
 
-				if (res.ok) {
-					const { response } = await res.json();
-
-					setDatas(response);
-					if (response.guardianship_count)
-						dispatch(
-							setTotalPages(Math.ceil(response.guardianship_count / limit))
-						);
-				} else {
-					const { message } = await res.json();
-					setError(message);
-				}
-			} catch (error) {
-				console.error("error", error);
-				setError(error.message);
-			}
-		}
-		fetchGuardian(page);
-	}, [isEditingOpen, page]);
-
-	useEffect(() => {
-		dispatch(reset());
-	}, [navigate]);
+    if (error) {
+        return <p>{error}</p>;
+    }
 
 	return (
 		<>
-			{error && <p>{error}</p>}
-
 			{datas && (
 				<>
 					{isEditingOpen ? (
 						<UpdateEntity data={datas.guardian} />
 					) : (
 						<>
+							{/* ManageItem component to display and manage the guardian */}
 							<ManageItem
 								entity={{
 									id: datas.guardian.details.id,
@@ -96,14 +72,6 @@ function GuardianDetails() {
 								<aside className="wrapper">
 									<header>
 										<h2>Liste de(s) tutelle(s) ({datas.guardianship_count})</h2>
-										{isAdmin && (
-											<button
-												className="add-button"
-												onClick={() => navigate(`/patients/ajouter`)}
-											>
-												Ajouter
-											</button>
-										)}
 									</header>
 
 									{datas.patients ? (
@@ -132,7 +100,14 @@ function GuardianDetails() {
 												</article>
 											))}
 
-											{datas.guardianship_count && <Pagination />}
+											{/* Pagination controls for listing the patients */}
+											{datas.guardianship_count && (
+												<Pagination
+													page={page}
+													totalPages={totalPages}
+													onPageChange={(newPage) => setPage(newPage)}
+												/>)
+											}
 										</>
 									) : (
 										<p>Aucune tutelle trouvée</p>

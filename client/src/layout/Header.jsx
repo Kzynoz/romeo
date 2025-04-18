@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faXmark, faPowerOff } from "@fortawesome/free-solid-svg-icons";
@@ -7,44 +8,50 @@ import logo from "../assets/img/logo-romeo.svg";
 
 import { logout } from "../features/authSlice";
 import { toggleMenu } from "../features/menuSlice";
-import { useEffect, useState } from "react";
+
+import { customFetch } from "../service/api.js";
 
 function Header() {
+	// Extract necessary values from Redux store using useSelector
 	const { isLogged } = useSelector((state) => state.auth);
 	const { isMenuOpen } = useSelector((state) => state.menu);
 	const {
 		infos: { role },
 	} = useSelector((state) => state.auth);
+	const [error, setError] = useState(null);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const year = new Date().getFullYear();
-
 	const open = <FontAwesomeIcon icon={faBars} />;
 	const close = <FontAwesomeIcon icon={faXmark} />;
 
+	const year = new Date().getFullYear();
 	const date = new Date().toLocaleDateString("fr-FR", {
 		day: "numeric",
 		month: "short",
 		year: "numeric",
 	});
 
+	// Handle logout: Make an API call to log the user out
 	async function handleLogout() {
-		try {
-			const res = await fetch("http://localhost:9000/api/v1/auth/logout", {
-				method: "POST",
-				credentials: "include",
-			});
+		const options = {
+			method: "POST",
+			credentials: "include",
+		};
 
-			console.log(res);
+		try {
+			// API call to logout endpoint
+			const res = await customFetch("/auth/logout", options);
 
 			if (res.ok) {
 				dispatch(logout());
 				navigate("/");
+			} else {
+				setError("Une erreur est survenue, veuillez réessayer plus tard");
 			}
 		} catch (error) {
-			console.log(error);
+			setError("Une erreur est survenue, veuillez réessayer plus tard");
 		}
 	}
 
@@ -68,8 +75,10 @@ function Header() {
 					/>
 				</NavLink>
 			</div>
+
 			{date && <span className="current-date">{date}</span>}
 
+			{/* Only show the menu if the user is logged in */}
 			{isLogged && (
 				<>
 					<div className={`burger-menu`} onClick={handleClick}>
@@ -117,19 +126,15 @@ function Header() {
 									</li>
 								</>
 							)}
-
-							{/*  À FAIRE							
-							<li>
-								<NavLink to="profil" onClick={handleClick} end>
-									Profil
-								</NavLink>
-							</li> */}
 						</ul>
 
+						{/* Logout action button */}
 						<button onClick={handleLogout}>
 							<FontAwesomeIcon icon={faPowerOff} />
 							<span>Déconnexion</span>
 						</button>
+
+						{error && <p>{error}</p>}
 					</nav>
 				</>
 			)}

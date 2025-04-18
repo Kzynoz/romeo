@@ -1,6 +1,13 @@
 import pool from "../config/db.js";
 
 class Patient {
+  
+/* 📝 Function to find ...
+* ⚙️ @param string title - title of patient ( M. Mme)
+* ⚙️ @param void
+* 
+* 🔙 @return object object containe id
+*/
 	static async findPatient({ title, firstname, lastname }) {
 		const SELECT_PATIENT = `SELECT id 
                             FROM customer 
@@ -12,7 +19,15 @@ class Patient {
 		return await pool.execute(SELECT_PATIENT, [title, firstname, lastname]);
 	}
 
+// SELECT COUNT(customer.id) AS total FROM customer WHERE is_patient = ?
+// SELECT COUNT(customer.id) AS total FROM customer WHERE is_patient = ? AND guardian_id = ?
+
+// si NULL -> 1 si non 2
+
 	static async countAll(guardian_id) {
+	  
+	  const sql = guardian_id ? "AND guardian_id = ?" : "";
+	  
 		const COUNT = `SELECT COUNT(customer.id) AS total 
                          FROM customer
                          WHERE is_patient = 1 ${
@@ -24,17 +39,16 @@ class Patient {
 		return await pool.execute(COUNT, params);
 	}
 
+
 	static async getOne({ offset, limit, id, guardian_id }) {
+
 		const SELECT_PATIENT = `SELECT
-                              c.id,
-                              c.title,
-                              c.lastname,
-                              c.firstname,
-                              JSON_OBJECT(
-                                  'id', rh.id,
-                                  'name', rh.name
-                              ) AS retirement_home,
-                              JSON_OBJECT(
+                                c.id, c.title, c.lastname, c.firstname,
+                                JSON_OBJECT(
+                                    'id', rh.id,
+                                    'name', rh.name
+                                  ) AS retirement_home,
+                                JSON_OBJECT(
                                   'id', gc.id,
                                   'title', gc.title,
                                   'firstname', gc.firstname,
@@ -44,52 +58,52 @@ class Patient {
                                   'email', g.email,
                                   'company', g.company,
                                   'address', 
-                                  CASE 
-                                      WHEN g.street IS NULL AND g.city IS NULL AND g.zip_code IS NULL 
-                                      THEN NULL 
-                                      ELSE JSON_OBJECT(
-                                          'street', g.street,
-                                          'city', g.city,
-                                          'zip_code', g.zip_code
-                                      ) 
+                                CASE 
+                                  WHEN g.street IS NULL AND g.city IS NULL AND g.zip_code IS NULL 
+                                  THEN NULL 
+                                  ELSE JSON_OBJECT(
+                                    'street', g.street,
+                                    'city', g.city,
+                                    'zip_code', g.zip_code
+                                  ) 
                                   END
-                              ) AS guardian,
-                            (
-                                SELECT JSON_ARRAYAGG(
+                                ) AS guardian,
+                                (
+                                  SELECT JSON_ARRAYAGG(
                                     JSON_OBJECT(
-                                        'id', sorted_care.id,
-                                        'performed_at', sorted_care.performed_at,
-                                        'type', sorted_care.type,
-                                        'invoice_paid', sorted_care.invoice_paid,
-                                        'invoice_send', sorted_care.invoice_send
+                                      'id', care.id,
+                                      'performed_at', care.performed_at,
+                                      'type', care.type,
+                                      'invoice_paid', care.invoice_paid,
+                                      'invoice_send', care.invoice_send
                                     )
-                                )
-                                FROM (
-                                    SELECT care.id, care.performed_at, care.invoice_paid, care.invoice_send, care.type
+                                  )
+                                  FROM (
+                                    SELECT id, performed_at, invoice_paid, invoice_send, type
                                     FROM care
-                                    WHERE care.customer_id = c.id
-                                    ORDER BY (care.invoice_paid = 0 AND care.invoice_send = 1) DESC, care.performed_at DESC
+                                    WHERE care.customer_id = ?
+                                    ORDER BY (invoice_paid = 0 AND invoice_send = 1) DESC, performed_at DESC
                                     LIMIT ?
                                     OFFSET ?
-                                ) AS sorted_care
-                            ) AS all_cares,
-                            (
-                              SELECT COUNT(care.id)
-                              FROM care
-                              WHERE care.customer_id = c.id
-                            ) AS care_count
-                            FROM customer c
-                            LEFT JOIN guardian g ON c.guardian_id = g.customer_id 
-                            LEFT JOIN retirement_home rh ON c.retirement_home_id = rh.id
-                            LEFT JOIN customer gc ON c.guardian_id = gc.id
-                            WHERE c.is_patient = 1 
-                            AND c.id = ?
-                            ${guardian_id ? "AND c.guardian_id = ?" : ""};`;
+                                  ) AS care
+                                ) AS all_cares,
+                                (
+                                  SELECT COUNT(id)
+                                  FROM care
+                                  WHERE customer_id = ?
+                                ) AS care_count
+                                FROM customer c
+                                LEFT JOIN guardian g ON c.guardian_id = g.customer_id 
+                                LEFT JOIN retirement_home rh ON c.retirement_home_id = rh.id
+                                LEFT JOIN customer gc ON c.guardian_id = gc.id
+                                WHERE c.is_patient = 1
+                                AND c.id = ?
+                                ${guardian_id ? "AND c.guardian_id = ?" : ""};`;
 
-		const params = guardian_id
-			? [limit, offset, id, guardian_id]
-			: [limit, offset, id];
-
+    const params = guardian_id
+      ? [id, limit, offset, id, id, guardian_id]
+      : [id, limit, offset, id, id];
+		
 		return await pool.execute(SELECT_PATIENT, params);
 	}
 
@@ -146,8 +160,8 @@ class Patient {
 		retirement_home_id,
 	}) {
 		const INSERT_PATIENT = `INSERT INTO customer 
-                            (title,firstname,lastname,is_patient,guardian_id,retirement_home_id) 
-                            VALUES (?,?,?,?,?,?)`;
+                            (title, firstname, lastname, is_patient, guardian_id, retirement_home_id) 
+                            VALUES (?, ?, ?, ?, ?, ?)`;
 
 		return await pool.execute(INSERT_PATIENT, [
 			title,

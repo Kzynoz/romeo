@@ -15,7 +15,8 @@
     "nodemon": "^3.1.9"
   },
   "scripts": {
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "dev_3wa": "NODE_ENV=3wa_cloud nodemon src/server.js"
   },
   "keywords": [],
   "author": "",

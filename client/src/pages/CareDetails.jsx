@@ -7,56 +7,42 @@ import GuardianContact from "./Components/GuardianContact";
 import UpdateEntity from "./UpdateEntity";
 
 import ManageItem from "./Components/ManageItem";
+import useFetchItem from "../hooks/useFetchItem";
 
 function CareDetails() {
+	// Get parameters from the URL
 	const { id, idSoin } = useParams();
-
-	const [datas, setDatas] = useState(null);
-	const [error, setError] = useState("");
-
+	
 	const { isEditingOpen } = useSelector((state) => state.menu);
 	const {
 		isAdmin,
 		infos: { role, id: guardianId },
 	} = useSelector((state) => state.auth);
 
-	useEffect(() => {
-		async function fetchCare() {
-			let URL = `http://localhost:9000/api/v1/patients/${id}/care/${idSoin}`;
+	// Custom Hook to fetch care details using the patient and care IDs
+	const { datas, error, loading } = useFetchItem({
+		url: `/patients/${id}/care/${idSoin}`,
+		dependencies: [isEditingOpen],
+		guardian: {role,id},
+	});
+	
+    if (loading) {
+        return <p>Chargement...</p>
+    }
 
-			if (role === "guardian") {
-				URL += `?guardian_id=${guardianId}`;
-			}
-
-			try {
-				const res = await fetch(URL, {
-					credentials: "include",
-				});
-
-				if (res.ok) {
-					const { response } = await res.json();
-					console.log(response);
-					setDatas(response);
-				} else {
-					const { message } = await res.json();
-					setError(message);
-				}
-			} catch (error) {
-				console.error("error", error);
-				setError(error);
-			}
-		}
-		fetchCare();
-	}, [isEditingOpen]);
+    if (error) {
+        return <p>{error}</p>;
+    }
 
 	return (
 		<>
-			{error && <p>{error}</p>}
-
 			{datas && (
 				<>
+					{/* If the edit mode is open and the user is an admin, show the UpdateEntity component */}
 					{isEditingOpen && isAdmin ? (
+						
 						<UpdateEntity data={datas} />
+						
 					) : (
 						<>
 							<ManageItem
@@ -72,6 +58,7 @@ function CareDetails() {
 									title: "le soin",
 								}}
 							/>
+							
 							<article>
 								<header>
 									<h1>
@@ -91,7 +78,8 @@ function CareDetails() {
 										</address>
 									)}
 								</header>
-
+								
+								{/* If the patient has a guardian and the current user's role is not "guardian", show guardian contact details */}
 								{datas.guardian && role !== "guardian" && (
 									<GuardianContact datas={datas.guardian} isFull={true} />
 								)}
@@ -116,7 +104,8 @@ function CareDetails() {
 											<strong>Complements :</strong> {datas.care.complements}
 										</p>
 									)}
-
+									
+									{/* If an invoice has been generated, show a button to view the invoice */}
 									{datas.care.invoice.invoice_generated === 1 && (
 										<button onClick={"ajouter"}>Voir la facture</button>
 									)}

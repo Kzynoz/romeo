@@ -3,46 +3,50 @@ import pool from "../config/db.js";
 class Guardian {
 	static async getOne({ offset, limit, id }) {
 		const SELECT_GUARDIAN = `SELECT 
-    JSON_OBJECT(
-        'details', JSON_OBJECT(
-            'id', g.customer_id,
-            'title', gc.title,
-            'firstname', gc.firstname,
-            'lastname', gc.lastname,
-            'phone', gc.phone,
-            'email', g.email
-        ),
-        'relationship', g.relationship,
-        'company', g.company,
-        'address', CASE
-            WHEN g.street IS NULL OR g.city IS NULL OR g.zip_code IS NULL THEN NULL
-            ELSE JSON_OBJECT(
-                'street', g.street,
-                'city', g.city,
-                'zip_code', g.zip_code
-            )
-        END
-    ) AS guardian,
-    (SELECT COUNT(customer.id) FROM customer WHERE guardian_id = g.customer_id) AS guardianship_count,
-    (
-        SELECT JSON_ARRAYAGG(
-            JSON_OBJECT(
-                'id', c.id,
-                'title', c.title,
-                'firstname', c.firstname,
-                'lastname', c.lastname,
-                'retirement_home', rh.name
-            )
-        )
-        FROM customer c
-        LEFT JOIN retirement_home rh ON c.retirement_home_id = rh.id
-        WHERE c.guardian_id = g.customer_id
-        ORDER BY c.id ASC
-        LIMIT ? OFFSET ?
-    ) AS patients
-FROM guardian g
-JOIN customer gc ON g.customer_id = gc.id
-WHERE g.customer_id = ?`;
+                                    JSON_OBJECT(
+                                        'details', JSON_OBJECT(
+                                            'id', g.customer_id,
+                                            'title', gc.title,
+                                            'firstname', gc.firstname,
+                                            'lastname', gc.lastname,
+                                            'phone', gc.phone,
+                                            'email', g.email
+                                        ),
+                                        'relationship', g.relationship,
+                                        'company', g.company,
+                                        'address', CASE
+                                            WHEN g.street IS NULL OR g.city IS NULL OR g.zip_code IS NULL THEN JSON_OBJECT()
+                                            ELSE JSON_OBJECT(
+                                                'street', g.street,
+                                                'city', g.city,
+                                                'zip_code', g.zip_code
+                                            )
+                                        END
+                                    ) AS guardian,
+                                    ( SELECT COUNT(customer.id) 
+                                       FROM customer 
+                                       WHERE guardian_id = g.customer_id
+                                    ) AS guardianship_count,
+                                    (
+                                        SELECT JSON_ARRAYAGG(
+                                            JSON_OBJECT(
+                                                'id', c.id,
+                                                'title', c.title,
+                                                'firstname', c.firstname,
+                                                'lastname', c.lastname,
+                                                'retirement_home', rh.name
+                                            )
+                                        )
+                                        FROM customer c
+                                        LEFT JOIN retirement_home rh ON c.retirement_home_id = rh.id
+                                        WHERE c.guardian_id = g.customer_id
+                                        ORDER BY c.id ASC
+                                        LIMIT ? 
+                                        OFFSET ?
+                                    ) AS patients
+                                FROM guardian g
+                                JOIN customer gc ON g.customer_id = gc.id
+                                WHERE g.customer_id = ?`;
 
 		return await pool.execute(SELECT_GUARDIAN, [limit, offset, id]);
 	}

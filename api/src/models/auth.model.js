@@ -2,16 +2,12 @@ import pool from "../config/db.js";
 
 class Auth {
 	static async findPractitioner(email) {
-		const SELECT_PRACTITIONER =
-			"SELECT id, alias, email, password, is_admin FROM practitioner WHERE email = ?";
-
+		const SELECT_PRACTITIONER = "SELECT id, alias, email, password, is_admin FROM practitioner WHERE email = ?";
 		return await pool.execute(SELECT_PRACTITIONER, [email]);
 	}
 
 	static async createPractitioner({ alias, email, password }) {
-		const INSERT_PRACTITIONER =
-			"INSERT INTO practitioner (alias,email,password) VALUES (?,?,?)";
-
+		const INSERT_PRACTITIONER = "INSERT INTO practitioner (alias, email, password) VALUES (?, ?, ?)";
 		return await pool.execute(INSERT_PRACTITIONER, [alias, email, password]);
 	}
 
@@ -29,10 +25,7 @@ class Auth {
 	}
 
 	static async updateGuardian({ id, email, password }) {
-		const UPDATE_GUARDIAN = `UPDATE guardian SET email = ?, 
-                              password = ?
-                              WHERE g.id = ?`;
-
+		const UPDATE_GUARDIAN = `UPDATE guardian SET email = ?, password = ? WHERE g.id = ?`; // Tester si on met un email déjà existant
 		return await pool.execute(UPDATE_GUARDIAN, [email, password, id]);
 	}
 
@@ -54,7 +47,7 @@ class Auth {
 	}
 
 	static async deleteToken(connection, { id, token }) {
-		console.log(id, token);
+
 		const DELETE_TOKEN = `UPDATE guardian
                           SET token = NULL
                           WHERE customer_id = ? AND token = ?`;

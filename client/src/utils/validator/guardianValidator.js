@@ -1,3 +1,15 @@
+/**
+ * Validator functions for the Guardian Form.
+ * 
+ * Each individual field has a specific validation function checking for:
+ *  - Presence (required fields)
+ *  - Maximum length constraints
+ *  - Specific format requirements
+ * 
+ * The main `guardianValidator` function aggregates all field validations,
+ * and returns an object containing any validation errors found.
+ */
+
 function validateFirstname(firstname) {
 	if (!firstname) return "Le prénom est obligatoire.";
 	if (firstname.length > 50)
@@ -85,6 +97,7 @@ export function guardianValidator(formData) {
 
 	validations.forEach(({ field, validate }) => {
 		const error = validate(formData[field]);
+		
 		if (error) {
 			errors[field] = error;
 		}

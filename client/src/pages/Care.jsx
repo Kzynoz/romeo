@@ -1,51 +1,30 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 
 import CareStatus from "./Components/CareStatus";
 import SearchBar from "./Components/SearchBar/SearchBar";
 import Pagination from "./Components/Pagination";
 
-import { setTotalPages, reset } from "../features/paginationSlice";
+import { useFetchData } from "../hooks/useFetchData";
 
 function Care() {
-	const [datas, setDatas] = useState([]);
-	const [error, setError] = useState("");
-
-	const { page } = useSelector((state) => state.pagination);
-
-	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	useEffect(() => {
-		async function fetchPatients(page) {
-			const limit = 10;
-			const offset = (page - 1) * limit;
+	// Custom hook for fetching care data with pagination
+	const { datas, error, totalPages, page, setPage, loading } = useFetchData(
+		"/care",
+		10
+	);
 
-			try {
-				const res = await fetch(
-					`http://localhost:9000/api/v1/care?limit=${limit}&offset=${offset}`,
-					{
-						credentials: "include",
-					}
-				);
+	// Handle loading state
+	if (loading) {
+		return <p>Chargement...</p>;
+	}
 
-				if (res.ok) {
-					const { response, totalPages } = await res.json();
-					setDatas(response);
-					dispatch(setTotalPages(totalPages));
-				}
-			} catch (error) {
-				console.error("error", error);
-				setError(error);
-			}
-		}
-		fetchPatients(page);
-	}, [page]);
-
-	useEffect(() => {
-		dispatch(reset());
-	}, [navigate]);
+	// Handle error state
+	if (error) {
+		return <p>{error}</p>;
+	}
 
 	return (
 		<>
@@ -53,15 +32,12 @@ function Care() {
 				<h1>Mes Soins</h1>
 				<p>Ici tu retrouveras la liste de tous tes soins effectués</p>
 			</header>
-
+			
+			{/* Search bar component for searching care */}
 			<SearchBar entityType={"care"} />
 
 			<section className="wrapper">
-				{error && <p>{error}</p>}
-
-				{!datas.length ? (
-					<p>Chargement…</p>
-				) : (
+				{datas.length && (
 					<>
 						{datas.map((data) => (
 							<article
@@ -98,7 +74,11 @@ function Care() {
 							</article>
 						))}
 
-						<Pagination />
+						<Pagination
+							page={page}
+							totalPages={totalPages}
+							onPageChange={(newPage) => setPage(newPage)}
+						/>
 					</>
 				)}
 			</section>

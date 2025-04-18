@@ -1,64 +1,35 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import CareStatus from "./Components/CareStatus";
 import SearchBar from "./Components/SearchBar/SearchBar";
 import Pagination from "./Components/Pagination";
 
-import { setTotalPages, reset } from "../features/paginationSlice";
+import { useFetchData } from "../hooks/useFetchData";
 
 function Patient() {
-	const [datas, setDatas] = useState([]);
-	const [error, setError] = useState("");
-	const [message, setMessage] = useState("");
-
-	const { page } = useSelector((state) => state.pagination);
 	const {
 		isAdmin,
 		infos: { role, id },
 	} = useSelector((state) => state.auth);
 
-	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	useEffect(() => {
-		async function fetchPatients(page) {
-			const limit = 10;
-			const offset = (page - 1) * limit;
+	// Custom hook to fetch data for patients
+	const { datas, error, totalPages, page, setPage, loading } = useFetchData(
+		"/patients",
+		10,
+		{ role, id }
+	);
 
-			let URL = `http://localhost:9000/api/v1/patients?limit=${limit}&offset=${offset}`;
+	if (loading) {
+		return <p>Chargement...</p>;
+	}
 
-			if (role === "guardian") {
-				URL += `&guardian_id=${id}`;
-			}
-
-			try {
-				const res = await fetch(URL, {
-					credentials: "include",
-				});
-
-				if (res.ok) {
-					const { response, totalPages } = await res.json();
-
-					console.log(totalPages);
-					setDatas(response);
-					dispatch(setTotalPages(totalPages));
-				} else {
-					const { message } = await res.json();
-					setMessage(message);
-				}
-			} catch (error) {
-				const { message } = await error.json();
-				setError(message);
-			}
-		}
-		fetchPatients(page);
-	}, [page]);
-
-	useEffect(() => {
-		dispatch(reset());
-	}, [navigate]);
+	if (error) {
+		return <p>{error}</p>;
+	}
 
 	return (
 		<>
@@ -79,11 +50,7 @@ function Patient() {
 					</button>
 				)}
 
-				{error && <p>{error}</p>}
-
-				{!datas.length ? (
-					<>{message && <p>{message}</p>}</>
-				) : (
+				{datas.length && (
 					<>
 						{datas.map((patient) => (
 							<article
@@ -100,6 +67,7 @@ function Patient() {
 										<span className="society">{patient.guardian.company}</span>
 									)}
 								</p>
+
 								{patient.latest_care && (
 									<aside>
 										<p>
@@ -120,7 +88,12 @@ function Patient() {
 								</Link>
 							</article>
 						))}
-						<Pagination />
+
+						<Pagination
+							page={page}
+							totalPages={totalPages}
+							onPageChange={(newPage) => setPage(newPage)}
+						/>
 					</>
 				)}
 			</section>

@@ -1,35 +1,24 @@
 import { useEffect, useState } from "react";
-import StatistiquesOverview from "./Components/StatistiquesOverview";
 import { useParams } from "react-router-dom";
 
+import StatisticsOverview from "./Components/StatisticsOverview";
+
+import { useFetchData } from "../hooks/useFetchData";
+
 function Statistics() {
+	// Get the year parameter from the URL
 	const { year } = useParams();
 
-	const [datas, setDatas] = useState([]);
-	const [error, setError] = useState("");
+	// Use custom hook to fetch data for the selected year
+	const { datas, error, loading } = useFetchData(`/care/count-by-year/${year}`);
 
-	useEffect(() => {
-		async function fetchPatients() {
-			try {
-				const res = await fetch(
-					`http://localhost:9000/api/v1/care/count-by-year/${year}`,
-					{
-						credentials: "include",
-					}
-				);
+	if (loading) {
+		return <p>Chargement...</p>;
+	}
 
-				if (res.ok) {
-					const { response } = await res.json();
-					console.log(response);
-					setDatas(response);
-				}
-			} catch (error) {
-				console.error("error", error);
-				setError(error);
-			}
-		}
-		fetchPatients();
-	}, []);
+	if (error) {
+		return <p>{error}</p>;
+	}
 
 	return (
 		<>
@@ -37,10 +26,12 @@ function Statistics() {
 				<h1>Statistiques</h1>
 				<p>Voici les statistiques de l'année en cours</p>
 			</header>
-			{error && <p>{error}</p>}
+
 			{datas && datas.months && datas.year == year ? (
 				<>
-					<StatistiquesOverview isFull={false} data={datas.months} />
+					{/* Render the overview statistics */}
+					<StatisticsOverview isFull={false} data={datas.months} />
+
 					<section className="wrapper">
 						{datas.months.map((data) => (
 							<article key={data.month}>

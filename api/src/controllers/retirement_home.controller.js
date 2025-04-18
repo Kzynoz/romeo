@@ -125,9 +125,13 @@ const update = async (req, res, next) => {
 
 const getOne = async (req, res, next) => {
 	const { id } = req.params;
-
+	const offset = req.query.offset || "0";
+	const limit = req.query.limit || "10";
+	
+	console.log("hiit");
+	
 	try {
-		const [[response]] = await RetirementHome.getOne(id);
+		const [[response]] = await RetirementHome.getOne({id,offset,limit});
 
 		if (response) {
 			return res.status(200).json({

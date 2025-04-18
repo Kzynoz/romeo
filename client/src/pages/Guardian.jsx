@@ -1,52 +1,32 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import SearchBar from "./Components/SearchBar/SearchBar";
 import Pagination from "./Components/Pagination";
 
-import { setTotalPages, reset } from "../features/paginationSlice";
+import { useFetchData } from "../hooks/useFetchData";
 
 function Guardian() {
-	const [datas, setDatas] = useState([]);
-	const [error, setError] = useState("");
-
-	const { page } = useSelector((state) => state.pagination);
+	// Get the 'isAdmin' flag from the Redux store (to check if the user is an admin)
 	const { isAdmin } = useSelector((state) => state.auth);
 
-	const dispatch = useDispatch();
+	// Hook to navigate programmatically to different routes
 	const navigate = useNavigate();
+	
+	// Custom Hook to fetch the guardians' data (using a URL and a page size of 10)
+	const { datas, error, totalPages, page, setPage, loading } = useFetchData(
+		"/guardians",
+		10,
+	);
+	
+	if (loading) {
+        return <p>Chargement...</p>
+    }
 
-	useEffect(() => {
-		async function fetchGuardians(page) {
-			const limit = 10;
-			const offset = (page - 1) * limit;
-
-			try {
-				const res = await fetch(
-					`http://localhost:9000/api/v1/guardians?limit=${limit}&offset=${offset}`,
-					{
-						credentials: "include",
-					}
-				);
-
-				if (res.ok) {
-					const { response, totalPages } = await res.json();
-
-					setDatas(response);
-					dispatch(setTotalPages(totalPages));
-				}
-			} catch (error) {
-				console.error("error", error);
-				setError(error);
-			}
-		}
-		fetchGuardians(page);
-	}, [page]);
-
-	useEffect(() => {
-		dispatch(reset());
-	}, [navigate]);
+    if (error) {
+        return <p>{error}</p>;
+    }
 
 	return (
 		<>
@@ -54,8 +34,11 @@ function Guardian() {
 				<h1>Les tuteurs</h1>
 				<p>Ici tu retrouveras la liste de tous les tuteurs</p>
 			</header>
+			
 			<SearchBar entityType={"guardian"} />
+			
 			<section className="wrapper">
+			
 				{isAdmin && (
 					<button
 						className="add-button"
@@ -64,14 +47,11 @@ function Guardian() {
 						Ajouter un tuteur
 					</button>
 				)}
-
-				{error && <p>{error}</p>}
-
-				{!datas.length ? (
-					<p>Chargement…</p>
-				) : (
+				
+				{datas.length && (
 					<>
 						{datas.map((guardian) => (
+						
 							<article
 								key={guardian.id}
 								onClick={() => navigate(`/tuteurs/${guardian.id}`)}
@@ -93,10 +73,15 @@ function Guardian() {
 								<Link className="link-desktop" to={`/tuteurs/${guardian.id}`}>
 									Consulter
 								</Link>
+								
 							</article>
 						))}
 
-						<Pagination />
+						<Pagination
+							page={page}
+							totalPages={totalPages}
+							onPageChange={(newPage) => setPage(newPage)}
+						/>
 					</>
 				)}
 			</section>

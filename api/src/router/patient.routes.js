@@ -20,8 +20,11 @@ const router = Router();
 router.post("/", validatorCreatePatient, create);
 
 router.get("/", isGuardian, getAll);
+
 router.get("/search", getBySearch);
+
 router.get("/:patientId/care/:id", isGuardian, getOneCare);
+
 router.get("/:id", isGuardian, getOne);
 
 router.patch("/:id", validatorUpdatePatient, update);

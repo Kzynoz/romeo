@@ -1,15 +1,31 @@
+import { useEffect, useState } from "react";
+
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+
+import PropTypes from "prop-types";
+
 import Form from "./Components/Form.jsx";
 import { formRetirementHome } from "../utils/formStructure/formRetirementHome.js";
 import { formGuardian } from "../utils/formStructure/formGuardian.js";
 import { formCare } from "../utils/formStructure/formCare.js";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 
+/**
+ * The UpdateEntity component allows updating different entities (retirement homes, guardians, or care)
+ * based on the URL and ID. It dynamically renders the appropriate form structure based on the type of entity
+ *
+ * @param {object} data - The entity data to be updated
+ * 
+ * @returns - The form for updating the entity or an error message if the data is unavailable
+ */
+ 
 function UpdateEntity({ data }) {
+	
 	const { id, idSoin } = useParams();
+	
 	const navigate = useNavigate();
 	const location = useLocation();
 	const path = location.pathname;
@@ -17,20 +33,29 @@ function UpdateEntity({ data }) {
 	const [formSetting, setFormSetting] = useState(null);
 	const [formData, setFormData] = useState({});
 	const [isVerifying, setIsVerifying] = useState(false);
-
+	
+	// Redirection based on the URL
 	function handleRedirection() {
+		
 		const segments = path.split("/").filter(Boolean);
 
 		if (segments.length === 2) {
+			
 			navigate(`/${segments[0]}`);
 		} else if (segments.length > 2) {
+			
 			navigate(`/${segments[0]}/${segments[1]}`);
 		}
 	}
 
+	// Set up the entity to be updated based on the URL
 	useEffect(() => {
+		
 		function handleRoute() {
+			
+			// Updating Retirement Homes
 			if (path === `/maisons-retraite/${id}`) {
+				
 				setFormSetting({
 					title: "l'établissement",
 					form: {
@@ -40,6 +65,7 @@ function UpdateEntity({ data }) {
 				});
 
 				if (data.name && data.street && data.city && data.zip_code) {
+					
 					const filtredData = {
 						name: data.name,
 						contact: data.contact || null,
@@ -50,11 +76,14 @@ function UpdateEntity({ data }) {
 
 					setFormData(filtredData);
 				} else {
+					
 					setIsVerifying(true);
 				}
 			}
 
+			// Updating Guardians
 			if (path === `/tuteurs/${id}`) {
+				
 				setFormSetting({
 					title: "le tuteur",
 					form: {
@@ -64,6 +93,7 @@ function UpdateEntity({ data }) {
 				});
 
 				if (data.details) {
+					
 					const filtredData = {
 						title: data.details.title,
 						firstname: data.details.firstname,
@@ -79,11 +109,14 @@ function UpdateEntity({ data }) {
 
 					setFormData(filtredData);
 				} else {
+					
 					setIsVerifying(true);
 				}
 			}
 
+			// Updating Care
 			if (path === `/patients/${id}/soin/${idSoin}`) {
+				
 				setFormSetting({
 					title: "le soin",
 					form: {
@@ -93,6 +126,7 @@ function UpdateEntity({ data }) {
 				});
 
 				if (data.care) {
+					
 					const date = new Date(data.care.performed_at).toLocaleDateString(
 						"fr-CA"
 					);
@@ -109,14 +143,19 @@ function UpdateEntity({ data }) {
 
 					setFormData(filtredData);
 				} else {
+					
 					setIsVerifying(true);
 				}
 			}
 		}
+		
 		handleRoute();
+		
 	}, [path, id, data]);
 
+	// If there's an error in creating my data to send to the update form, show an error
 	if (isVerifying) {
+		
 		return <p>Une erreur est survenue. Veuillez réessayer plus tard.</p>;
 	}
 
@@ -124,6 +163,7 @@ function UpdateEntity({ data }) {
 		<>
 			{!formSetting ? (
 				<p>Une erreur est survenue. Veuillez réessayer</p>
+				
 			) : (
 				<>
 					<section id="update-form">
@@ -144,11 +184,17 @@ function UpdateEntity({ data }) {
 							initialFormData={formData}
 							isUpdated={true}
 						/>
+						
 					</section>
 				</>
 			)}
 		</>
 	);
 }
+
+UpdateEntity.propTypes = {
+	data: PropTypes.object.isRequired,
+};
+
 
 export default UpdateEntity;

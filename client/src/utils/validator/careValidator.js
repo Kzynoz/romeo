@@ -1,3 +1,16 @@
+/**
+ * Validator functions for the Care Form.
+ * 
+ * Each individual field has a specific validation function checking for:
+ *  - Presence (required fields)
+ *  - Maximum length constraints
+ *  - Specific format requirements
+ * 
+ * The main `careValidator` function aggregates all field validations,
+ * and returns an object containing any validation errors found.
+ */
+
+
 function validateType(type) {
 	if (!type) return "Le type de soin est obligatoire.";
 	if (
@@ -56,6 +69,7 @@ export function careValidator(formData) {
 
 	validations.forEach(({ field, validate }) => {
 		const error = validate(formData[field]);
+		
 		if (error) {
 			errors[field] = error;
 		}

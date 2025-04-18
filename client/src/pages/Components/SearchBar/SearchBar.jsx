@@ -1,9 +1,21 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faXmark } from "@fortawesome/free-solid-svg-icons";
+
 import SearchCard from "./SearchCard";
-import { useSelector } from "react-redux";
+
+import { customFetch } from "../../../service/api.js";
+
+/**
+ * SearchBar component to provide a dynamic search for various entities
+ * 
+ * @param {string} entityType - Is used to customize both the search input placeholder and the API endpoint URL
+ * 
+ * @returns - The SearchBar component
+ */
 
 function SearchBar({ entityType }) {
 	const [query, setQuery] = useState("");
@@ -24,6 +36,7 @@ function SearchBar({ entityType }) {
 		setIsOpen((prevState) => !prevState);
 	}
 
+	// Modification du placeholder de la barre de recherche en fonction de la props "entityType"
 	function handlePlaceholder() {
 		let placeholder = "";
 
@@ -31,59 +44,75 @@ function SearchBar({ entityType }) {
 			case "patient":
 				placeholder = "Rechercher un patient";
 				break;
+
 			case "care":
 				placeholder = "Rechercher un soin";
 				break;
+
 			case "guardian":
 				placeholder = "Rechercher un tuteur";
 				break;
+
 			case "retirement home":
 				placeholder = "Rechercher une EHPAD";
 				break;
+
 			case "all":
 				placeholder = "Rechercher un patient, tuteur, soin, EHPAD…";
 				break;
+
 			default:
 				placeholder = "Erreur, veuillez réessayer plus tard";
 				break;
 		}
+
 		return placeholder;
 	}
 
 	async function handleSubmit(e) {
 		e.preventDefault();
+
+		// Reset errors, data, and loading state
 		setError(null);
 		setLoading(true);
 		setDatas(null);
 
 		let URL = "";
 
+		// Update the search bar placeholder based on the "entityType" prop
 		switch (entityType) {
 			case "patient":
-				URL = `http://localhost:9000/api/v1/patients/search?q=${query}`;
+				URL = `/patients/search?q=${query}`;
 				break;
+
 			case "care":
-				URL = `http://localhost:9000/api/v1/care/search?q=${query}`;
+				URL = `/care/search?q=${query}`;
 				break;
+
 			case "guardian":
-				URL = `http://localhost:9000/api/v1/guardians/search?q=${query}`;
+				URL = `/guardians/search?q=${query}`;
 				break;
+
 			case "retirement home":
-				URL = `http://localhost:9000/api/v1/retirement-homes/search?q=${query}`;
+				URL = `/retirement-homes/search?q=${query}`;
 				break;
+
 			case "all":
-				URL = `http://localhost:9000/api/v1/user/search?q=${query}`;
+				URL = `/user/search?q=${query}`;
 				break;
+
 			default:
 				setError("Une erreur est survenue, veuillez réessayer plus tard.");
 				setLoading(false);
 				return;
 		}
 
+		const options = {
+			credentials: "include",
+		};
+
 		try {
-			const res = await fetch(URL, {
-				credentials: "include",
-			});
+			const res = await customFetch(URL, options);
 
 			if (res.ok) {
 				const { response } = await res.json();
@@ -95,13 +124,13 @@ function SearchBar({ entityType }) {
 				setIsOpen(false);
 			}
 		} catch (error) {
-			console.error("error", error);
-			setError(error.message);
+			setError("Une erreur est survenue, veuillez réessayer plus tard.");
 		} finally {
 			setLoading(false);
 		}
 	}
 
+	// Prevents the search bar from displaying for the "guardian" role
 	if (role === "guardian") {
 		return null;
 	}
@@ -137,6 +166,7 @@ function SearchBar({ entityType }) {
 								.map((result, index) => (
 									<SearchCard key={index} result={result} entityType={"all"} />
 								))
+								
 						: datas.map((result, index) => (
 								<SearchCard
 									key={index}
@@ -149,8 +179,8 @@ function SearchBar({ entityType }) {
 	);
 }
 
-export default SearchBar;
-
 SearchBar.propTypes = {
 	entityType: PropTypes.string.isRequired,
 };
+
+export default SearchBar;

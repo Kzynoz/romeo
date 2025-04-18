@@ -1,16 +1,34 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import PropTypes from "prop-types";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch, useSelector } from "react-redux";
+
 import { toggleModal } from "../features/menuSlice";
 
+import { customFetch } from "../service/api.js";
+
+/**
+ * This component handles the deletion of an entity (such as a patient, care, retirement home and care) through a confirmation modal
+ * The modal asks the user to confirm the deletion and sends a DELETE request to the server when confirmed
+ * 
+ * @params {string} entity - The entity to be deleted, which includes the id and name of the entity
+ * @params {string} link - Contains information for the modal, such as the title to be displayed
+ * 
+ * @returns - The modal element for confirming the deletion, or null if not displayed
+ */
+
 function RemoveEntity({ entity, link }) {
+	// Extract parameters from URL
 	const { id, idSoin } = useParams();
 	const navigate = useNavigate();
 
+	// Set up local state to manage validation, messages, and form data
 	const [isVerifying, setIsVerifying] = useState(true);
-	const [message, setMessage] = useState("");
+	const [message, setMessage] = useState(null);
 	const [formData, setFormData] = useState({
 		id: entity.careId ? entity.careId : entity.id,
 		name: entity.name,
@@ -20,77 +38,74 @@ function RemoveEntity({ entity, link }) {
 	const path = location.pathname;
 
 	const dispatch = useDispatch();
+
 	const { isModalOpen } = useSelector((state) => state.menu);
 
+	// Handle form submission to delete the entity
 	async function handleSubmit(e) {
 		e.preventDefault();
-		setMessage("");
+
+		setMessage(null);
+
+		const options = {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+			body: JSON.stringify(formData),
+		};
 
 		try {
-			const res = await fetch(
-				`http://localhost:9000/api/v1/${link.url}/${formData.id}`,
-				{
-					method: "DELETE",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					credentials: "include",
-					body: JSON.stringify(formData),
-				}
-			);
-
+			const res = await customFetch(`/${link.url}/${formData.id}`, options);
 			const resBody = await res.json();
 
 			if (res.ok) {
 				setMessage({ status: "success", text: resBody.message });
 
+				// Redirect based on the current URL path
 				setTimeout(() => {
 					if (path.includes("/maisons-retraite/")) {
 						navigate("/maisons-retraite");
-					}
-
-					if (path.includes("/tuteurs/")) {
+					} else if (path.includes("/tuteurs/")) {
 						navigate("/tuteurs");
-					}
-
-					if (path === `/patients/${id}`) {
+					} else if (path === `/patients/${id}`) {
 						navigate(`/patients`);
-					}
-
-					if (path.includes(`/patients/${id}/soin`)) {
+					} else if (path.includes(`/patients/${id}/soin`)) {
 						navigate(`/patients/${id}`);
 					}
 
 					dispatch(toggleModal(false));
 				}, 600);
+			} else {
+				setMessage({ status: "error", text: resBody.message });
 			}
-
-			setMessage({ status: "error", text: resBody.message });
 		} catch (error) {
-			setMessage({ status: "error", text: error.message });
+			setMessage({
+				status: "error",
+				text: "Une erreur est survenue. Veuillez réessayer plus tard.",
+			});
 		}
 	}
 
+	// Handle modal close button click
 	function handleClick(e) {
 		dispatch(toggleModal(false));
 	}
 
+	// Validate the ID parameters from the URL and entity data
+	// If they don't match, the modal won't show
 	useEffect(() => {
-		const isValid =
-			idSoin && entity.careId
-				? idSoin == entity.careId && id == entity.id
-				: id == entity.id;
-
-		if (!isValid) {
-			return setIsVerifying(false);
-		}
-
-		console.log("form data", formData.name, "entity", entity);
-	}, []);
+		const isValid = idSoin
+			? idSoin == entity.careId && id == entity.id
+			: id == entity.id;
+		setIsVerifying(isValid);
+		
+	}, [id, idSoin, entity]);
 
 	return (
 		<>
-			{isVerifying ? (
+			{isVerifying && isModalOpen && (
 				<section id="modal" className={isModalOpen ? "active" : "close"}>
 					<div>
 						<button className="close-button" onClick={handleClick}>
@@ -110,12 +125,18 @@ function RemoveEntity({ entity, link }) {
 						<button className="cancel-button" onClick={handleClick}>
 							Annuler
 						</button>
+
 						{message && <p className={message.status}>{message.text}</p>}
 					</div>
 				</section>
-			) : null}
+			)}
 		</>
 	);
 }
+
+RemoveEntity.propTypes = {
+	entity: PropTypes.object.isRequired,
+	link: PropTypes.object.isRequired,
+};
 
 export default RemoveEntity;

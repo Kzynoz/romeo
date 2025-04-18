@@ -4,47 +4,35 @@ import { useSelector } from "react-redux";
 
 import UpdateEntity from "./UpdateEntity";
 import ManageItem from "./Components/ManageItem";
+import Pagination from "./Components/Pagination";
+
+import useFetchItem from "../hooks/useFetchItem";
 
 function RetirementHomeDetails() {
 	const { id } = useParams();
 	const navigate = useNavigate();
 
-	const [datas, setDatas] = useState(null);
-	const [error, setError] = useState("");
-
 	const { isEditingOpen } = useSelector((state) => state.menu);
 	const { isAdmin } = useSelector((state) => state.auth);
 
-	useEffect(() => {
-		async function fetchPatient() {
-			try {
-				const res = await fetch(
-					`http://localhost:9000/api/v1/retirement-homes/${id}`,
-					{
-						credentials: "include",
-					}
-				);
+	// Custom hook to fetch data for a specific retirement home
+	const { datas, error, totalPages, page, setPage, loading } = useFetchItem({
+		url: `/retirement-homes/${id}`,
+		limit: 10,
+		countKey: "patients_count",
+		dependencies: [isEditingOpen],
+	});
 
-				if (res.ok) {
-					const { response } = await res.json();
-					console.log(response);
-					setDatas(response);
-				} else {
-					const { message } = await res.json();
-					setError(message);
-				}
-			} catch (error) {
-				console.error("error", error);
-				setError(error);
-			}
-		}
-		fetchPatient();
-	}, [isEditingOpen]);
+	if (loading) {
+		return <p>Chargement...</p>;
+	}
+
+	if (error) {
+		return <p>{error}</p>;
+	}
 
 	return (
 		<>
-			{error && <p>{error}</p>}
-
 			{datas && (
 				<>
 					{isEditingOpen ? (
@@ -79,8 +67,7 @@ function RetirementHomeDetails() {
 								<aside className="wrapper">
 									<header>
 										<h2>
-											Liste de(s) patients(s) (
-											{datas.patients_count && datas.patients_count})
+											Liste de(s) patient(s) ({datas.patients_count ?? 0})
 										</h2>
 										{isAdmin && (
 											<button
@@ -92,24 +79,35 @@ function RetirementHomeDetails() {
 										)}
 									</header>
 
-									{datas.patients ? (
-										datas.patients.map((patient) => (
-											<article
-												key={patient.id}
-												onClick={() => navigate(`/patients/${patient.id}`)}
-											>
-												<h2>
-													{patient.title} {patient.firstname} {patient.lastname}
-												</h2>
-
-												<Link
-													className="link-desktop"
-													to={`/patients/${patient.id}`}
+									{datas.patients && datas.patients.length > 0 ? (
+										<>
+											{datas.patients.map((patient) => (
+												<article
+													key={patient.id}
+													onClick={() => navigate(`/patients/${patient.id}`)}
 												>
-													Consulter
-												</Link>
-											</article>
-										))
+													<h2>
+														{patient.title} {patient.firstname}{" "}
+														{patient.lastname}
+													</h2>
+
+													<Link
+														className="link-desktop"
+														to={`/patients/${patient.id}`}
+													>
+														Consulter
+													</Link>
+												</article>
+											))}
+
+											{datas.patients_count && (
+												<Pagination
+													page={page}
+													totalPages={totalPages}
+													onPageChange={(newPage) => setPage(newPage)}
+												/>
+											)}
+										</>
 									) : (
 										<p>Aucun patient trouvé</p>
 									)}

@@ -6,9 +6,7 @@ import router from "./router/index.routes.js";
 import morgan from "morgan";
 import path from "path";
 
-import authCheck from "./middlewares/authCheck.js";
-
-const PORT = process.env.PORT || 9000;
+const PORT = process.env.PORT || process.env.LOCAL_PORT;
 const HOST = process.env.DOMAIN || "localhost";
 const base_url = "/api/v1";
 
@@ -18,7 +16,7 @@ app.use(morgan("dev")); // uniquement en phase de dev
 
 app.use(
 	cors({
-		origin: "http://localhost:5173",
+    	origin: process.env.CLIENT_URL,
 		credentials: true,
 		methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
 		allowedHeaders: ["Content-Type", "Accept", "Authorization"],
@@ -29,8 +27,6 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use("/public", express.static(path.join(process.cwd(), "public")));
-
-console.log(process.cwd());
 
 // pour le dev
 app.get("/", (req, res) => {
@@ -45,6 +41,7 @@ app.use((req, res, next) => {
 	});
 });
 
+// Middleware d'erreur
 app.use((err, req, res, next) => {
 	if (err.code === "ER_DUP_ENTRY") {
 		res.status(409).json({
@@ -52,19 +49,21 @@ app.use((err, req, res, next) => {
 		});
 		return;
 	}
+	
 	if (err.code === "ER_BAD_NULL_ERROR") {
 		res.status(409).json({
 			message: `La colonne ne peut pas être nulle.`,
 		});
 		return;
 	}
+	
 	if (err.code === "ER_TRUNCATED_WRONG_VALUE") {
 		res.status(409).json({
 			message: `Le type de donnée n'est pas bon.`,
 		});
 		return;
 	}
-	console.log("MIDDLEWARE", err, err.sqlMessage);
+	
 	res.status(500).json({
 		message: "Une erreur est survenue. Veuillez essayer plus tard.",
 	});

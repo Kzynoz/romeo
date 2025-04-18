@@ -10,12 +10,13 @@ function App() {
 	const location = useLocation();
 	const dispatch = useDispatch();
 
+	// Current URL path
 	const path = location.pathname;
 
-	// Génére des id dynmaique en fonction de mon path
+	// Generate dynamic ID based on the current path
 	function handleId() {
 		if (path === "/") return "home";
-		if (/^\/patients\/\d+$/.test(path)) return "patients-details"; // Vérifié que le chemin commence bien par /patients, test renvera true ou false
+		if (/^\/patients\/\d+$/.test(path)) return "patients-details"; // Matches /patients/{id}
 		if (/^\/tuteurs\/\d+$/.test(path)) return "tuteurs-details";
 		if (/^\/patients\/\d+\/soin\/\d+$/.test(path)) return "soins-details";
 		if (/^\/maisons-retraite\/\d+$/.test(path))
@@ -25,11 +26,14 @@ function App() {
 			return "add-form";
 		}
 
+		// Default: remove the first slash and return the path
 		return path.slice(1, path.length);
 	}
 
 	useEffect(() => {
+		// Reset menu state when the location changes
 		dispatch(reset());
+		
 	}, [location]);
 
 	return (
@@ -37,7 +41,7 @@ function App() {
 			<Header />
 
 			<main className="container" id={handleId()}>
-				<AppRoutes />
+				<AppRoutes /> {/* Render the routes */}
 			</main>
 
 			<Footer />

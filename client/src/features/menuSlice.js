@@ -1,3 +1,4 @@
+// This slice manages the UI state related to navigation and modal
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -21,18 +22,22 @@ const menuSlice = createSlice({
 			state.isSubMenuOpen = !state.isSubMenuOpen;
 			state.isModalOpen = false;
 		},
+		
 		toggleModal(state, action) {
 			state.isModalOpen = action.payload;
 			state.isMenuOpen = false;
 			state.isSubMenuOpen = false;
 		},
+		
 		toggleEditing(state, action) {
 			state.isEditingOpen = action.payload;
 		},
+		
 		reset: () => initialState,
 	},
 });
 
 export const { toggleMenu, toggleSubMenu, toggleModal, toggleEditing, reset } =
 	menuSlice.actions;
+	
 export default menuSlice.reducer;

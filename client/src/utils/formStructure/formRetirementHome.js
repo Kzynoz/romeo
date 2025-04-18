@@ -1,3 +1,10 @@
+/**
+ * Configuration object for the Retirement Home form.
+ * The API endpoint to which the form data should be submitted (`url`).
+ * The structure of the form fields, grouped into logical sections (`contact` and `adresse`).
+ * This structure can be used to dynamically generate the create or update form
+ */
+
 export const formRetirementHome = {
 	url: "retirement-homes",
 	structure: {

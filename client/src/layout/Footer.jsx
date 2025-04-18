@@ -15,22 +15,26 @@ import {
 import { toggleSubMenu } from "../features/menuSlice";
 
 function Footer() {
+	// Select necessary states from Redux store
 	const { isLogged } = useSelector((state) => state.auth);
 	const { isSubMenuOpen } = useSelector((state) => state.menu);
 	const { isAdmin } = useSelector((state) => state.auth);
-
+	
+	// Get user role from Redux
 	const {
 		infos: { role },
 	} = useSelector((state) => state.auth);
 
 	const dispatch = useDispatch();
 
+	// Handle submenu toggle when clicked
 	function handleClick() {
 		dispatch(toggleSubMenu());
 	}
 
 	return (
 		<footer>
+			{/* Only show the navigation if the user is logged in */}
 			{isLogged && (
 				<nav className={isSubMenuOpen ? "active" : null}>
 					<ul>
@@ -47,16 +51,7 @@ function Footer() {
 							</NavLink>
 						</li>
 
-						{/* À FAIRE SI JAMAIS						
-						{role === "guardian" && (
-							<li>
-								<NavLink to="profil">
-									<FontAwesomeIcon icon={faUserGear} />
-									<span>Profil</span>
-								</NavLink>
-							</li>
-						)} */}
-
+						{/* Practitioner specific links */}
 						{role === "practitioner" && (
 							<>
 								<li>
@@ -74,6 +69,7 @@ function Footer() {
 							</>
 						)}
 
+						{/* Admin specific links */}
 						{isAdmin && (
 							<li className={`add-menu ${isSubMenuOpen ? "active" : ""}`}>
 								<button onClick={handleClick}>

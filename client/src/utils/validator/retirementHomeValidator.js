@@ -1,3 +1,15 @@
+/**
+ * Validator functions for the Retirement Home form.
+ * 
+ * Each individual field has a specific validation function checking for:
+ *  - Presence (required fields)
+ *  - Maximum length constraints
+ *  - Specific format requirements
+ * 
+ * The main `retirementHomeValidator` function aggregates all field validations,
+ * and returns an object containing any validation errors found.
+ */
+
 function validateName(name) {
 	if (!name) return "Le nom de l'établissement est obligatoire.";
 	if (name.length > 150)
@@ -36,6 +48,7 @@ function validateZipCode(zip_code) {
 export function retirementHomeValidator(formData) {
 	const errors = {};
 
+	// List of all fields to validate with their corresponding validation function
 	const validations = [
 		{ field: "name", validate: validateName },
 		{ field: "contact", validate: validateContact },
@@ -44,12 +57,15 @@ export function retirementHomeValidator(formData) {
 		{ field: "zip_code", validate: validateZipCode },
 	];
 
+	// Perform each validation and collect errors
 	validations.forEach(({ field, validate }) => {
 		const error = validate(formData[field]);
+		
 		if (error) {
 			errors[field] = error;
 		}
 	});
 
+	// Return all validation errors
 	return errors;
 }

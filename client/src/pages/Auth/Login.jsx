@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+
 import { login } from "../../features/authSlice";
+import { customFetch } from "../../service/api.js";
 
 function Login() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
+	// Local state for email, password, and error/message handling
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [message, setMessage] = useState("");
@@ -14,14 +17,17 @@ function Login() {
 
 	const { isLogged } = useSelector((state) => state.auth);
 
+	// Handle email input change
 	function onChangeEmail(e) {
 		setEmail(e.target.value);
 	}
 
+	// Handle password input change
 	function onChangePassword(e) {
 		setPassword(e.target.value);
 	}
 
+	// Toggle between "practitioner" and "guardian" roles
 	function toggleRole() {
 		setRole((prevRole) =>
 			prevRole === "practitioner" ? "guardian" : "practitioner"
@@ -31,35 +37,32 @@ function Login() {
 		setPassword("");
 	}
 
+	// Handle form submission for login
 	async function handleSubmit(e) {
 		e.preventDefault();
 
-		const URL =
-			role === "guardian"
-				? "http://localhost:9000/api/v1/auth/login-guardian"
-				: "http://localhost:9000/api/v1/auth/login";
+		const URL = role === "guardian" ? "/auth/login-guardian" : "/auth/login";
+
+		const options = {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			credentials: "include",
+			body: JSON.stringify({ email, password }),
+		};
 
 		try {
-			const res = await fetch(URL, {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				credentials: "include",
-				body: JSON.stringify({ email, password }),
-			});
-
+			const res = await customFetch(URL, options);
 			const resJSON = await res.json();
-			// navigate timeout + refaire error
+
 			if (res.ok) {
-				console.log("Connexion réussie:", resJSON.user);
 				dispatch(login(resJSON.user));
-
 				navigate("/");
+			} else {
+				setMessage({
+					status: "error",
+					text: resJSON.message,
+				});
 			}
-
-			setMessage({
-				status: "error",
-				text: resJSON.message,
-			});
 		} catch (error) {
 			setMessage({
 				status: "error",
@@ -96,8 +99,11 @@ function Login() {
 					/>
 				</label>
 				<button type="submit">Se connecter</button>
+
 				{message && <p className={message.status}>{message.text}</p>}
 			</form>
+
+			{/* Toggle between practitioner and guardian roles */}
 			<button type="button" onClick={toggleRole}>
 				{role === "practitioner" ? "Je suis un tuteur" : "Je suis un praticien"}
 			</button>

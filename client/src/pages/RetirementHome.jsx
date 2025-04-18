@@ -1,51 +1,30 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import SearchBar from "./Components/SearchBar/SearchBar";
 import Pagination from "./Components/Pagination";
 
-import { setTotalPages, reset } from "../features/paginationSlice";
+import { useFetchData } from "../hooks/useFetchData";
 
 function RetirementHome() {
-	const [datas, setDatas] = useState([]);
-	const [error, setError] = useState("");
-
-	const { page } = useSelector((state) => state.pagination);
+	// Retrieve the user's role (isAdmin) from the Redux store
 	const { isAdmin } = useSelector((state) => state.auth);
-
-	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	
+	// Custom hook to fetch the list of retirement homes
+	const { datas, error, totalPages, page, setPage, loading } = useFetchData(
+		"/retirement-homes",
+		10,
+	);
+	
+	if (loading) {
+        return <p>Chargement...</p>
+    }
 
-	useEffect(() => {
-		async function fetchRetirementHomes(page) {
-			const limit = 10;
-			const offset = (page - 1) * limit;
-
-			try {
-				const res = await fetch(
-					`http://localhost:9000/api/v1/retirement-homes?limit=${limit}&offset=${offset}`,
-					{
-						credentials: "include",
-					}
-				);
-
-				if (res.ok) {
-					const { response, totalPages } = await res.json();
-
-					setDatas(response);
-					dispatch(setTotalPages(totalPages));
-				}
-			} catch (error) {
-				setError(error.message);
-			}
-		}
-		fetchRetirementHomes(page);
-	}, [page]);
-
-	useEffect(() => {
-		dispatch(reset());
-	}, [navigate]);
+    if (error) {
+        return <p>{error}</p>;
+    }
 
 	return (
 		<>
@@ -59,6 +38,7 @@ function RetirementHome() {
 			<SearchBar entityType={"retirement home"} />
 
 			<section className="wrapper">
+			
 				{isAdmin && (
 					<button
 						className="add-button"
@@ -67,12 +47,9 @@ function RetirementHome() {
 						Ajouter un établissement
 					</button>
 				)}
-
-				{error && <p>{error}</p>}
-
-				{!datas.length ? (
-					<p>Chargement…</p>
-				) : (
+				
+				{/* Display the list of retirement homes if available */}
+				{datas.length && (
 					<>
 						{datas.map((establishment) => (
 							<article
@@ -99,7 +76,11 @@ function RetirementHome() {
 							</article>
 						))}
 
-						<Pagination />
+						<Pagination
+							page={page}
+							totalPages={totalPages}
+							onPageChange={(newPage) => setPage(newPage)}
+						/>
 					</>
 				)}
 			</section>

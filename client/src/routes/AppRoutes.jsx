@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
-import { useSelector } from "react-redux";
 
+
+// Importing all the components/pages for routing
 import Home from "../pages/Home";
 import Login from "../pages/Auth/Login";
 import ProtectedRoute from "./ProtectedRoute";
@@ -22,13 +23,17 @@ import PageNotFound from "../pages/PageNotFound";
 function AppRoutes() {
 	return (
 		<Routes>
+		     {/* Login route for non-authenticated users */}
 			<Route path="login" element={<Login />} />
+			
+			{/* Protected routes (requires authentication) */}
 			<Route element={<ProtectedRoute />}>
 				<Route path="/" element={<Home />} />
 				<Route path="patients" element={<Patient />} />
 				<Route path="patients/:id" element={<PatientDetails />} />
 				<Route path="patients/:id/soin/:idSoin" element={<CareDetails />} />
 
+				{/* Route accessible pour le role Practitioner */}
 				<Route element={<RoleProtectedRoute requiredRole="practitioner" />}>
 					<Route path="patients/ajouter" element={<FormPatient />} />
 					<Route path="patients/:id/soin/ajouter" element={<CreateEntity />} />
@@ -44,8 +49,11 @@ function AppRoutes() {
 					<Route path="soins" element={<Care />} />
 					<Route path="statistiques/:year" element={<Statistics />} />
 				</Route>
-
+				
+				{/* Route for unauthorized access (not authorized to see the page) */}
 				<Route path="non-autorise" element={<Unauthorized />} />
+				
+				{/* Fallback route for undefined paths */}
 				<Route path="*" element={<PageNotFound />} />
 			</Route>
 		</Routes>

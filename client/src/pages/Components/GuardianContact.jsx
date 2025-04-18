@@ -1,12 +1,22 @@
+import PropTypes from "prop-types";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faBuilding,
 	faEnvelope,
 	faPhone,
 } from "@fortawesome/free-solid-svg-icons";
-import PropTypes from "prop-types";
 
+/** 
+ * Guardian Contact component displays guardia'sn contact details, address, name, email, phone…
+ * 
+ * @params {object} datas - Data fetch from the API
+ * @params {bool}   isFull - Boolean to display a full contact list 
+ * 
+ * @returns - Rendered component displays guardians's details
+ */
 function GuardianContact({ datas, isFull }) {
+	// Clean and extract the necessary data from the passed 'datas' object
 	const title = datas.title || datas.details?.title;
 	const firstname = datas.firstname || datas.details?.firstname;
 	const lastname = datas.lastname || datas.details?.lastname;
@@ -22,6 +32,7 @@ function GuardianContact({ datas, isFull }) {
 		<>
 			<section className="row-guardian">
 				<h2>{isFull ? "Sous tutelle" : "Coordonnées"}</h2>
+				
 				<p>
 					{isFull && (
 						<strong>
@@ -55,15 +66,16 @@ function GuardianContact({ datas, isFull }) {
 							<FontAwesomeIcon icon={faPhone} /> {phone}
 						</a>
 					)}
+					
 				</address>
 			</section>
 		</>
 	);
 }
 
-export default GuardianContact;
-
 GuardianContact.propTypes = {
 	datas: PropTypes.object.isRequired,
 	isFull: PropTypes.bool.isRequired,
 };
+
+export default GuardianContact;

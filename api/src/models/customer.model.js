@@ -95,7 +95,11 @@ class Customer {
 		]);
 	}
 
-	static async findBySearch(search, isPatient = 0) {
+
+/*
+ * *******************************************************************************************************************************************
+*/
+static async findBySearch(search, isPatient = 0) {
 		console.log(search);
 		const SELECT_ALL = `SELECT id, title, firstname, lastname, is_patient 
                         FROM customer 

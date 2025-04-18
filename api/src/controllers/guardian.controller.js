@@ -87,19 +87,22 @@ const create = async (req, res, next) => {
 			return;
 		}
 
+
+
 		const [customer] = await Customer.insert(customer_detail, connection);
+		
 		if (customer.insertId) {
 			const token = crypto.randomBytes(32).toString("hex");
 
 			const guardian = {
-				relationship: req.body.relationship,
-				email: req.body.email,
-				company: req.body.company || null,
-				street: req.body.street || null,
-				zip_code: req.body.zip_code || null,
-				city: req.body.city || null,
-				customer_id: customer.insertId,
-				token: token,
+				relationship:	req.body.relationship,
+				email:			req.body.email,
+				company:		req.body.company	|| null,
+				street: 		req.body.street 	|| null,
+				zip_code:		req.body.zip_code	|| null,
+				city:			req.body.city		|| null,
+				customer_id:	customer.insertId,
+				token:			token,
 			};
 
 			const [response] = await Guardian.insert(guardian, connection);
@@ -110,8 +113,11 @@ const create = async (req, res, next) => {
 					.json({ message: "Le tuteur a été ajouté avec succès." });
 				return;
 			}
+		} else {
+			await connection.rollback(); // à verifier 	
 		}
-		await connection.rollback();
+		
+		
 	} catch (error) {
 		if (connection) await connection.rollback();
 		console.log(error);
@@ -150,6 +156,7 @@ const update = async (req, res, next) => {
 			connection
 		);
 
+// affectedRows == 1 ???
 		if (updatedCustomer.affectedRows) {
 			const guardian = {
 				relationship: req.body.relationship,
@@ -168,6 +175,8 @@ const update = async (req, res, next) => {
 				return;
 			}
 
+
+// revoir ici
 			await connection.rollback();
 			return res
 				.status(500)

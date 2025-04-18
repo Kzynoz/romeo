@@ -2,22 +2,20 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import { setTotalPages, reset } from "../features/paginationSlice";
-
 import CareStatus from "./Components/CareStatus";
 import GuardianContact from "./Components/GuardianContact";
 import FormPatient from "./FormPatient";
 import Pagination from "./Components/Pagination";
 import ManageItem from "./Components/ManageItem";
 
+import useFetchItem from "../hooks/useFetchItem";
+
+
 function PatientDetails() {
+	// Get the patient ID from the URL params
 	const { id } = useParams();
 
-	const [datas, setDatas] = useState(null);
-	const [error, setError] = useState("");
-
 	const { isEditingOpen } = useSelector((state) => state.menu);
-	const { page } = useSelector((state) => state.pagination);
 	const {
 		isAdmin,
 		infos: { role, id: guardianId },
@@ -25,49 +23,26 @@ function PatientDetails() {
 
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	
+	// Custom hook to fetch the patient's details and related data (like care data)
+	const { datas, error, totalPages, page, setPage, loading } = useFetchItem({
+		url: `/patients/${id}`,
+		limit: 5,
+		countKey: "care_count",
+		dependencies: [isEditingOpen],
+		guardian: {role,id},
+	});
+	
+	 if (loading) {
+        return <p>Chargement...</p>
+    }
 
-	useEffect(() => {
-		async function fetchPatient(page) {
-			const limit = 5;
-			const offset = (page - 1) * limit;
-
-			let URL = `http://localhost:9000/api/v1/patients/${id}?limit=${limit}&offset=${offset}`;
-
-			if (role === "guardian") {
-				URL += `&guardian_id=${guardianId}`;
-			}
-
-			try {
-				const res = await fetch(URL, {
-					credentials: "include",
-				});
-
-				if (res.ok) {
-					const { response } = await res.json();
-
-					setDatas(response);
-					if (response.care_count)
-						dispatch(setTotalPages(Math.ceil(response.care_count / limit)));
-				} else {
-					const { message } = await res.json();
-					setError(message);
-				}
-			} catch (error) {
-				console.error("error", error);
-				setError("Une erreur est survenue, veuillez réessayer plus tard.");
-			}
-		}
-		fetchPatient(page);
-	}, [isEditingOpen, page]);
-
-	useEffect(() => {
-		dispatch(reset());
-	}, [navigate]);
+    if (error) {
+        return <p>{error}</p>;
+    }
 
 	return (
 		<>
-			{error && <p>{error}</p>}
-
 			{datas && (
 				<>
 					{isEditingOpen && isAdmin ? (
@@ -80,8 +55,8 @@ function PatientDetails() {
 									name: `${datas.title} ${datas.firstname} ${datas.lastname}`,
 								}}
 								link={{
-									url: "guardians",
-									title: "le tuteur",
+									url: "patients",
+									title: "le patient",
 								}}
 							/>
 							<article>
@@ -102,6 +77,7 @@ function PatientDetails() {
 									)}
 								</header>
 
+								{/* If the user is not the guardian, display guardian contact details */}
 								{datas.guardian && role !== "guardian" && (
 									<GuardianContact datas={datas.guardian} isFull={true} />
 								)}
@@ -142,7 +118,12 @@ function PatientDetails() {
 												</article>
 											))}
 
-											{datas.care_count && <Pagination />}
+											{datas.care_count && (
+												<Pagination
+													page={page}
+													totalPages={totalPages}
+													onPageChange={(newPage) => setPage(newPage)}
+												/>)}
 										</>
 									) : (
 										<p>Aucun soin trouvé</p>

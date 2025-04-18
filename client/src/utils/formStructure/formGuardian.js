@@ -1,3 +1,10 @@
+/**
+ * Configuration object for the Guardian form.
+ * The API endpoint to which the form data should be submitted (`url`).
+ * The structure of the form fields, grouped into logical sections (`contact` and `adresse`).
+ * This structure can be used to dynamically generate the create or update form
+ */
+
 export const formGuardian = {
 	url: "guardians",
 	structure: {
@@ -59,7 +66,7 @@ export const formGuardian = {
 			{
 				name: "company",
 				type: "text",
-				label: "Nom de la société",
+				label: "Nom de la société (si Relation est société)",
 				maxLength: 50,
 			},
 		],
