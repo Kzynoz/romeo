@@ -33,7 +33,7 @@ export default async (invoiceData) => {
 					</header>
 					<section>
 						<p className="date">
-							Le ${new Date(invoiceData.performed_at).toLocaleDateString()}
+							Le ${new Date(invoiceData.performed_at).toLocaleDateString("fr-FR")}
 						</p>
 						<h1>Facture</h1>
 						<p>En attente de réglement</p>
@@ -74,7 +74,7 @@ export default async (invoiceData) => {
 
 		const pdfPath = path.join(
 			process.cwd(),
-			"public",
+			"public", "invoices",
 			`${invoiceData.invoice_url}.pdf`
 		);
 		fs.writeFileSync(pdfPath, pdfBuffer);

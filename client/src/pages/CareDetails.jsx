@@ -8,6 +8,7 @@ import UpdateEntity from "./UpdateEntity";
 
 import ManageItem from "./Components/ManageItem";
 import useFetchItem from "../hooks/useFetchItem";
+import { customFetch } from "../service/api.js";
 
 function CareDetails() {
 	// Get parameters from the URL
@@ -26,6 +27,9 @@ function CareDetails() {
 		guardian: {role,id},
 	});
 	
+	// Import env variable
+	const API_URL = import.meta.env.VITE_API_URL;
+	
     if (loading) {
         return <p>Chargement...</p>
     }
@@ -33,6 +37,62 @@ function CareDetails() {
     if (error) {
         return <p>{error}</p>;
     }
+    
+    
+     // Attempt to fetch the invoice file
+    async function downloadInvoice(e,filename) {
+
+    	const options = {
+    		credentials: "include",
+    	}
+    	
+    	try {
+    		 // Attempt to fetch the invoice file
+    		const res = await customFetch(`/care/invoices/${filename}`, options);
+    		
+    		if (res.ok) {
+    			// Convert the response to a Blob (binary data)
+    			const blob = await res.blob(); 
+    			// Create a URL representing the Blob
+    			const pdf = URL.createObjectURL(blob);
+    			// Create a temporary link element
+    			const link = document.createElement("a");
+    			link.href = pdf;
+    			link.download = filename;
+
+    			// Append the link to the document, trigger a click to download the file, then remove it
+    			document.body.appendChild(link);
+    			link.click();
+    			document.body.removeChild(link);
+    			
+    			// Release the Blob URL after the download has been initiated
+    			URL.revokeObjectURL(pdf)
+    		} else {
+    			const existingError = e.target.parentElement.querySelector(".download-error");
+    			
+    			if (existingError) existingError.remove();
+    			
+    			const downloadError = document.createElement("p");
+				downloadError.className = "download-error";
+				downloadError.textContent = "Erreur lors du téléchargement de la facture";
+				
+				e.target.appendChild(downloadError);
+    		}
+    	} catch(error) {
+    		// Check if there's an existing error message in the parent element
+    		const existingError = e.target.parentElement.querySelector(".download-error");
+    		
+    		if (existingError) existingError.remove();
+			
+			// Create a new <p> element for the error message, 
+			const downloadError = document.createElement("p");
+    		downloadError.className = "download-error";
+    		downloadError.textContent = "Erreur lors du téléchargement de la facture";
+
+			// Append the newly created error message to the target
+    		e.target.appendChild(downloadError);
+    	}
+	}
 
 	return (
 		<>
@@ -106,8 +166,8 @@ function CareDetails() {
 									)}
 									
 									{/* If an invoice has been generated, show a button to view the invoice */}
-									{datas.care.invoice.invoice_generated === 1 && (
-										<button onClick={"ajouter"}>Voir la facture</button>
+									{datas.care.invoice.invoice_generated === 1 && datas.care.invoice.invoice_url && (
+										<button onClick={(e) => { downloadInvoice(e,datas.care.invoice.invoice_url) }}>Voir la facture</button>
 									)}
 								</section>
 							</article>

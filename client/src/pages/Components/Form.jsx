@@ -33,6 +33,7 @@ function Form({ formStructure, initialFormData, isUpdated }) {
 	);
 	const [errors, setErrors] = useState({});
 	const [message, setMessage] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
 
 	const practitionerId = useSelector((state) => state.auth);
 	const location = useLocation();
@@ -163,19 +164,22 @@ function Form({ formStructure, initialFormData, isUpdated }) {
 		};
 
 		try {
+			setIsLoading(true);
+			
 			const res = await customFetch(`/${formStructure.url}`, options);
-			const resBody = await res.json();
 
 			if (res.ok) {
+				const { message, response } = await res.json();
+				
 				setMessage({
 					status: "success",
-					text: resBody.message,
+					text: message,
 				});
 
 				// Dynamic redirection after adding or updating an entity
 				if (path.includes(`/patients/${id}/soin/ajouter`)) {
 					return setTimeout(() => {
-						navigate(`/patients/${id}/soin/${resBody.response}`);
+						navigate(`/patients/${id}/soin/${response}`);
 					}, 600);
 				}
 
@@ -191,23 +195,29 @@ function Form({ formStructure, initialFormData, isUpdated }) {
 						dispatch(toggleEditing(false));
 					}, 600);
 				}
-			} else if (res.status === 400 && resBody.errors) {
-				// Accumulator to store express-validator errors in an object with "path": "error" and display them
-				setErrors(
-					resBody.errors.reduce(
-						(acc, error) => ({
-							...acc,
-							[error.path]: error.msg,
-						}),
-						{}
-					)
-				);
 			} else {
-				setErrors({});
-				setMessage({
-					status: "error",
-					text: resBody.message,
-				});
+				const resBody = await res.json();  // Ensure response body is parsed
+
+				if (res.status === 400 && resBody.errors) {
+					// Accumulator to store express-validator errors in an object
+					setErrors(
+						resBody.errors.reduce(
+							(acc, error) => ({
+								...acc,
+								[error.path]: error.msg,
+							}),
+							{}
+						)
+					);
+				} else {
+					// Reset errors and display the message in case of a generic error
+					setErrors({});
+					const { message } = resBody;  // Ensure correct message extraction
+					setMessage({
+						status: "error",
+						text: message,
+					});
+				}
 			}
 		} catch (error) {
 			console.log("Erreur lors de la mise à jour", error);
@@ -216,6 +226,8 @@ function Form({ formStructure, initialFormData, isUpdated }) {
 				status: "error",
 				text: "Une erreur est survenue, veuillez réessayer.",
 			});
+		} finally {
+			setIsLoading(false);
 		}
 	}
 
@@ -305,6 +317,7 @@ function Form({ formStructure, initialFormData, isUpdated }) {
 				<button type="submit">{isUpdated ? "Modifier" : "Ajouter"}</button>
 
 				{message && <p className={message.status}>{message.text}</p>}
+				{isLoading && <p>En attente de traitement…</p>}
 			</form>
 		</>
 	);

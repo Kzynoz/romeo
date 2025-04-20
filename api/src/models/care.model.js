@@ -209,6 +209,40 @@ class Care {
 
 		return await pool.execute(UPDATE_CARE, params);
 	}
+	
+	
+	/** 
+	 * Updates the invoice URL with a specific care ID
+	 * 
+	 * @param {number} id - The ID of the care for wich the invoice URL need to be updated
+	 * @param {string} invoice_url - The URL of the generated invoice
+	 * 
+	 * @returns - A promise that resolves with the result of the SQL query, 
+	 * if update is succesfull, the promise resolves to an array containing the result
+	 */
+	static async updateInvoiceURL({ id, invoice_url }) {
+	    
+		const UPDATE_CARE = `UPDATE care SET invoice_url = ? WHERE id = ? `;
+
+		return await pool.execute(UPDATE_CARE, [invoice_url, id]);
+	}
+	
+	/** 
+	 * Updates the invoice generated status with a specific care ID
+	 * 
+	 * @param {number} id - The ID of the care for wich the invoice status need to be set to 1
+	 * @param {number} invoice_generated - 1 for generated else 0
+	 * 
+	 * @returns - A promise that resolves with the result of the SQL query, 
+	 * if update is succesfull, the promise resolves to an array containing the result
+	 */
+	static async updateInvoiceStatus({ id, invoice_generated }) {
+	    console.log('id', id, "invoice_generated", invoice_generated);
+	    
+		const UPDATE_CARE = `UPDATE care SET invoice_generated = ? WHERE id = ? `;
+
+		return await pool.execute(UPDATE_CARE, [invoice_generated, id]);
+	}
 
 	// à stocker dans la BDD
 	static async getTotalCareThisMonth() {

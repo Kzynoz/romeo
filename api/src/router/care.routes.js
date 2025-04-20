@@ -8,6 +8,7 @@ import {
   getTotalCareThisMonth,
   remove,
   update,
+  getInvoice
 } from "../controllers/care.controller.js";
 import {
   validatorCreateCare,
@@ -22,6 +23,7 @@ router.get("/", getAll);
 router.get("/count-this-month", getTotalCareThisMonth);
 router.get("/count-by-year/:year", getTotalCareByYear);
 router.get("/search", getBySearch);
+router.get("/invoices/:filename", getInvoice);
 
 router.patch("/:id", validatorUpdateCare, update);
 

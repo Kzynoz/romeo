@@ -6,6 +6,8 @@ import router from "./router/index.routes.js";
 import morgan from "morgan";
 import path from "path";
 
+import authCheck from "./middlewares/authCheck.js"
+
 const PORT = process.env.PORT || process.env.LOCAL_PORT;
 const HOST = process.env.DOMAIN || "localhost";
 const base_url = "/api/v1";
@@ -26,7 +28,7 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 
-app.use("/public", express.static(path.join(process.cwd(), "public")));
+// app.use("/public", authCheck, express.static(path.join(process.cwd(), "public")));
 
 // pour le dev
 app.get("/", (req, res) => {

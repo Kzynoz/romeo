@@ -3,6 +3,9 @@ import Care from "../models/care.model.js";
 import generateInvoicePDF from "../utils/generateInvoicePDF.js";
 import pool from "../config/db.js";
 
+import fs from "fs";
+import path from "path";
+
 const getAll = async (req, res, next) => {
 	const offset = req.query.offset || "0";
 	const limit = req.query.limit || "10";
@@ -75,63 +78,6 @@ const getBySearch = async (req, res, next) => {
 	}
 };
 
-/* const create = async (req, res, next) => {
-	const errors = validationResult(req);
-
-	if (!errors.isEmpty()) {
-		return res.status(400).json({
-			message: "Erreur lors de la validation du formulaire.",
-			errors: errors.array(),
-		});
-	}
-
-	const id = req.params.id || req.body.patient_id;
-	const date = new Date(req.body.performed_at).toLocaleDateString("fr-CA");
-
-	try {
-		const [[existingCare]] = await Care.findCare(id, date);
-
-		if (existingCare) {
-			res.status(400).json({ message: "Ce soin pour ce patient existe déjà." });
-			return;
-		}
-
-		const url = `facture-${existingCare.title}-${existingCare.firstname}-${existingCare.lastname}-${date}-${id}`;
-
-		const newCare = {
-			performed_at: date,
-			practitioner_id: req.body.practitioner_id,
-			type: req.body.type,
-			complements: req.body.complements || null,
-			price: req.body.price,
-			invoice_generated: 1,
-			invoice_paid: 0,
-			invoice_send: 0,
-			customer_id: id,
-			invoice_url: url,
-		};
-
-		const [response] = await Care.insert(newCare, id);
-
-		if (response.insertId) {
-			const [[getInvoice]] = await Care.displayInvoice(response.insertId);
-
-			if (getInvoice) {
-				await generateInvoicePDF(getInvoice);
-
-				return res.status(200).json({
-					message: "Le soin a été ajouté avec succès.",
-					response: getInvoice.invoice_url,
-				});
-			}
-		}
-
-		res.status(500).json({ message: "Erreur lors de l'ajout du soin." });
-	} catch (error) {
-		next(error);
-	}
-}; */
-
 const create = async (req, res, next) => {
 	let connection = null;
 	const errors = validationResult(req);
@@ -171,6 +117,7 @@ const create = async (req, res, next) => {
 		const [response] = await Care.insert(newCare, id);
 
 		if (response.insertId) {
+			
 			const [[getInvoice]] = await Care.displayInvoice(response.insertId);
 
 			if (!getInvoice) {
@@ -179,46 +126,55 @@ const create = async (req, res, next) => {
 					.status(500)
 					.json({ message: "Erreur lors de l'ajout du soin." });
 			}
-
+			
 			// sanitize
-			const sanitze = (string) =>
+			const sanitize = (string) =>
 				string
 					.normalize("NFD")
 					.replace(/[\u0300-\u036f]/g, "")
 					.replace(/\s+/g, "-")
 					.toLowerCase();
 
-			const title = sanitze(getInvoice.title);
-			const firstname = sanitze(getInvoice.firstname);
-			const lastname = sanitze(getInvoice.lastname);
+			const title = sanitize(getInvoice.title);
+			const firstname = sanitize(getInvoice.firstname);
+			const lastname = sanitize(getInvoice.lastname);
 
 			const url = `${title}-${firstname}-${lastname}_${date}_${id}`;
 
-			const [updateCare] = await Care.update({
-				...newCare,
+			const [updateCare] = await Care.updateInvoiceURL({
 				id: response.insertId,
 				invoice_url: url,
 			});
 
-			if (updateCare.affectedRows) {
+			if (updateCare.affectedRows === 1) {
+
 				const pdf = await generateInvoicePDF({
 					...getInvoice,
 					invoice_url: url,
 				});
 
 				if (pdf) {
-					await connection.commit();
+					
+					const [updateInvoiceStatus] = await Care.updateInvoiceStatus({
+						id: response.insertId,
+						invoice_generated: 1,
+					});
+					
+					if (updateInvoiceStatus.affectedRows === 1) {
+							await connection.commit();
 					return res.status(200).json({
 						message: "Le soin a été ajouté avec succès.",
 						response: response.insertId,
 					});
+					}
 				}
 			}
 		}
 
 		await connection.rollback();
-		res.status(500).json({ message: "Erreur lors de l'ajout du soin." });
+		return res.status(500).json({ message: "Erreur lors de l'ajout du soin." });
 	} catch (error) {
+		console.log(error);
 		if (connection) await connection.rollback();
 		next(error);
 	} finally {
@@ -331,6 +287,26 @@ const remove = async (req, res, next) => {
 	}
 };
 
+const getInvoice = async (req,res,next) => {
+	const { filename } = req.params;
+	
+	const filePath = path.join(process.cwd(), "public", "invoices", `${filename}.pdf`);
+	
+	// Protection contre path traversal
+	const normalizedPath = path.normalize(filePath);
+	
+	if (!normalizedPath.startsWith(path.join(process.cwd(), "public", "invoices"))) {
+		
+    return res.status(400).json({ message: "Chemin invalide" });
+	}
+	
+	if (!fs.existsSync(filePath)) {
+		return res.status(404).json({message: "Fichier introuvable"});
+	}
+	
+	return res.sendFile(filePath);
+} ;
+
 export {
 	getAll,
 	getOneCare,
@@ -340,4 +316,5 @@ export {
 	getTotalCareThisMonth,
 	getTotalCareByYear,
 	remove,
+	getInvoice,
 };
