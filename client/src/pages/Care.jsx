@@ -6,9 +6,13 @@ import SearchBar from "./Components/SearchBar/SearchBar";
 import Pagination from "./Components/Pagination";
 
 import { useFetchData } from "../hooks/useFetchData";
+import useHead from "../hooks/useHead";
 
 function Care() {
 	const navigate = useNavigate();
+	
+	// Set title and meta description
+	useHead("Soins","Accédez à la gestion complète des soins de vos patients sur Roméo, avec un suivi détaillé de chaque acte et intervention.");
 
 	// Custom hook for fetching care data with pagination
 	const { datas, error, totalPages, page, setPage, loading } = useFetchData(

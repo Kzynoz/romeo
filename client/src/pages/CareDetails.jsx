@@ -8,6 +8,8 @@ import UpdateEntity from "./UpdateEntity";
 
 import ManageItem from "./Components/ManageItem";
 import useFetchItem from "../hooks/useFetchItem";
+import useHead from "../hooks/useHead";
+
 import { customFetch } from "../service/api.js";
 
 function CareDetails() {
@@ -27,6 +29,9 @@ function CareDetails() {
 		guardian: {role,id},
 	});
 	
+	// Set title and meta description
+	useHead("Détail du soin","Consultez et gérez les détails des soins pour chaque patient dans Roméo. Suivez l'évolution des traitements et assurez-vous que chaque soin est bien documenté");
+	
 	// Import env variable
 	const API_URL = import.meta.env.VITE_API_URL;
 	
@@ -41,7 +46,7 @@ function CareDetails() {
     
      // Attempt to fetch the invoice file
     async function downloadInvoice(e,filename) {
-
+    	
     	const options = {
     		credentials: "include",
     	}
@@ -76,7 +81,7 @@ function CareDetails() {
 				downloadError.className = "download-error";
 				downloadError.textContent = "Erreur lors du téléchargement de la facture";
 				
-				e.target.appendChild(downloadError);
+				e.target.insertAdjacentElement('afterend', downloadError);
     		}
     	} catch(error) {
     		// Check if there's an existing error message in the parent element
@@ -90,7 +95,7 @@ function CareDetails() {
     		downloadError.textContent = "Erreur lors du téléchargement de la facture";
 
 			// Append the newly created error message to the target
-    		e.target.appendChild(downloadError);
+    		e.target.insertAdjacentElement('afterend', downloadError);
     	}
 	}
 

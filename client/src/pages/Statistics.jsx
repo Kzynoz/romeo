@@ -4,10 +4,15 @@ import { useParams } from "react-router-dom";
 import StatisticsOverview from "./Components/StatisticsOverview";
 
 import { useFetchData } from "../hooks/useFetchData";
+import useHead from "../hooks/useHead";
+
 
 function Statistics() {
 	// Get the year parameter from the URL
 	const { year } = useParams();
+	
+	// Set title and meta description
+	useHead("Statistics de l'année en cours","Accédez aux statistiques détaillées de votre activité paramédicale avec Roméo, pour une analyse précise de vos performances et de vos soins.");
 
 	// Use custom hook to fetch data for the selected year
 	const { datas, error, loading } = useFetchData(`/care/count-by-year/${year}`);

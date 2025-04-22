@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -103,13 +103,13 @@ function Footer() {
 			)}
 			<p>
 				&copy; 2025 Julien Bellet - dans le cadre de la 3WA -
-				<NavLink to="mentions-legales" end>
+				<Link to="mentions-legales">
 					Mentions légales
-				</NavLink>
+				</Link>
 				-
-				<NavLink to="politique-confidentialite" end>
+				<Link to="politique-confidentialite">
 					Politique de confidentialité
-				</NavLink>
+				</Link>
 			</p>
 		</footer>
 	);

@@ -1,7 +1,10 @@
 import { compare, hash } from "bcrypt";
 import { validationResult } from "express-validator";
 import pool from "../config/db.js";
-import Auth from "../models/auth.model.js";
+
+import Customer from "../models/customer.model.js";
+import Guardian from "../models/guardian.model.js"
+import Practitioner from "../models/practitioner.model.js";
 import createToken from "../utils/token.js";
 
 const SALT = 10;
@@ -19,7 +22,7 @@ const register = async (req, res, next) => {
 
 	try {
 		const hashedPassword = await hash(password, SALT);
-		const [response] = await Auth.createPractitioner({
+		const [response] = await Practitioner.createPractitioner({
 			alias,
 			email,
 			password: hashedPassword,
@@ -38,7 +41,7 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
 	const { email, password } = req.body;
 	try {
-		const [[response]] = await Auth.findPractitioner(email);
+		const [[response]] = await Practitioner.findPractitioner(email);
 
 		if (response) {
 			const comparedPassword = await compare(password, response.password);
@@ -110,7 +113,7 @@ const guardianRegister = async (req, res, next) => {
 	}
 
 	try {
-		const [[findGuardian]] = await Auth.findGuardian(email, tokenUrl);
+		const [[findGuardian]] = await Customer.findGuardianByEmail(email, tokenUrl);
 
 		if (findGuardian && findGuardian.token) {
 			const { id, token } = findGuardian;
@@ -119,15 +122,14 @@ const guardianRegister = async (req, res, next) => {
 			connection = await pool.getConnection();
 			await connection.beginTransaction();
 
-			const [response] = await Auth.registerGuardian(connection, {
+			const [response] = await Customer.registerGuardian(connection, {
 				id,
-				email,
 				token,
 				password: hashedPassword,
 			});
 
 			if (response.affectedRows) {
-				const [deleteToken] = await Auth.deleteToken(connection, { id, token });
+				const [deleteToken] = await Guardian.deleteToken(connection, { id, token });
 
 				if (deleteToken.affectedRows) {
 					await connection.commit();
@@ -153,7 +155,7 @@ const guardianRegister = async (req, res, next) => {
 const guardianLogin = async (req, res, next) => {
 	const { email, password } = req.body;
 	try {
-		const [[response]] = await Auth.findGuardian(email);
+		const [[response]] = await Customer.findGuardianByEmail(email);
 
 		if (response) {
 			const comparedPassword = await compare(password, response.password);

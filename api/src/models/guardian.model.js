@@ -134,6 +134,45 @@ class Guardian {
 			id,
 		]);
 	}
+	
+	/**
+	 * Method to remove the token from the guardian's record once it's used
+	 * Consume after a successful registration
+	 * (It is not yet implemented in the front-end (V2))
+	 * 
+	 * @param {number} id - The id of the guardian to update
+	 * @param {string} token - The token
+	 * 
+	 * @returns - A promise that resolves with the result of the SQL query
+	 */
+	static async deleteToken(connection, { id, token }) {
+
+		const DELETE_TOKEN = `UPDATE 
+								guardian
+                        	  SET 
+                        		token = NULL
+                        	  WHERE 
+                        		customer_id = ? AND token = ?`;
+
+		return await connection.execute(DELETE_TOKEN, [id, token]);
+	}
+	
+	/** 
+	 * Method to update guardian login info
+	 *  (It is not yet implemented (V2))
+	 * 
+	 * @param {number} id - The id of the guardian to update
+	 * @param {string} email - The email of the guardian
+	 * @param {string} passwoord - The hashed password of the guadian
+	 * 
+	 * @returns - A promise that resolves with the result of the SQL query
+	 */
+	static async updateGuardianAccount({ id, email, password }) {
+		const UPDATE_GUARDIAN = `UPDATE guardian SET email = ?, password = ? WHERE g.id = ?`;
+		
+		return await pool.execute(UPDATE_GUARDIAN, [email, password, id]);
+	}
+
 }
 
 export default Guardian;

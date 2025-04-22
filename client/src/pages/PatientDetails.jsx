@@ -9,7 +9,7 @@ import Pagination from "./Components/Pagination";
 import ManageItem from "./Components/ManageItem";
 
 import useFetchItem from "../hooks/useFetchItem";
-
+import useHead from "../hooks/useHead";
 
 function PatientDetails() {
 	// Get the patient ID from the URL params
@@ -23,6 +23,10 @@ function PatientDetails() {
 
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	
+	// Set title and meta description
+	useHead("Détail du patient","Découvrez les informations détaillées sur le patient dans Roméo");
+
 	
 	// Custom hook to fetch the patient's details and related data (like care data)
 	const { datas, error, totalPages, page, setPage, loading } = useFetchItem({

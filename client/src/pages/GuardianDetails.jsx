@@ -8,6 +8,7 @@ import Pagination from "./Components/Pagination";
 import ManageItem from "./Components/ManageItem";
 
 import useFetchItem from "../hooks/useFetchItem";
+import useHead from "../hooks/useHead";
 
 function GuardianDetails() {
 	// Extract the guardian ID from the URL parameters
@@ -19,6 +20,9 @@ function GuardianDetails() {
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	
+	// Set title and meta description
+	useHead("Détails du tuteur","Découvrez les informations détaillées sur le tuteur dans Roméo");
 
 	// Custom Hook to fetch data for the specific guardian
 	const { datas, error, totalPages, page, setPage, loading } = useFetchItem({

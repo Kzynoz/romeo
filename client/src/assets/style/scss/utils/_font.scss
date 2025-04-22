@@ -22,7 +22,7 @@ body {
 		margin-bottom: 0px;
 	}
 
-	h1 + p {
+	h1+p {
 		font-size: 1.8rem;
 	}
 }
@@ -42,22 +42,22 @@ header {
 }
 
 .row-guardian {
-	h2 + p > strong {
+	h2+p>strong {
 		font-size: 1.6rem;
 		font-weight: 600;
 	}
 }
 
 .row-contact {
-	h2 + p {
+	h2+p {
 		font-size: 1.6rem;
 		font-weight: 600;
 	}
 }
 
-#patients-details h1 > span,
-#soins-details h1 > span,
-#tuteurs-details h1 > span {
+#patients-details h1>span,
+#soins-details h1>span,
+#tuteurs-details h1>span {
 	font-size: 1.4rem;
 	text-transform: uppercase;
 	letter-spacing: 0.2rem;
@@ -97,6 +97,13 @@ header {
 .date-desktop {
 	display: none;
 }
+
+#soins-details .care-details h2 span,
+#patients-details .wrapper article h3 span,
+#soins .wrapper h2 span {
+	font-weight: initial;
+}
+
 
 @media (min-width: $breakpoint-lg) {
 	#home aside p strong {

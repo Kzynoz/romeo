@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 import { customFetch } from "../service/api.js";
+import useHead from "../hooks/useHead";
 
 import PropTypes from "prop-types";
 
@@ -43,6 +44,9 @@ function FormPatient({ data }) {
 	
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	
+	// Set title and meta description
+	useHead("Ajout d'un nouveau patient","Ajout d'un patient dans Roméo.");
 
 	// Redirect to the appropriate page based on whether a patient was created or updated
 	function handleRedirection() {

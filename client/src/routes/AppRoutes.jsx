@@ -19,12 +19,16 @@ import FormPatient from "../pages/FormPatient";
 import Unauthorized from "../pages/Unauthorized";
 import RoleProtectedRoute from "./RoleProtectedRoute";
 import PageNotFound from "../pages/PageNotFound";
+import LegalNotice from "../pages/Legal/LegalNotice";
+import PrivacyPolicy from "../pages/Legal/PrivacyPolicy";
 
 function AppRoutes() {
 	return (
 		<Routes>
 		     {/* Login route for non-authenticated users */}
 			<Route path="login" element={<Login />} />
+			<Route path="mentions-legales" element={<LegalNotice />} />
+			<Route path="politique-confidentialite" element={<PrivacyPolicy />} />
 			
 			{/* Protected routes (requires authentication) */}
 			<Route element={<ProtectedRoute />}>

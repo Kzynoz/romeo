@@ -84,6 +84,7 @@ function Login() {
 						value={email}
 						onChange={onChangeEmail}
 						placeholder="Entrer votre email"
+						autoComplete="email"
 					/>
 				</label>
 				<label htmlFor="password">
@@ -96,6 +97,7 @@ function Login() {
 						value={password}
 						onChange={onChangePassword}
 						placeholder="Entrer votre mot de passe"
+						autoComplete="password"
 					/>
 				</label>
 				<button type="submit">Se connecter</button>

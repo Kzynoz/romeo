@@ -12,6 +12,7 @@ const enumValidator = (table, column) => {
 	};
 };
 
+// Validator for creating Guardian
 const validatorCreateGuardian = [
 	body("title")
 		.notEmpty()
@@ -78,6 +79,7 @@ const validatorCreateGuardian = [
 		.trim(),
 ];
 
+// Validator for updating Guardian
 const validatorUpdateGuardian = [
 	param("id")
 		.isInt()

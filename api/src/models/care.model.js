@@ -1,70 +1,115 @@
 import pool from "../config/db.js";
 
 class Care {
+    
+    /** 
+	 * Method to find a Care by Patient and date before add new one
+	 * 
+	 * @param {number} id - The ID of the patient
+	 * @param {date}   performed_at - The date of the care
+	 * 
+	 * @returns - A promise that resolves with the result of the SQL query
+	 * Object contains: care id, care performed_at, patient title, patient firstname, patient lastname,
+	 */
 	static async findCare(id, performed_at) {
-		const SELECT_CARE = `SELECT care.id, c.title, c.firstname, c.lastname, care.performed_at 
-                         FROM care
-                         LEFT JOIN customer c ON care.customer_id = c.id
-                         WHERE DATE(care.performed_at) = ? AND c.id = ?`;
+		const SELECT_CARE = `SELECT
+                                care.id,
+                                c.title,
+                                c.firstname,
+                                c.lastname,
+                                care.performed_at
+                            FROM
+                                care
+                            LEFT JOIN customer c ON
+                                care.customer_id = c.id
+                            WHERE
+                                DATE(care.performed_at) = ? AND c.id = ?`;
 
 		return await pool.execute(SELECT_CARE, [performed_at, id]);
 	}
 
+    /** 
+	 * Method to count all care records
+	 * 
+	 * @returns - A promise that resolves with the result the total number of cares
+	 * Example: {total: 42}
+	 */
 	static async countAll() {
-		const COUNT = `SELECT COUNT(care.id) AS total 
-                         FROM care`;
+		const COUNT = `SELECT
+                           COUNT(*) AS total
+                       FROM
+                           care`;
 
 		return await pool.query(COUNT);
 	}
 
+    /**
+     * Method to get all care records with their practitioner and patient info
+     * 
+     * @param {number} offset - The number of records to skip
+     * @param {number} limit - The maximum number of records to retrieve
+     * 
+     * @returns - A promise that resolves with an array of care objects
+     * Each object contains: care (object), practitioner (object), patient (object)
+     */
 	static async getAll(offset, limit) {
-		const SELECT_ALL = `SELECT JSON_OBJECT (
-                        	'id',care.id,
-                            'type',care.type,
-                        	'performed_at',care.performed_at,
-                        	'invoice_send', care.invoice_send,
-                        	'invoice_paid', care.invoice_paid) AS care,
-                              JSON_OBJECT (
-                              'id',p.id,
-                              'alias',p.alias) AS practitioner,
-                              JSON_OBJECT (
-                              'id',c.id,
-                              'title',c.title,
-                              'firstname', c.firstname,
-                              'lastname',c.lastname) AS patient
-                        FROM care
-                        LEFT JOIN practitioner p 
-                            ON care.practitioner_id = p.id
-                        LEFT JOIN customer c 
-                            ON  care.customer_id = c.id
-                        ORDER BY 
-                            CASE 
-                                WHEN care.invoice_paid = 0 AND care.invoice_send = 1 THEN 1
-                                WHEN care.invoice_send = 1 THEN 2
-                                ELSE 3
+		const SELECT_ALL = `SELECT
+                                JSON_OBJECT(
+                                    'id', care.id,
+                                    'type', care.type,
+                                    'performed_at', care.performed_at,
+                                    'invoice_send', care.invoice_send,
+                                    'invoice_paid', care.invoice_paid
+                                ) AS care,
+                                JSON_OBJECT('id', p.id, 'alias', p.alias) AS practitioner,
+                                JSON_OBJECT(
+                                    'id', c.id,
+                                    'title', c.title,
+                                    'firstname', c.firstname,
+                                    'lastname', c.lastname
+                                ) AS patient
+                            FROM
+                                care
+                            LEFT JOIN practitioner p ON
+                                care.practitioner_id = p.id
+                            LEFT JOIN customer c ON
+                                care.customer_id = c.id
+                            ORDER BY CASE WHEN
+                                care.invoice_paid = 0 AND care.invoice_send = 1 THEN 1 WHEN care.invoice_send = 1 THEN 2 ELSE 3
                             END,
-                            care.performed_at DESC
-                        LIMIT ?
-                        OFFSET ?`;
+                            care.performed_at
+                            DESC
+                            LIMIT ? OFFSET ?`;
 
 		return await pool.execute(SELECT_ALL, [limit, offset]);
 	}
 
-	static async displayInvoice(id) {
+    /**
+     * Method to display care info for the PDF generator
+     * 
+     * @param {number} id - The id of the care
+     * 
+     * @returns - A promise that resolves with a care object
+     * Object contains: care info and patient info
+     */
+	static async getInvoiceData(id) {
 		const SELECT_CARE = `SELECT
-                          c.id,
-                          c.title,
-                          c.lastname,
-                          c.firstname,
-                          care.id AS care_id,
-                          care.performed_at,
-                          care.price,
-                          care.type,
-                          care.complements,
-                          care.invoice_url
-                        FROM customer c
-                        LEFT JOIN care ON care.customer_id = c.id
-                        WHERE care.id = ?`;
+                                care.id AS care_id,
+                                care.performed_at,
+                                care.price,
+                                care.type,
+                                care.complements,
+                                care.invoice_url,
+                                c.id AS customer_id,
+                                c.title,
+                                c.lastname,
+                                c.firstname
+                            FROM
+                                care
+                            LEFT JOIN customer c ON
+                                care.customer_id = c.id
+                            WHERE
+                                care.id = ?;`;
 
 		return await pool.execute(SELECT_CARE, [id]);
 	}

@@ -10,6 +10,8 @@ import { formCare } from "../utils/formStructure/formCare.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
+import useHead from "../hooks/useHead";
+
 
 /**
  * This component is uses for rendering a form to create a new entity (such as a retirement home, guardian, or care)
@@ -26,6 +28,9 @@ function CreateEntity() {
 	const path = location.pathname;
 
 	const [settings, setSettings] = useState(null);
+	
+	// Set title and meta description
+	useHead(`Ajout d'une entité`,"Ajoutez une entité dans Roméo, la plateforme paramédicale, pour une gestion optimale des soins et des informations.");
 
 	// Redirection based on the URL
 	function handleRedirection() {
@@ -40,7 +45,6 @@ function CreateEntity() {
 	}
 
 	useEffect(() => {
-		
 		// Setting up the entity to be updated based on the URL
 		function handleRoute() {
 			if (path === "/maisons-retraite/ajouter") {

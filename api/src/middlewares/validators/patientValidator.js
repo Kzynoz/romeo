@@ -1,8 +1,10 @@
 import { body, check, param } from "express-validator";
 import getEnumValues from "../../utils/getEnumValue.js";
 
-// refactoriser
+// The function enumValidator takes a table and column name and returns a validation function
+// This validation function checks if a given value is a valid enum value from the specified table and column.
 const enumValidator = (table, column) => {
+	
 	return async (value) => {
 		const values = await getEnumValues(table, column);
 
@@ -12,6 +14,8 @@ const enumValidator = (table, column) => {
 	};
 };
 
+
+// Validator for creating Patient
 const validatorCreatePatient = [
 	body("title")
 		.notEmpty()
@@ -39,6 +43,7 @@ const validatorCreatePatient = [
 		.withMessage("Une erreur est survenue, veuillez ressayer plus tard."),
 ];
 
+// Validator for updating Patient
 const validatorUpdatePatient = [
 	param("id")
 		.isInt()

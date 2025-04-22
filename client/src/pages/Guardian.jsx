@@ -6,6 +6,8 @@ import SearchBar from "./Components/SearchBar/SearchBar";
 import Pagination from "./Components/Pagination";
 
 import { useFetchData } from "../hooks/useFetchData";
+import useHead from "../hooks/useHead";
+
 
 function Guardian() {
 	// Get the 'isAdmin' flag from the Redux store (to check if the user is an admin)
@@ -13,6 +15,9 @@ function Guardian() {
 
 	// Hook to navigate programmatically to different routes
 	const navigate = useNavigate();
+	
+	// Set title and meta description
+	useHead("Tuteurs","Gérez les informations relatives aux tuteurs de vos patients avec Roméo, une plateforme qui simplifie le suivi et la coordination avec les proches.");
 	
 	// Custom Hook to fetch the guardians' data (using a URL and a page size of 10)
 	const { datas, error, totalPages, page, setPage, loading } = useFetchData(

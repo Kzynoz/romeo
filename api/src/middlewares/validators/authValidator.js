@@ -1,5 +1,6 @@
-import { body, param } from "express-validator";
+ import { body, param } from "express-validator";
 
+// Validator for creating Practitioner (Not yet implemented on the front-end, will be part of v2)
 const validatorCreateUser = [
 	body("alias")
 		.notEmpty()
@@ -35,6 +36,7 @@ const validatorCreateUser = [
 		),
 ];
 
+// Validator for registering Guardian (Not yet implemented on the front-end, will be part of v2)
 const validatorRegisterGuardian = [
 	param("tokenUrl")
 		.isLength({ min: 64, max: 64 })

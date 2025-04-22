@@ -13,6 +13,8 @@ import {
 import StatisticsOverview from "./Components/StatisticsOverview";
 import SearchBar from "./Components/SearchBar/SearchBar";
 
+import useHead from "../hooks/useHead";
+
 function Home() {
 	// Hook for navigation
 	const navigate = useNavigate();
@@ -27,6 +29,9 @@ function Home() {
 	const day = new Date().getDate();
 	const month = new Date().toLocaleString("fr-FR", { month: "short" });
 	const year = new Date().getFullYear();
+	
+	// Set title and meta description
+	useHead("Dashboard","Découvrez le tableau de bord de Roméo, votre plateforme de gestion paramédicale, pour un suivi simple et efficace des soins, des patients et des factures.");
 
 	function handleNavigate(path) {
 		navigate(path);

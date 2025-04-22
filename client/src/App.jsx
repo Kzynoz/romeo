@@ -15,25 +15,37 @@ function App() {
 
 	// Generate dynamic ID based on the current path
 	function handleId() {
-		if (path === "/") return "home";
-		if (/^\/patients\/\d+$/.test(path)) return "patients-details"; // Matches /patients/{id}
-		if (/^\/tuteurs\/\d+$/.test(path)) return "tuteurs-details";
-		if (/^\/patients\/\d+\/soin\/\d+$/.test(path)) return "soins-details";
-		if (/^\/maisons-retraite\/\d+$/.test(path))
-			return "maisons-retraite-details";
-		if (/^\/statistiques\/\d+$/.test(path)) return "statistiques";
-		if (/\/[^/]+\/ajouter$/.test(path)) {
-			return "add-form";
+		const cleanPath = path.replace(/\/+$/, ""); // Removes the trailing slashes
+
+		const patterns = [
+			{ regex: /^$/, id: "home" },
+			{ regex: /^\/patients\/\d+$/, id: "patients-details" },
+			{ regex: /^\/tuteurs\/\d+$/, id: "tuteurs-details" },
+			{ regex: /^\/patients\/\d+\/soin\/\d+$/, id: "soins-details" },
+			{ regex: /^\/maisons-retraite\/\d+$/, id: "maisons-retraite-details" },
+			{ regex: /^\/statistiques\/\d+$/, id: "statistiques" },
+			{ regex: /\/[^/]+\/ajouter$/, id: "add-form" },
+		];
+
+		for (const { regex, id } of patterns) {
+			if (regex.test(cleanPath)) {
+				return id;
+			}
 		}
 
 		// Default: remove the first slash and return the path
-		return path.slice(1, path.length);
+		return cleanPath.slice(1, cleanPath.length);
 	}
 
 	useEffect(() => {
 		// Reset menu state when the location changes
 		dispatch(reset());
-		
+
+		// Removes the last slash in URL
+		const cleanPath = location.pathname.replace(/\/+$/, ""); // Removes excess slashes
+		if (location.pathname !== cleanPath) {
+			window.history.replaceState(null, "", cleanPath);
+		}
 	}, [location]);
 
 	return (

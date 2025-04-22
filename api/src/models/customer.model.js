@@ -94,6 +94,72 @@ class Customer {
 			id,
 		]);
 	}
+	
+	/** 
+	 * Method to find a guardian by their email (and optionnaly token).
+	 * Used for guardian registration or authentication.
+	 * (Token It is not yet implemented in the front-end (V2))
+	 * 
+	 * @param {string} email - The email of the guardian to registrate
+	 * @param {string} token - Email of the practitioner to registrate
+	 *  
+	 * @returns - A promise that resolves with the result of the SQL query
+	 */
+	static async findGuardianByEmail(email, token = null) {
+		let SELECT_GUARDIAN = `SELECT
+								    c.id,
+								    c.title,
+								    c.firstname,
+								    c.lastname,
+								    g.email,
+								    g.token,
+								    g.password
+								FROM
+								    customer c
+								LEFT JOIN guardian g ON
+								    c.id = g.customer_id
+								WHERE
+								    g.email = ? AND is_patient = '0'`;
+
+		const params = [email];
+		
+		// If token is provided, add the condition for token
+		if (token) {
+			SELECT_GUARDIAN += " AND g.token = ?";
+			params.push(token);
+		}
+
+		return await pool.execute(SELECT_GUARDIAN, params);
+	}
+	
+	/** 
+	 * Method to register a guardian on their first connection with a custom URL.
+	 * Guardian set is own password
+	 * (It is not yet implemented in the front-end (V2))
+	 * 
+	 * @param {object} connection - The database connection object
+	 * @param {number} id - The id of the guardian to update
+	 * @param {string} token - The token
+	 * @param {string} password - The hashed password of the guadian
+	 * 
+	 * @returns - A promise that resolves with the result of the SQL query
+	 */
+	static async registerGuardian(connection, { id, token, password }) {
+		const REGISTER_GUARDIAN = `UPDATE
+								       customer c
+								   JOIN guardian g ON
+								       c.id = g.customer_id
+								   SET
+								       g.password = ?
+								   WHERE
+								       c.id = ? AND g.token = ?`;
+
+		return await connection.execute(REGISTER_GUARDIAN, [
+			password,
+			id,
+			token,
+		]);
+	}
 
 
 /*

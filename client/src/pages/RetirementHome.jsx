@@ -6,11 +6,16 @@ import SearchBar from "./Components/SearchBar/SearchBar";
 import Pagination from "./Components/Pagination";
 
 import { useFetchData } from "../hooks/useFetchData";
+import useHead from "../hooks/useHead";
 
 function RetirementHome() {
 	// Retrieve the user's role (isAdmin) from the Redux store
 	const { isAdmin } = useSelector((state) => state.auth);
 	const navigate = useNavigate();
+	
+	// Set title and meta description
+	useHead("Établissements d'hébergement pour personnes âgées dépendantes","Suivez les informations des établissements de santé dans Roméo, pour une gestion optimale des soins et des services paramédicaux.");
+
 	
 	// Custom hook to fetch the list of retirement homes
 	const { datas, error, totalPages, page, setPage, loading } = useFetchData(

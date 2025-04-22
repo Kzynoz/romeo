@@ -1,4 +1,4 @@
-#soins-details > article {
+#soins-details>article {
 	header {
 		@include card($primary-color, $white);
 		text-align: left;
@@ -19,7 +19,7 @@
 		text-align: left;
 		cursor: initial;
 
-		.complements > strong {
+		.complements>strong {
 			display: block;
 			text-decoration: underline;
 		}
@@ -29,13 +29,16 @@
 		}
 
 		h2 {
-			flex-basis: 50%;
 			margin: auto;
 			margin-left: 0;
 			text-align: left;
+
+			span {
+				display: block;
+			}
 		}
 
-		+ span {
+		+span {
 			width: fit-content;
 		}
 	}

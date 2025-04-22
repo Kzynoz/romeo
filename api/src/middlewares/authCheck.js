@@ -4,15 +4,18 @@ const SECRET = process.env.JWT_SECRET;
 
 export default (req, res, next) => {
   try {
+    // Retrieve the JWT token from the cookies
     const token = req.cookies.jwt;
 
+    // If no token is found, respond with an unauthorized error
     if (!token) {
       return res.status(401).json({
         success: false,
         error: "Accès refusé: token manquant.",
       });
     }
-
+    
+    // Verify the token using the secret key
     jwt.verify(token, SECRET, (err, decoded) => {
       if (err) {
         const message =
@@ -25,6 +28,7 @@ export default (req, res, next) => {
         });
       }
 
+      // If token is valid, add the decoded user info to the request object
       req.user = decoded;
       next();
     });

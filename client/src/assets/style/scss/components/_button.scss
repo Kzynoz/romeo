@@ -58,3 +58,14 @@
 		margin-top: 2em;
 	}
 }
+
+#soins-details {
+	.price+button {
+		@include button();
+	}
+
+	.download-error {
+		color: $unpaid;
+		text-align: center;
+	}
+}

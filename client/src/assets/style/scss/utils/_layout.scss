@@ -29,11 +29,16 @@
 		@media (min-width: $breakpoint-md) {
 			grid-template-columns: repeat(3, 1fr);
 			grid-column: 2 span;
+		}
+
+		@media (min-width: $breakpoint-lg) {
 			margin-right: 3em;
 		}
+
+
 	}
 
-	> header {
+	>header {
 		margin: 1em 2em;
 		display: flex;
 		align-items: center;
@@ -41,15 +46,9 @@
 	}
 }
 
-@media (min-width: $breakpoint-lg) {
-	main {
-		max-width: $breakpoint-lg;
-		width: 100%;
-	}
-}
 
 #home {
-	> header {
+	>header {
 		p {
 			background-color: $background;
 
@@ -64,8 +63,39 @@
 		grid-template-columns: repeat(3, 1fr);
 		gap: 1em;
 
-		> header {
+		>header {
 			grid-column: span 3;
 		}
+	}
+}
+
+#mentions-legales,
+#politique-confidentialite {
+
+	p {
+		margin-bottom: 2em;
+	}
+
+	h2 {
+		margin: 1em 0;
+	}
+}
+
+footer a:hover {
+	color: $primary-color;
+}
+
+
+@media (min-width: $breakpoint-lg) {
+	main {
+		max-width: $breakpoint-lg;
+		width: 100%;
+	}
+}
+
+@media (min-width: $breakpoint-lg) {
+	#login {
+		max-width: 60vw;
+		width: 100%;
 	}
 }

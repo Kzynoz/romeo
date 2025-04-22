@@ -11,6 +11,7 @@ const enumValidator = (table, column) => {
 	};
 };
 
+// Validator for creating Care
 const validatorCreateCare = [
 	param("id")
 		.optional()
@@ -46,6 +47,7 @@ const validatorCreateCare = [
 		.custom(enumValidator("care", "type")),
 ];
 
+// Validator for updating Care
 const validatorUpdateCare = [
 	param("id")
 		.isInt()

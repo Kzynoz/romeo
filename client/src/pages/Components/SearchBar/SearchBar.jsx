@@ -98,7 +98,7 @@ function SearchBar({ entityType }) {
 				break;
 
 			case "all":
-				URL = `/user/search?q=${query}`;
+				URL = `/practitioner/search?q=${query}`;
 				break;
 
 			default:

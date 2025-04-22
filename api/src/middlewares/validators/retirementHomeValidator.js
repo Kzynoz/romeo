@@ -1,5 +1,6 @@
 import { body, param } from "express-validator";
 
+// Validator for creating Retirement Home
 const validatorCreateRH = [
 	body("name")
 		.notEmpty()
@@ -37,6 +38,7 @@ const validatorCreateRH = [
 		.trim(),
 ];
 
+// Validator for updating Retirement Home
 const validatorUpdateRH = [
 	param("id")
 		.isInt()

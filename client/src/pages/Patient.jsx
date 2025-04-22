@@ -7,6 +7,7 @@ import SearchBar from "./Components/SearchBar/SearchBar";
 import Pagination from "./Components/Pagination";
 
 import { useFetchData } from "../hooks/useFetchData";
+import useHead from "../hooks/useHead";
 
 function Patient() {
 	const {
@@ -15,6 +16,10 @@ function Patient() {
 	} = useSelector((state) => state.auth);
 
 	const navigate = useNavigate();
+	
+	// Set title and meta description
+	useHead("Liste des patients","Consultez et gérez la liste de vos patients, leur historique de soins et leurs informations personnelles sur Roméo, l'outil de gestion paramédicale.");
+
 
 	// Custom hook to fetch data for patients
 	const { datas, error, totalPages, page, setPage, loading } = useFetchData(

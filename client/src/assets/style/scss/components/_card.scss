@@ -5,11 +5,12 @@
 		cursor: initial;
 
 		@media (min-width: $breakpoint-md) {
-			margin: 0;
+			margin: 2em 0;
 		}
 
 		@media (min-width: $breakpoint-lg) {
 			grid-column: 1 span;
+			margin: 0;
 		}
 
 		a {
@@ -31,11 +32,11 @@
 					}
 				}
 
-				h2 + p {
+				h2+p {
 					position: relative;
 				}
 
-				h2 + p::after {
+				h2+p::after {
 					content: "";
 					height: 2px;
 					width: 30%;
@@ -78,6 +79,20 @@
 #statistiques .wrapper {
 	article {
 		@extend %card-flex;
+		text-align: left;
+
+		@media (min-width: $breakpoint-lg) {
+			text-align: center;
+		}
+
+		h3 span {
+			display: block;
+			margin-top: 0.5rem;
+
+			@media (min-width: $breakpoint-lg) {
+				margin-bottom: 1em;
+			}
+		}
 	}
 }
 
@@ -92,7 +107,7 @@
 			align-items: center;
 		}
 
-		> span {
+		>span {
 			grid-column: 2/3;
 			grid-row: 1/3;
 			align-self: center;
@@ -109,13 +124,29 @@
 #soins .wrapper {
 	article {
 		@extend %card-grid;
+
+		h2 {
+
+			@media (min-width: $breakpoint-lg) {
+				text-align: center;
+			}
+
+			span {
+				display: block;
+				margin-top: 0.5rem;
+
+				@media (min-width: $breakpoint-md) {
+					margin-bottom: 1rem;
+				}
+			}
+		}
 	}
 
 	h3 {
 		grid-column: 1/2;
 		grid-row: 2;
 
-		+ p {
+		+p {
 			grid-column: 2/3;
 			grid-row: 2;
 			text-transform: capitalize;
@@ -126,7 +157,7 @@
 #patients-details,
 #tuteurs-details,
 #maisons-retraite {
-	> article > header {
+	>article>header {
 		@include card($primary-color, $white);
 		text-align: left;
 		cursor: initial;
@@ -142,7 +173,7 @@
 }
 
 #statistiques {
-	> aside {
+	>aside {
 		@include card();
 		margin: 3em 0;
 
@@ -154,7 +185,7 @@
 			justify-content: space-around;
 
 			h2,
-			h2 + p {
+			h2+p {
 				flex-basis: 100%;
 			}
 		}
@@ -162,8 +193,8 @@
 }
 
 @media (min-width: $breakpoint-md) {
-	#tuteurs .wrapper article > span strong,
-	#maisons-retraite .wrapper article > span strong {
+	#tuteurs .wrapper article>span strong,
+	#maisons-retraite .wrapper article>span strong {
 		display: initial;
 		margin-right: 1rem;
 	}
@@ -225,7 +256,7 @@
 			align-items: center;
 			justify-content: space-between;
 
-			h2 + p {
+			h2+p {
 				margin-bottom: auto;
 			}
 
@@ -243,7 +274,7 @@
 	#tuteurs-details,
 	#maisons-retraite-details,
 	#soins-details {
-		> article > header {
+		>article>header {
 			text-align: center;
 		}
 

@@ -118,7 +118,7 @@ const create = async (req, res, next) => {
 
 		if (response.insertId) {
 			
-			const [[getInvoice]] = await Care.displayInvoice(response.insertId);
+			const [[getInvoice]] = await Care.getInvoiceData(response.insertId);
 
 			if (!getInvoice) {
 				await connection.rollback();
@@ -209,7 +209,7 @@ const update = async (req, res, next) => {
 		const [response] = await Care.update(updatedCare);
 
 		if (response.affectedRows) {
-			const [[getInvoice]] = await Care.displayInvoice(response.insertId);
+			const [[getInvoice]] = await Care.getInvoiceData(response.insertId);
 
 			const pdf = await generateInvoicePDF(getInvoice);
 
