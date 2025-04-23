@@ -27,7 +27,7 @@ function GuardianContact({ datas, isFull }) {
 	const zipCode = datas.address?.zip_code;
 	const email = datas.email || datas.details?.email;
 	const phone = datas.phone || datas.details?.phone;
-
+	
 	return (
 		<>
 			<section className="row-guardian">

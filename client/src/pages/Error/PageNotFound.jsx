@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import useHead from "../hooks/useHead";
+import useHead from "../../hooks/useHead";
 
 function PageNotFound() {
 	

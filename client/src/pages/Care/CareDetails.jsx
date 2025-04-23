@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import CareStatus from "./Components/CareStatus";
-import GuardianContact from "./Components/GuardianContact";
-import UpdateEntity from "./UpdateEntity";
+import CareStatus from "../Components/CareStatus";
+import GuardianContact from "../Components/GuardianContact";
+import UpdateEntity from "../Entity/UpdateEntity";
 
-import ManageItem from "./Components/ManageItem";
-import useFetchItem from "../hooks/useFetchItem";
-import useHead from "../hooks/useHead";
+import ManageItem from "../Components/ManageItem";
+import useFetchItem from "../../hooks/useFetchItem";
+import useHead from "../../hooks/useHead";
 
-import { customFetch } from "../service/api.js";
+import { customFetch } from "../../service/api.js";
 
 function CareDetails() {
 	// Get parameters from the URL
@@ -24,7 +24,7 @@ function CareDetails() {
 
 	// Custom Hook to fetch care details using the patient and care IDs
 	const { datas, error, loading } = useFetchItem({
-		url: `/patients/${id}/care/${idSoin}`,
+		url: `/care/${id}/${idSoin}`,
 		dependencies: [isEditingOpen],
 		guardian: {role,id},
 	});

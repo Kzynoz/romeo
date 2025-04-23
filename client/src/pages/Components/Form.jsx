@@ -56,7 +56,7 @@ function Form({ formStructure, initialFormData, isUpdated }) {
 
 	function handleChange(e) {
 		const { name, value } = e.target;
-		console.log(`Changement sur ${name} => ${value}`);
+		
 		let fieldValidation = null;
 
 		// Field validation upon change of values, different validation based on the URL
@@ -220,8 +220,6 @@ function Form({ formStructure, initialFormData, isUpdated }) {
 				}
 			}
 		} catch (error) {
-			console.log("Erreur lors de la mise à jour", error);
-
 			setMessage({
 				status: "error",
 				text: "Une erreur est survenue, veuillez réessayer.",

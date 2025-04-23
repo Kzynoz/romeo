@@ -4,10 +4,10 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import PropTypes from "prop-types";
 
-import Form from "./Components/Form.jsx";
-import { formRetirementHome } from "../utils/formStructure/formRetirementHome.js";
-import { formGuardian } from "../utils/formStructure/formGuardian.js";
-import { formCare } from "../utils/formStructure/formCare.js";
+import Form from "../Components/Form.jsx";
+import { formRetirementHome } from "../../utils/formStructure/formRetirementHome.js";
+import { formGuardian } from "../../utils/formStructure/formGuardian.js";
+import { formCare } from "../../utils/formStructure/formCare.js";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";

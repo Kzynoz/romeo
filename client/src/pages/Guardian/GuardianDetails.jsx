@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import UpdateEntity from "./UpdateEntity";
-import GuardianContact from "./Components/GuardianContact";
-import Pagination from "./Components/Pagination";
-import ManageItem from "./Components/ManageItem";
+import UpdateEntity from "../Entity/UpdateEntity";
+import GuardianContact from "../Components/GuardianContact";
+import Pagination from "../Components/Pagination";
+import ManageItem from "../Components/ManageItem";
 
-import useFetchItem from "../hooks/useFetchItem";
-import useHead from "../hooks/useHead";
+import useFetchItem from "../../hooks/useFetchItem";
+import useHead from "../../hooks/useHead";
 
 function GuardianDetails() {
 	// Extract the guardian ID from the URL parameters
@@ -67,6 +67,7 @@ function GuardianDetails() {
 										{datas.guardian.details.firstname}{" "}
 										{datas.guardian.details.lastname}
 									</h1>
+									<p>Relation : {datas.guardian.relationship}</p>
 								</header>
 
 								{datas.guardian && (

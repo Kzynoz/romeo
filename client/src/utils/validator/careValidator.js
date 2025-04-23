@@ -74,6 +74,6 @@ export function careValidator(formData) {
 			errors[field] = error;
 		}
 	});
-	console.log(errors);
+
 	return errors;
 }

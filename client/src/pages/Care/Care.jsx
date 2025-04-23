@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import CareStatus from "./Components/CareStatus";
-import SearchBar from "./Components/SearchBar/SearchBar";
-import Pagination from "./Components/Pagination";
+import CareStatus from "../Components/CareStatus";
+import SearchBar from "../Components/SearchBar/SearchBar";
+import Pagination from "../Components/Pagination";
 
-import { useFetchData } from "../hooks/useFetchData";
-import useHead from "../hooks/useHead";
+import { useFetchData } from "../../hooks/useFetchData";
+import useHead from "../../hooks/useHead";
 
 function Care() {
 	const navigate = useNavigate();

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 
-import RemoveEntity from "../RemoveEntity";
+import RemoveEntity from "../Entity/RemoveEntity";
 
 import { toggleModal, toggleEditing } from "../../features/menuSlice";
 
@@ -14,7 +14,7 @@ import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
  * This component handles the management of an entity (such as a patient, care, guardian, retirement home), 
  * allowing for actions like: Back navigation, Open the modal for deleting and updating entity
  * 
- * @params {object} entity - The id's entity from API to be deleted
+ * @params {object} entity - The id's entity from API to be
  * @params {object} link - The link object containing the URL and title
  * 
  * @returns - A set of action buttons (Back, Edit, Delete) for managing the entity, visible only to admins

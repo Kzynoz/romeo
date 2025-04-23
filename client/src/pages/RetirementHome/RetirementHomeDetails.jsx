@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import UpdateEntity from "./UpdateEntity";
-import ManageItem from "./Components/ManageItem";
-import Pagination from "./Components/Pagination";
+import UpdateEntity from "../Entity/UpdateEntity";
+import ManageItem from "../Components/ManageItem";
+import Pagination from "../Components/Pagination";
 
-import useFetchItem from "../hooks/useFetchItem";
-import useHead from "../hooks/useHead";
+import useFetchItem from "../../hooks/useFetchItem";
+import useHead from "../../hooks/useHead";
 
 function RetirementHomeDetails() {
 	const { id } = useParams();
@@ -18,7 +18,6 @@ function RetirementHomeDetails() {
 	
 	// Set title and meta description
 	useHead("Détail de l'EHPAD","Découvrez les informations détaillées sur l'établissement");
-
 
 	// Custom hook to fetch data for a specific retirement home
 	const { datas, error, totalPages, page, setPage, loading } = useFetchItem({

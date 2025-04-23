@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import SearchBar from "./Components/SearchBar/SearchBar";
-import Pagination from "./Components/Pagination";
+import SearchBar from "../Components/SearchBar/SearchBar";
+import Pagination from "../Components/Pagination";
 
-import { useFetchData } from "../hooks/useFetchData";
-import useHead from "../hooks/useHead";
+import { useFetchData } from "../../hooks/useFetchData";
+import useHead from "../../hooks/useHead";
 
 
 function Guardian() {

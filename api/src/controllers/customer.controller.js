@@ -1,20 +1,19 @@
-import Patient from "../models/patient.model.js";
 import Customer from "../models/customer.model.js";
 import { validationResult } from "express-validator";
 
 
-
-const getAll = async (req, res, next) => {
+// Get All customers who are patient
+const getAllPatients = async (req, res, next) => {
 	const offset = req.query.offset || "0";
 	const limit = req.query.limit || "10";
 	const guardian_id = req.guardian_id;
 
 	try {
 		// Count patients of guardian
-		const [[count]] = await Patient.countAll(guardian_id);
+		const [[count]] = await Customer.countAll(guardian_id);
 
 		if (count.total > 0) {
-			const [response] = await Patient.gettAllWithLatestCare({
+			const [response] = await Customer.getAllWithLatestCare({
 				offset,
 				limit,
 				guardian_id,
@@ -37,14 +36,15 @@ const getAll = async (req, res, next) => {
 	}
 };
 
-const getOne = async (req, res, next) => {
+// Get one patient by his ID
+const getOnePatient = async (req, res, next) => {
 	const { id } = req.params;
 	const offset = req.query.offset || "0";
 	const limit = req.query.limit || "10";
 	const guardian_id = req.guardian_id;
 
 	try {
-		const [[response]] = await Patient.getOne({
+		const [[response]] = await Customer.getOnePatient({
 			offset,
 			limit,
 			id,
@@ -67,6 +67,7 @@ const getOne = async (req, res, next) => {
 	}
 };
 
+// Create a patient
 const create = async (req, res, next) => {
 	const errors = validationResult(req);
 
@@ -76,9 +77,14 @@ const create = async (req, res, next) => {
 			errors: errors.array(),
 		});
 	}
+	
+	const findPatient = {
+		...req.body,
+		isPatient: 1,
+	}
 
 	try {
-		const [[existingPatient]] = await Patient.findPatient(req.body);
+		const [[existingPatient]] = await Customer.findCustomer(findPatient);
 
 		if (existingPatient) {
 			return res.status(400).json({ message: "Le patient existe déjà." });
@@ -86,21 +92,23 @@ const create = async (req, res, next) => {
 
 		const patient = {
 			...req.body,
-			is_patient: 1,
-			guardian_id: req.body.guardian_id || null,
-			retirement_home_id: req.body.retirement_home_id || null,
+			is_patient:             1,
+			guardian_id:            req.body.guardian_id        || null,
+			retirement_home_id:     req.body.retirement_home_id || null,
 		};
 
-		const [response] = await Patient.insert(patient);
+		const [response] = await Customer.insertPatient(patient);
 
 		if (response.insertId) {
 			return res.status(201).json({ message: "Patient ajouté avec succès." });
 		}
 	} catch (error) {
+		console.log(error);
 		next(error);
 	}
 };
 
+// Update a patient
 const update = async (req, res, next) => {
 	const { id } = req.params;
 	const errors = validationResult(req);
@@ -112,8 +120,6 @@ const update = async (req, res, next) => {
 		});
 	}
 
-	console.log(errors);
-
 	const updatedPatient = {
 		...req.body,
 		id,
@@ -122,7 +128,7 @@ const update = async (req, res, next) => {
 	try {
 		const [response] = await Customer.updateIsPatient(updatedPatient);
 
-		if (response.affectedRows) {
+		if (response.affectedRows === 1) {
 			return res.status(201).json({ message: "Patient modifié." });
 		}
 		return res
@@ -133,11 +139,21 @@ const update = async (req, res, next) => {
 	}
 };
 
+
+// Remove a customer who's patient
 const remove = async (req, res, next) => {
 	const { id } = req.body;
+	const { idItem } = req.params;
+
+	if (id != idItem) {
+		res.status(400).json({
+			message: "Une erreur est survenue, veuillez réessayer plus tard.",
+		});
+		return;
+	}
 	try {
 		const [response] = await Customer.delete(id, 1);
-		if (response.affectedRows) {
+		if (response.affectedRows === 1) {
 			res.json({ message: "Patient supprimé." });
 			return;
 		}
@@ -149,7 +165,8 @@ const remove = async (req, res, next) => {
 	}
 };
 
-const getBySearch = async (req, res, next) => {
+// Get patient with search
+const getCustomersBySearch = async (req, res, next) => {
 	const { q = "" } = req.query;
 	const formattedSearch = `%${q.trim()}%`;
 
@@ -174,4 +191,4 @@ const getBySearch = async (req, res, next) => {
 	}
 };
 
-export { getAll, getOne, create, remove, update, getBySearch };
+export { getAllPatients, getOnePatient, create, update, remove, getCustomersBySearch };

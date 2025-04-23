@@ -64,7 +64,6 @@ export function useFetchData(url,limit = null, guardian = null) {
                     setError(message);
                 }
             } catch (error) {
-                console.log(error);
                 setError("Une erreur est survenue lors de la récupération des données.");
             } finally {
                 setLoading(false);

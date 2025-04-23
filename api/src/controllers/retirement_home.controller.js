@@ -1,6 +1,8 @@
 import { validationResult } from "express-validator";
 import RetirementHome from "../models/retirement_home.model.js";
 
+
+// Get all retirement homes with limit
 const getAll = async (req, res, next) => {
 	const offset = req.query.offset || "0";
 	const limit = req.query.limit || "10";
@@ -28,6 +30,7 @@ const getAll = async (req, res, next) => {
 	}
 };
 
+// Insert a new retirement home
 const create = async (req, res, next) => {
 	const { name, contact, street, city, zip_code } = req.body;
 	const errors = validationResult(req);
@@ -60,12 +63,12 @@ const create = async (req, res, next) => {
 	}
 };
 
+// Remove a specific retirement home
 const remove = async (req, res, next) => {
 	const { id } = req.body;
 	const { idItem } = req.params;
-	console.log("id body", id);
-	console.log("id params", idItem);
 
+	// Check if the ID from the body matches the ID from the URL
 	if (id != idItem) {
 		res.status(400).json({
 			message: "Une erreur est survenue, veuillez réessayer plus tard.",
@@ -75,7 +78,7 @@ const remove = async (req, res, next) => {
 
 	try {
 		const [response] = await RetirementHome.delete(id);
-		if (response.affectedRows) {
+		if (response.affectedRows === 1) {
 			res.json({ message: "Maison de retraite supprimée." });
 			return;
 		}
@@ -87,6 +90,7 @@ const remove = async (req, res, next) => {
 	}
 };
 
+// Update a specific Retirement Home
 const update = async (req, res, next) => {
 	const { name, contact, street, city, zip_code } = req.body;
 	const { id } = req.params;
@@ -112,7 +116,7 @@ const update = async (req, res, next) => {
 	try {
 		const [response] = await RetirementHome.update(retirement_home);
 
-		if (response.affectedRows) {
+		if (response.affectedRows === 1) {
 			return res.status(201).json({ message: "Maison de retraite modifiée." });
 		}
 		return res
@@ -123,12 +127,11 @@ const update = async (req, res, next) => {
 	}
 };
 
+// Get one retirement home by ID and limit the number of patients living there
 const getOne = async (req, res, next) => {
 	const { id } = req.params;
 	const offset = req.query.offset || "0";
 	const limit = req.query.limit || "10";
-	
-	console.log("hiit");
 	
 	try {
 		const [[response]] = await RetirementHome.getOne({id,offset,limit});
@@ -148,6 +151,7 @@ const getOne = async (req, res, next) => {
 	}
 };
 
+// Get a specific retirement home with search
 const getBySearch = async (req, res, next) => {
 	const { q = "" } = req.query;
 	const formattedSearch = `%${q.trim()}%`;

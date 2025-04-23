@@ -31,7 +31,6 @@ function validateTitle(title) {
 }
 
 function validateGuardian(guardian) {
-	console.log("guardian", guardian);
 	if (!guardian) return "Veuillez sélectionner un tuteur";
 	return null;
 }

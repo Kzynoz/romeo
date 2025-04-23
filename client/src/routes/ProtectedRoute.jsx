@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate, Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
 import { login, logout } from "../features/authSlice";
 import { customFetch } from "../service/api.js";
 
 function ProtectedRoute() {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	
 	// Get the authentication state from Redux
 	const { isLogged } = useSelector((state) => state.auth);
@@ -33,9 +34,11 @@ function ProtectedRoute() {
 					dispatch(login(resJSON.user));
 				} else {
 					dispatch(logout());
+					navigate("/login");
 				}
 			} catch (error) {
 				dispatch(logout());
+				navigate("/login");
 			} finally {
 				// In any case, verification process is done
 				setIsVerifying(false);
@@ -55,11 +58,7 @@ function ProtectedRoute() {
 	if (isVerifying) {
 		return <p>Chargement…</p>;
 	}
-
-	if (!isLogged) {
-		return <Navigate to="/login" />;
-	}
-
+	
 	// If everything is fine, render the child routes
 	return <Outlet />;
 }

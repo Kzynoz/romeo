@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import CareStatus from "./Components/CareStatus";
-import SearchBar from "./Components/SearchBar/SearchBar";
-import Pagination from "./Components/Pagination";
+import CareStatus from "../Components/CareStatus";
+import SearchBar from "../Components/SearchBar/SearchBar";
+import Pagination from "../Components/Pagination";
 
-import { useFetchData } from "../hooks/useFetchData";
-import useHead from "../hooks/useHead";
+import { useFetchData } from "../../hooks/useFetchData";
+import useHead from "../../hooks/useHead";
 
 function Patient() {
 	const {
@@ -23,7 +23,7 @@ function Patient() {
 
 	// Custom hook to fetch data for patients
 	const { datas, error, totalPages, page, setPage, loading } = useFetchData(
-		"/patients",
+		"/customers",
 		10,
 		{ role, id }
 	);

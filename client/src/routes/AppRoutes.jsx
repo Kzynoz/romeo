@@ -1,26 +1,45 @@
 import { Route, Routes } from "react-router-dom";
 
-
 // Importing all the components/pages for routing
 import Home from "../pages/Home";
+
+// Auth page
 import Login from "../pages/Auth/Login";
-import ProtectedRoute from "./ProtectedRoute";
-import Patient from "../pages/Patient";
-import PatientDetails from "../pages/PatientDetails";
-import CareDetails from "../pages/CareDetails";
-import Guardian from "../pages/Guardian";
-import GuardianDetails from "../pages/GuardianDetails";
-import RetirementHome from "../pages/RetirementHome";
-import RetirementHomeDetails from "../pages/RetirementHomeDetails";
-import Care from "../pages/Care";
-import Statistics from "../pages/Statistics";
-import CreateEntity from "../pages/CreateEntity";
-import FormPatient from "../pages/FormPatient";
-import Unauthorized from "../pages/Unauthorized";
-import RoleProtectedRoute from "./RoleProtectedRoute";
-import PageNotFound from "../pages/PageNotFound";
+
+// Patient pages
+import Patient from "../pages/Patient/Patient";
+import PatientDetails from "../pages/Patient/PatientDetails";
+import FormPatient from "../pages/Patient/FormPatient";
+
+// Guardian pages
+import Guardian from "../pages/Guardian/Guardian";
+import GuardianDetails from "../pages/Guardian/GuardianDetails";
+
+// Retirement Home pages
+import RetirementHome from "../pages/RetirementHome/RetirementHome";
+import RetirementHomeDetails from "../pages/RetirementHome/RetirementHomeDetails";
+
+// Care pages
+import Care from "../pages/Care/Care";
+import CareDetails from "../pages/Care/CareDetails";
+
+// Legal pages
 import LegalNotice from "../pages/Legal/LegalNotice";
 import PrivacyPolicy from "../pages/Legal/PrivacyPolicy";
+
+// Statistics page
+import Statistics from "../pages/Statistics";
+
+// Entity actions pages
+import CreateEntity from "../pages/Entity/CreateEntity";
+
+// Error pages
+import Unauthorized from "../pages/Error/Unauthorized";
+import PageNotFound from "../pages/Error/PageNotFound";
+
+// Protected components
+import ProtectedRoute from "./ProtectedRoute";
+import RoleProtectedRoute from "./RoleProtectedRoute";
 
 function AppRoutes() {
 	return (

@@ -9,6 +9,8 @@ import createToken from "../utils/token.js";
 
 const SALT = 10;
 
+// Register a new practitioner
+// (not implemented yet in front, V2)
 const register = async (req, res, next) => {
 	const { alias, email, password } = req.body;
 	const errors = validationResult(req);
@@ -21,6 +23,7 @@ const register = async (req, res, next) => {
 	}
 
 	try {
+		// Hash password with bcrypt
 		const hashedPassword = await hash(password, SALT);
 		const [response] = await Practitioner.createPractitioner({
 			alias,
@@ -38,6 +41,7 @@ const register = async (req, res, next) => {
 	}
 };
 
+// Login for practitioner
 const login = async (req, res, next) => {
 	const { email, password } = req.body;
 	try {
@@ -47,10 +51,13 @@ const login = async (req, res, next) => {
 			const comparedPassword = await compare(password, response.password);
 
 			if (comparedPassword) {
+				// Create a security TOken with JWT
 				const TOKEN = createToken(response);
+				
+				// Send the cookie
 				res.cookie("jwt", TOKEN, {
 					httpOnly: true,
-					secure: process.env.NODE_ENV === "production", // Utilise HTTPS en production
+					secure: process.env.NODE_ENV === "production", // Use HTTPS in production
 					//sameSite: "none",
 					maxAge: 86400000,
 				});
@@ -75,15 +82,17 @@ const login = async (req, res, next) => {
 	}
 };
 
+// Logout 
 const logout = async (req, res, next) => {
 	res.clearCookie("jwt", {
 		httpOnly: true,
 		secure: process.env.NODE_ENV === "production",
-		//sameSite: "none", en remettre à la mise en ligne
+		//sameSite: "none", Use for online
 	});
 	res.json({ message: "L'utilisateur a été deconnecté." });
 };
 
+// Refresh Login 
 const refreshLogin = async (req, res, next) => {
 	res.json({
 		message: "L'utilisateur est bien connecté.",
@@ -96,15 +105,16 @@ const refreshLogin = async (req, res, next) => {
 	});
 };
 
+
+// Guardian registration 
+// (not implented yet in front, V2)
 const guardianRegister = async (req, res, next) => {
 	const { tokenUrl } = req.params;
 	const { email, password } = req.body;
 	const errors = validationResult(req);
 	let connection = null;
 
-	console.log("toke", tokenUrl);
-	console.log("email", req.body);
-
+	// Check if there are validation errors from the request body
 	if (!errors.isEmpty()) {
 		return res.status(400).json({
 			message: "Erreur lors de la validation du formulaire.",
@@ -113,25 +123,31 @@ const guardianRegister = async (req, res, next) => {
 	}
 
 	try {
-		const [[findGuardian]] = await Customer.findGuardianByEmail(email, tokenUrl);
+		// Check if the guardian exists with the provided email and tokenUrl
+		const [[findGuardian]] = await Guardian.findGuardianByEmail(email, tokenUrl);
 
+		// If guardian and token are found
 		if (findGuardian && findGuardian.token) {
+			
 			const { id, token } = findGuardian;
 			const hashedPassword = await hash(password, SALT);
 
+			// Start a database transaction
 			connection = await pool.getConnection();
 			await connection.beginTransaction();
 
-			const [response] = await Customer.registerGuardian(connection, {
+			const [response] = await Guardian.registerGuardian(connection, {
 				id,
 				token,
 				password: hashedPassword,
 			});
 
-			if (response.affectedRows) {
+			// If the guardian was successfully registered
+			if (response.affectedRows === 1) {
+				// Then delete the associated token so he couldn't registred twice
 				const [deleteToken] = await Guardian.deleteToken(connection, { id, token });
 
-				if (deleteToken.affectedRows) {
+				if (deleteToken.affectedRows === 1) {
 					await connection.commit();
 					return res
 						.status(201)
@@ -140,6 +156,7 @@ const guardianRegister = async (req, res, next) => {
 			}
 		}
 
+		// If registration failed, rollback the transaction
 		if (connection) await connection.rollback();
 		return res.status(400).json({
 			message: "Token ou email invalide.",
@@ -152,10 +169,12 @@ const guardianRegister = async (req, res, next) => {
 	}
 };
 
+// Guardian login
 const guardianLogin = async (req, res, next) => {
 	const { email, password } = req.body;
+	
 	try {
-		const [[response]] = await Customer.findGuardianByEmail(email);
+		const [[response]] = await Guardian.findGuardianByEmail(email);
 
 		if (response) {
 			const comparedPassword = await compare(password, response.password);
@@ -165,8 +184,8 @@ const guardianLogin = async (req, res, next) => {
 
 				res.cookie("jwt", TOKEN, {
 					httpOnly: true,
-					secure: process.env.NODE_ENV === "production", // Utilise HTTPS en production
-					// sameSite: "none", à changer à la mise en lgine
+					secure: process.env.NODE_ENV === "production",
+					// sameSite: "none",
 					maxAge: 86400000,
 				});
 

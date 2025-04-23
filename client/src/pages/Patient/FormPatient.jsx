@@ -2,17 +2,17 @@ import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
-import SearchCard from "./Components/SearchBar/SearchCard";
+import SearchCard from "../Components/SearchBar/SearchCard";
 
-import { patientValidator } from "../utils/validator/patientValidator";
+import { patientValidator } from "../../utils/validator/patientValidator";
 
-import { toggleEditing } from "../features/menuSlice";
+import { toggleEditing } from "../../features/menuSlice";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
-import { customFetch } from "../service/api.js";
-import useHead from "../hooks/useHead";
+import { customFetch } from "../../service/api.js";
+import useHead from "../../hooks/useHead";
 
 import PropTypes from "prop-types";
 
@@ -29,7 +29,6 @@ function FormPatient({ data }) {
 		title:					data?.title 				?? "",
 		firstname:				data?.firstname 			?? "",
 		lastname:				data?.lastname				?? "",
-		phone:					data?.phone 				?? "",
 		guardian_id:			data?.guardian?.id			?? "",
 		retirement_home_id:		data?.retirement_home?.id	?? "",
 		
@@ -200,8 +199,8 @@ function FormPatient({ data }) {
 		
 		// The URL differs depending on whether it's an update or a create operation
 		const URL = data
-			? `/patients/${data.id}`
-			: "/patients/";
+			? `/customers/${data.id}`
+			: "/customers/";
 
 		try {
 			

@@ -82,7 +82,7 @@ function SearchBar({ entityType }) {
 		// Update the search bar placeholder based on the "entityType" prop
 		switch (entityType) {
 			case "patient":
-				URL = `/patients/search?q=${query}`;
+				URL = `/customers/search?q=${query}`;
 				break;
 
 			case "care":
@@ -124,6 +124,7 @@ function SearchBar({ entityType }) {
 				setIsOpen(false);
 			}
 		} catch (error) {
+			console.log(error);
 			setError("Une erreur est survenue, veuillez réessayer plus tard.");
 		} finally {
 			setLoading(false);

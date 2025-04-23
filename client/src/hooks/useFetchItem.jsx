@@ -39,9 +39,9 @@ function useFetchItem({url, limit = null, countKey = null, guardian = null, depe
             // Separator uses for adding & if limit is provided or ?
             if (guardian && guardian.role === "guardian") {
                 const separator = finalURL.includes("?") ? "&" : "?";
-                finalURL += `${separator}guardian_id=${guardian.id}`;
+                finalURL += `${separator}guardian_id=${guardian.id || guardian.guardianId}`;
             }
-            
+
             const options = {
                 credentials: "include",
             };
@@ -58,7 +58,6 @@ function useFetchItem({url, limit = null, countKey = null, guardian = null, depe
                 if (res.ok) {
                     const { response } = await res.json();
                     setDatas(response);
-                
                     // If a limit is set, calculate the total pages based on countKey
                     if (limit && response[countKey]) {
                         setTotalPages(Math.ceil(response[countKey] / limit));
@@ -68,7 +67,6 @@ function useFetchItem({url, limit = null, countKey = null, guardian = null, depe
                     setError(message);
                 }
             } catch (error) {
-                console.log(error);
                 setError("Une erreur est survenue lors de la récupération des données.");
             } finally {
                 setLoading(false);

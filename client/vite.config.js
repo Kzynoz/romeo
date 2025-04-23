@@ -15,7 +15,7 @@ export default ({ mode }) => {
           changeOrigin: true,
         },
       },
-      allowedHosts: ["julienbellet.ide.3wa.io"],
+      allowedHosts: ["julienbellet.ide.3wa.io"]
     },
   });
 };

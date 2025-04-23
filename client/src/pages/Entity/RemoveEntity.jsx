@@ -7,9 +7,9 @@ import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
-import { toggleModal } from "../features/menuSlice";
+import { toggleModal } from "../../features/menuSlice";
 
-import { customFetch } from "../service/api.js";
+import { customFetch } from "../../service/api.js";
 
 /**
  * This component handles the deletion of an entity (such as a patient, care, retirement home and care) through a confirmation modal
