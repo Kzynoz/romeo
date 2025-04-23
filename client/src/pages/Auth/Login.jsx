@@ -16,7 +16,7 @@ function Login() {
 	const [role, setRole] = useState("practitioner");
 
 	const { isLogged } = useSelector((state) => state.auth);
-
+	
 	// Handle email input change
 	function onChangeEmail(e) {
 		setEmail(e.target.value);

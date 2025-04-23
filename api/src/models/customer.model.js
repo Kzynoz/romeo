@@ -242,7 +242,7 @@ class Customer {
 	 * @returns - A promise that resolves with the result of the SQL query. 
 	 */
 	static async getOnePatient({ offset, limit, id, guardian_id }) {
-
+		
 		const SELECT_PATIENT = `SELECT
 								    c.id, c.title, c.lastname, c.firstname,
 								    JSON_OBJECT('id', rh.id, 'name', rh.name) AS retirement_home,
@@ -304,8 +304,7 @@ class Customer {
 								LEFT JOIN customer gc ON
 								    c.guardian_id = gc.id
 								WHERE
-								    c.is_patient = 1 AND c.id = ?
-                                ${guardian_id ? "AND c.guardian_id = ?" : ""};`;
+								    c.is_patient = 1 AND c.id = ?`;
                                 
                                 
     	const params = [id, limit, offset, id, id];
