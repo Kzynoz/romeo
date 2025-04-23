@@ -103,7 +103,6 @@ const create = async (req, res, next) => {
 			return res.status(201).json({ message: "Patient ajouté avec succès." });
 		}
 	} catch (error) {
-		console.log(error);
 		next(error);
 	}
 };

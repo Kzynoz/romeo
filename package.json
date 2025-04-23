@@ -1,8 +1,0 @@
-{
-	"devDependencies": {
-		"concurrently": "^9.1.2"
-	},
-	"scripts": {
-		"dev": "concurrently \"npm run dev_3wa --prefix api\" \"npm run dev --prefix client\""
-	}
-}

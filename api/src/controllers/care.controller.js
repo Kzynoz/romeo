@@ -40,8 +40,6 @@ const getOneCare = async (req, res, next) => {
 	const { patientId, id } = req.params;
 	const guardian_id = req.guardian_id;
 
-	console.log("guardian_id from Care", guardian_id);
-
 	try {
 		const [[response]] = await Care.getOne({ patientId, id, guardian_id });
 
@@ -185,7 +183,6 @@ const create = async (req, res, next) => {
 		if(connection) await connection.rollback();
 		return res.status(500).json({ message: "Erreur lors de l'ajout du soin." });
 	} catch (error) {
-		console.log(error);
 		if (connection) await connection.rollback();
 		next(error);
 	} finally {
