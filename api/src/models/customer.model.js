@@ -246,18 +246,23 @@ class Customer {
 		const SELECT_PATIENT = `SELECT
 								    c.id, c.title, c.lastname, c.firstname,
 								    JSON_OBJECT('id', rh.id, 'name', rh.name) AS retirement_home,
-								    JSON_OBJECT(
-								        'id', gc.id,
-								        'title', gc.title,
-								        'firstname', gc.firstname,
-								        'lastname', gc.lastname,
-								        'relationship', g.relationship,
-								        'phone', gc.phone,
-								        'email', g.email,
-								        'company', g.company,
-								        'address',
-								        JSON_OBJECT('street', g.street, 'city', g.city, 'zip_code', g.zip_code)
-								    ) AS guardian,
+								    CASE
+								    	WHEN gc.id IS NULL THEN
+								    		NULL
+								    	ELSE
+								    		JSON_OBJECT(
+								    		    'id', gc.id,
+								    		    'title', gc.title,
+								    		    'firstname', gc.firstname,
+								    		    'lastname', gc.lastname,
+								    		    'relationship', g.relationship,
+								    		    'phone', gc.phone,
+								    		    'email', g.email,
+								    		    'company', g.company,
+								    		    'address',
+								    		    JSON_OBJECT('street', g.street, 'city', g.city, 'zip_code', g.zip_code)
+								    		) 
+								    END AS guardian,
 								    (
 								    SELECT
 								        JSON_ARRAYAGG(

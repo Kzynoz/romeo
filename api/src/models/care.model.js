@@ -115,24 +115,29 @@ class Care {
 	static async getOne({ patientId, id, guardian_id }) {
 		const SELECT_CARE = `SELECT
                                 c.id, c.title, c.lastname, c.firstname,
-                                JSON_OBJECT(
-                                    'details',
-                                    JSON_OBJECT(
-                                        'id', g.id,
-                                        'customer_id', g.customer_id,
-                                        'title', gc.title,
-                                        'firstname', gc.firstname,
-                                        'lastname', gc.lastname,
-                                        'phone', gc.phone,
-                                        'email', g.email
-                                    ),
-                                    'relationship', g.relationship,
-                                    'company', g.company,
-                                    'address',
-                                    JSON_OBJECT(
-                                        'street', g.street, 'city', g.city, 'zip_code', g.zip_code
-                                    )
-                                ) AS guardian,
+                                CASE
+                                    WHEN g.id IS NULL THEN
+                                        NULL
+                                    ELSE
+                                        JSON_OBJECT(
+                                            'details',
+                                            JSON_OBJECT(
+                                                'id', g.id,
+                                                'customer_id', g.customer_id,
+                                                'title', gc.title,
+                                                'firstname', gc.firstname,
+                                                'lastname', gc.lastname,
+                                                'phone', gc.phone,
+                                                'email', g.email
+                                            ),
+                                            'relationship', g.relationship,
+                                            'company', g.company,
+                                            'address',
+                                            JSON_OBJECT(
+                                                'street', g.street, 'city', g.city, 'zip_code', g.zip_code
+                                            )
+                                        ) 
+                                    END AS guardian,
                                 JSON_OBJECT(
                                     'id', care.id,
                                     'performed_at', care.performed_at,
@@ -354,10 +359,10 @@ class Care {
 	 */
 	static async getTotalCareByYear(year) {
 		const COUNT_BY_YEAR = `SELECT
-                                    YEAR,
+                                    year,
                                     JSON_ARRAYAGG(
                                         JSON_OBJECT(
-                                            'month',MONTH,
+                                            'month',month,
                                             'total_entries',total_entries,
                                             'total_revenue_paid',total_revenue_paid,
                                             'total_revenue_estimated',total_revenue_estimated
@@ -366,8 +371,8 @@ class Care {
                                 FROM
                                     (
                                     SELECT
-                                        YEAR(performed_at) AS YEAR,
-                                        MONTH(performed_at) AS MONTH,
+                                        YEAR(performed_at) AS year,
+                                        MONTH(performed_at) AS month,
                                         COUNT(id) AS total_entries,
                                         IFNULL(
                                             SUM(
@@ -391,13 +396,13 @@ class Care {
                                     YEAR(performed_at),
                                     MONTH(performed_at)
                                 ORDER BY
-                                    MONTH
+                                    month
                                 DESC
-                                    ) AS DATA
+                                    ) AS data
                                 GROUP BY
-                                    YEAR
+                                    year
                                 ORDER BY
-                                    YEAR
+                                    year
                                 DESC
                                     ;`;
 

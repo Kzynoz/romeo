@@ -55,6 +55,7 @@ const getOneCare = async (req, res, next) => {
 			response,
 		});
 	} catch (error) {
+		console.log(error);
 		next(error);
 	}
 };
@@ -257,6 +258,8 @@ const getTotalCareByYear = async (req, res, next) => {
 	const { year } = req.params;
 	try {
 		const [[response]] = await Care.getTotalCareByYear(year);
+		
+		console.log(response);
 
 		if (response) {
 			return res.status(200).json({
@@ -268,6 +271,7 @@ const getTotalCareByYear = async (req, res, next) => {
 			message: "Aucun soin trouvé pour cette année.",
 		});
 	} catch (error) {
+		console.log(error);
 		next(error);
 	}
 };

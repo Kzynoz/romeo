@@ -12,7 +12,7 @@ function Statistics() {
 	const { year } = useParams();
 	
 	// Set title and meta description
-	useHead("Statistics de l'année en cours","Accédez aux statistiques détaillées de votre activité paramédicale avec Roméo, pour une analyse précise de vos performances et de vos soins.");
+	useHead("Statistiques de l'année en cours","Accédez aux statistiques détaillées de votre activité paramédicale avec Roméo, pour une analyse précise de vos performances et de vos soins.");
 
 	// Use custom hook to fetch data for the selected year
 	const { datas, error, loading } = useFetchData(`/care/count-by-year/${year}`);

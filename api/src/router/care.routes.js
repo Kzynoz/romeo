@@ -30,9 +30,6 @@ router.post("/", validatorCreateCare, create);
 // Route to get all care
 router.get("/", getAll);
 
-// Route to get a specific care by patient ID and care ID
-router.get("/:patientId/:id", isGuardian, getOneCare);
-
 // Route to count the number of cares made during the current month, use for statistics
 router.get("/count-this-month", getTotalCareThisMonth);
 
@@ -44,6 +41,9 @@ router.get("/search", getBySearch);
 
 // Route to get a specifi invoice by its filename
 router.get("/invoices/:filename", getInvoice);
+
+// Route to get a specific care by patient ID and care ID
+router.get("/:patientId/:id", isGuardian, getOneCare);
 
 // Route to update care details
 router.patch("/:id", validatorUpdateCare, update);

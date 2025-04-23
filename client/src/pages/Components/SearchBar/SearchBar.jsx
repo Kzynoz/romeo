@@ -124,7 +124,6 @@ function SearchBar({ entityType }) {
 				setIsOpen(false);
 			}
 		} catch (error) {
-			console.log(error);
 			setError("Une erreur est survenue, veuillez réessayer plus tard.");
 		} finally {
 			setLoading(false);

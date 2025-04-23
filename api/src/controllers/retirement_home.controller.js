@@ -172,7 +172,7 @@ const getBySearch = async (req, res, next) => {
 			return;
 		}
 
-		res.status(400).json({ message: "Aucunes maisons de retaires trouvées." });
+		res.status(500).json({ message: "Aucunes maisons de retaires trouvées." });
 		return;
 	} catch (error) {
 		next(error);

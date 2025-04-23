@@ -37,6 +37,6 @@ router.get("/:id", isGuardian, getOnePatient);
 router.patch("/:id", validatorUpdatePatient, update);
 
 // Route to remove a customer
-router.delete("/:id", isAdmin, remove);
+router.delete("/:idItem", isAdmin, remove);
 
 export default router;
