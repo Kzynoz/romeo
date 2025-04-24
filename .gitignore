@@ -5,3 +5,9 @@ client/node_modules/
 # env variables
 api/.env
 client/.env
+
+# retirer les fichiers DS_Store
+.DS_Store
+
+# Remove invoices
+api/public/invoices/

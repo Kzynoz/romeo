@@ -50,6 +50,8 @@ const getOnePatient = async (req, res, next) => {
 			id,
 			guardian_id,
 		});
+		
+		console.log(response);
 
 		if (!response) {
 			res.status(400).json({
