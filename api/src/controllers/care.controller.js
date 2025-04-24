@@ -321,8 +321,13 @@ const getInvoice = async (req,res,next) => {
 	}
 	
 	// Send the file to the client
+		res.set({
+		"Content-Type": "application/pdf",
+		"Content-Disposition": `attachment; filename="${filename}.pdf"`,
+	});
+	
 	return res.sendFile(filePath);
-} ;
+};
 
 export {
 	getAll,

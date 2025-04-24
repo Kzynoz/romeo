@@ -63,7 +63,7 @@ function CareDetails() {
     			// Create a temporary link element
     			const link = document.createElement("a");
     			link.href = pdf;
-    			link.download = filename;
+    			link.download = `${filename}.pdf`;
 
     			// Append the link to the document, trigger a click to download the file, then remove it
     			document.body.appendChild(link);
