@@ -138,21 +138,30 @@ function SearchBar({ entityType }) {
 	return (
 		<div className="search-bar">
 			<form onSubmit={handleSubmit}>
+				<label htmlFor="search">Recherche</label>
 				<input
 					type="search"
 					placeholder={handlePlaceholder()}
 					value={query}
 					onChange={handleChange}
+					aria-label="Champ de recherche"
 				/>
-				<button type="submit" disabled={loading}>
+				<button 
+					type="submit" 
+					disabled={loading}
+					aria-label="Lancer la recherche"
+				>
 					<FontAwesomeIcon icon={faMagnifyingGlass} />
 				</button>
 			</form>
 
 			{error && <p>{error}</p>}
 
-			<section className={`search-results ${isOpen ? "" : "close"}`}>
-				<button onClick={handleClick}>
+			<section className={`search-results ${isOpen ? "" : "close"}`} aria-label="Résultats de la recherche">
+				<button 
+					onClick={handleClick}
+					aria-label="Fermer la recherche"
+				>
 					<FontAwesomeIcon icon={faXmark} />
 				</button>
 

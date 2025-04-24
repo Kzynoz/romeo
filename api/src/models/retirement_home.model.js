@@ -44,42 +44,42 @@ class RetirementHome {
 	 * Method to get one specific retirement home with all patients living their
 	 * 
 	 * @param {number} id - The retirement home ID
-	 * @param {number} offset - The offset for the pagination
-	 * @param {number} limit - The limit for the pagination
 	 * 
 	 * @returns - A promise that resolves with the result of the SQL query. 
 	 */
-	static async getOne({ id, offset, limit }) {
+	static async getOne(id) {
 		const SELECT_RH = `SELECT
-						       rh.id, rh.name, rh.city, rh.contact, rh.street, rh.zip_code,
-						       COUNT(c.id) AS patients_count,
-						       CASE WHEN COUNT(c.id) = 0 THEN NULL ELSE JSON_ARRAYAGG(
-						           JSON_OBJECT(
-						               'id', c.id,
-						               'title', c.title,
-						               'firstname', c.firstname,
-						               'lastname', c.lastname
-						           )
-						       )
-						   END AS patients
-						   FROM
-						       retirement_home rh
-						   LEFT JOIN(
-						       SELECT id, title, firstname, lastname, retirement_home_id
-						       FROM
-						           customer
-						       ORDER BY
-						           lastname
-						       LIMIT ? OFFSET ?
-						   ) c
-						   ON
-						       c.retirement_home_id = rh.id
-						   WHERE
-						       rh.id = ?
-						   GROUP BY
-						       rh.id;`;
+							    rh.id,
+							    rh.name,
+							    rh.city,
+							    rh.contact,
+							    rh.street,
+							    rh.zip_code,
+							    COUNT(c.id) AS patients_count,
+							    CASE WHEN COUNT(c.id) = 0 THEN NULL ELSE JSON_ARRAYAGG(
+							        JSON_OBJECT(
+							            'id',
+							            c.id,
+							            'title',
+							            c.title,
+							            'firstname',
+							            c.firstname,
+							            'lastname',
+							            c.lastname
+							        )
+							    )
+							END AS patients
+							FROM
+							    retirement_home rh
+							LEFT JOIN customer c
+							ON
+							    c.retirement_home_id = rh.id
+							WHERE
+							    rh.id = ?
+							GROUP BY
+								rh.id`;
 
-		return await pool.execute(SELECT_RH, [limit, offset, id]);
+		return await pool.execute(SELECT_RH, [id]);
 	}
 
     /**

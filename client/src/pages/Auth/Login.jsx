@@ -76,7 +76,7 @@ function Login() {
 			<form onSubmit={handleSubmit}>
 				<h1>Connexion {role === "guardian" ? "tuteur" : "praticien"}</h1>
 				<label htmlFor="email">
-					Email
+					Email *:
 					<input
 						type="email"
 						id="email"
@@ -85,10 +85,11 @@ function Login() {
 						onChange={onChangeEmail}
 						placeholder="Entrer votre email"
 						autoComplete="email"
+						aria-required="true"
 					/>
 				</label>
 				<label htmlFor="password">
-					Mot de passe
+					Mot de passe *:
 					<input
 						type="password"
 						id="password"
@@ -97,16 +98,24 @@ function Login() {
 						value={password}
 						onChange={onChangePassword}
 						placeholder="Entrer votre mot de passe"
-						autoComplete="password"
+						aria-required="true"
 					/>
 				</label>
 				<button type="submit">Se connecter</button>
 
-				{message && <p className={message.status}>{message.text}</p>}
+				{message && <p className={message.status} role="alert">{message.text}</p>}
 			</form>
 
 			{/* Toggle between practitioner and guardian roles */}
-			<button type="button" onClick={toggleRole}>
+			<button 
+				type="button" 
+				onClick={toggleRole} 
+				aria-label={
+					role === "practitioner"
+    					? "Basculer en tant que tuteur"
+    					: "Basculer en tant que praticien"
+				}
+			>
 				{role === "practitioner" ? "Je suis un tuteur" : "Je suis un praticien"}
 			</button>
 		</>

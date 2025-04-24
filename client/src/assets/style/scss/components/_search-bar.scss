@@ -1,6 +1,11 @@
 .search-bar {
 	margin: 2em 0;
 
+	label {
+		text-indent: -99999px;
+		display: inline-block;
+	}
+
 	.search-results {
 		background-color: $white;
 		overflow-y: scroll;
@@ -74,6 +79,10 @@
 			color: $secondary-color;
 			font-style: italic;
 
+			@media (min-width: $breakpoint-lg) {
+				width: 50%;
+			}
+
 			&:focus-visible {
 				padding: 1.5rem 2rem;
 				padding-inline: 1.5rem 2rem;
@@ -95,6 +104,10 @@
 			right: 2rem;
 			top: 50%;
 			transform: translateY(-50%);
+
+			@media (min-width: $breakpoint-lg) {
+				right: calc(50% + 20px);
+			}
 
 			.svg-inline--fa {
 				color: $primary-color;

@@ -63,6 +63,7 @@ const getOnePatient = async (req, res, next) => {
 			response,
 		});
 	} catch (error) {
+		console.log(error);
 		next(error);
 	}
 };

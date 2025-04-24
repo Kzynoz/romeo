@@ -70,14 +70,7 @@ function PatientDetails() {
 										{datas.title} {datas.firstname} {datas.lastname}
 									</h1>
 									{datas.retirement_home && (
-										<address>
-											<p>
-												Maison de retraite :{" "}
-												<Link to={`/ehpads/${datas.retirement_home.id}`}>
-													{datas.retirement_home.name}
-												</Link>
-											</p>
-										</address>
+										<p>Maison de retraite : {datas.retirement_home.name}</p>
 									)}
 								</header>
 
@@ -102,12 +95,15 @@ function PatientDetails() {
 
 									{datas.all_cares ? (
 										<>
-											{datas.all_cares.map((care) => (
+											{datas.all_cares.map((care, index) => (
 												<article
 													key={care.id}
 													onClick={() =>
 														navigate(`/patients/${id}/soin/${care.id}`)
 													}
+													role="button"
+													aria-label={`Accèder au soin du ${new Date(care.performed_at).toLocaleDateString()}`}
+													tabIndex={index}
 												>
 													<h3>
 														{care.type} du

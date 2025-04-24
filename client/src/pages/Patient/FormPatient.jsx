@@ -314,7 +314,7 @@ function FormPatient({ data }) {
 						{/* Label for the title. 
 							Applies an error class if there's an error message for it */}
 					<label htmlFor="title" className={errors.title ? "error" : undefined}>
-						Civilité :
+						Civilité* :
 						<label>
 							<input
 								id="title"
@@ -382,7 +382,7 @@ function FormPatient({ data }) {
 						htmlFor="guardian_id"
 						className={errors.guardian_id ? "error" : undefined}
 					>
-						Tuteur
+						Tuteur* :
 						<input
 							id="guardian_id"
 							type="search"
@@ -423,7 +423,7 @@ function FormPatient({ data }) {
 						htmlFor="retirement_home_id"
 						className={errors.retirement_home_id ? "error" : undefined}
 					>
-						Maison de retraite
+						Maison de retraite* :
 						<input
 							id="retirement_home_id"
 							type="search"

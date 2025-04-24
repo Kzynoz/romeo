@@ -22,8 +22,6 @@ function RetirementHomeDetails() {
 	// Custom hook to fetch data for a specific retirement home
 	const { datas, error, totalPages, page, setPage, loading } = useFetchItem({
 		url: `/retirement-homes/${id}`,
-		limit: 10,
-		countKey: "patients_count",
 		dependencies: [isEditingOpen],
 	});
 
@@ -85,10 +83,13 @@ function RetirementHomeDetails() {
 
 									{datas.patients && datas.patients.length > 0 ? (
 										<>
-											{datas.patients.map((patient) => (
+											{datas.patients.map((patient, index) => (
 												<article
 													key={patient.id}
 													onClick={() => navigate(`/patients/${patient.id}`)}
+													role="button"
+													aria-label={`Accèder à la fiche de ${patient.firstname} ${patient.lastname}`}
+													tabIndex={index}
 												>
 													<h2>
 														{patient.title} {patient.firstname}{" "}

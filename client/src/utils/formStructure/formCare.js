@@ -12,7 +12,7 @@ export const formCare = {
 			{
 				name: "type",
 				type: "select",
-				label: "Type de soin",
+				label: "Type de soin*",
 				options: [
 					{
 						value: "choisir",
@@ -29,13 +29,13 @@ export const formCare = {
 			{
 				name: "performed_at",
 				type: "date",
-				label: "Réalisé le",
+				label: "Réalisé le*",
 				required: true,
 			},
 			{
 				name: "price",
 				type: "text",
-				label: "Prix",
+				label: "Prix*",
 				maxLength: 7,
 				required: true,
 			},
@@ -51,7 +51,7 @@ export const formCare = {
 			{
 				name: "invoice_send",
 				type: "radio",
-				label: "Facture envoyée",
+				label: "Facture envoyée*",
 				options: [
 					{ value: "0", label: "Non" },
 					{ value: "1", label: "Oui" },
@@ -61,7 +61,7 @@ export const formCare = {
 			{
 				name: "invoice_paid",
 				type: "radio",
-				label: "Facture réglée",
+				label: "Facture réglée*",
 				options: [
 					{ value: "0", label: "Non" },
 					{ value: "1", label: "Oui" },

@@ -196,7 +196,10 @@
 	.wrapper article {
 		cursor: initial;
 	}
+}
 
+#patients-details header+aside {
+	margin-top: 2em;
 }
 
 @media (min-width: $breakpoint-md) {
@@ -297,5 +300,10 @@
 				align-items: center;
 			}
 		}
+	}
+
+	#tuteurs .wrapper article h2 {
+		text-align: center;
+		flex-direction: column;
 	}
 }

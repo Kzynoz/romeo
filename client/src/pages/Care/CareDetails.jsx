@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import CareStatus from "../Components/CareStatus";
@@ -26,7 +26,7 @@ function CareDetails() {
 	const { datas, error, loading } = useFetchItem({
 		url: `/care/${id}/${idSoin}`,
 		dependencies: [isEditingOpen],
-		guardian: {role,id},
+		guardian: {role,guardianId},
 	});
 	
 	// Set title and meta description
@@ -124,7 +124,11 @@ function CareDetails() {
 								}}
 							/>
 							
-							<article>
+							<article 
+								aria-label={`Détail du soin du ${new Date(
+										datas.care.performed_at
+									).toLocaleDateString("fr-FR")}`}
+							>
 								<header>
 									<h1>
 										<span>Patient</span>
@@ -132,13 +136,9 @@ function CareDetails() {
 									</h1>
 									<p>Soin réalisé par : {datas.practitioner}</p>
 
-									{datas.retirement_home && (
+									{datas.name && (
 										<address>
-											<p>Maison de retraite :</p>
-											<p>
-												<Link to={`/ehpads/${datas.retirement_home.id}`}>
-													{datas.retirement_home.name}
-												</Link>
+											<p>Maison de retraite : {datas.name}
 											</p>
 										</address>
 									)}
@@ -171,8 +171,12 @@ function CareDetails() {
 									)}
 									
 									{/* If an invoice has been generated, show a button to view the invoice */}
-									{datas.care.invoice.invoice_generated === 1 && datas.care.invoice.invoice_url && (
-										<button onClick={(e) => { downloadInvoice(e,datas.care.invoice.invoice_url) }}>Voir la facture</button>
+									{datas.care.invoice.invoice_generated === 1 && 
+										datas.care.invoice.invoice_url && (
+										<button 
+											onClick={(e) => { downloadInvoice(e,datas.care.invoice.invoice_url) }}
+											aria-label="Télécharger la facture du soin"
+										>Voir la facture</button>
 									)}
 								</section>
 							</article>

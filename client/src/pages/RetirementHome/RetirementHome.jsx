@@ -56,12 +56,15 @@ function RetirementHome() {
 				{/* Display the list of retirement homes if available */}
 				{datas.length && (
 					<>
-						{datas.map((establishment) => (
+						{datas.map((establishment, index) => (
 							<article
 								key={establishment.id}
 								onClick={() =>
 									navigate(`/maisons-retraite/${establishment.id}`)
 								}
+								role="button"
+								aria-label={`Consulter l'établissement ${establishment.name}`}
+								tabIndex={index}
 							>
 								<h2>{establishment.name}</h2>
 

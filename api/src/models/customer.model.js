@@ -243,7 +243,7 @@ class Customer {
 	 */
 	static async getOnePatient({ offset, limit, id, guardian_id }) {
 		
-		const SELECT_PATIENT = `SELECT
+		let SELECT_PATIENT = `SELECT
 								    c.id, c.title, c.lastname, c.firstname,
 								    JSON_OBJECT('id', rh.id, 'name', rh.name) AS retirement_home,
 								    CASE
@@ -315,7 +315,7 @@ class Customer {
     	const params = [id, limit, offset, id, id];
 			
 		if (guardian_id) {
-			SELECT_PATIENT += "AND c.guardian_id = ?";
+			SELECT_PATIENT += " AND c.guardian_id = ?";
 			params.push(guardian_id);
 		}
 			

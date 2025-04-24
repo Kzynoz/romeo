@@ -57,6 +57,7 @@ function ManageItem({ entity, link }) {
 							onClick={() => {
 								handleRedirection();
 							}}
+							aria-label="Retour"
 						>
 							<FontAwesomeIcon icon={faAngleLeft} />
 						</button>
@@ -65,6 +66,7 @@ function ManageItem({ entity, link }) {
 							onClick={() => {
 								dispatch(toggleEditing(true));
 							}}
+							aria-label="Modifier"
 						>
 							Modifier
 						</button>
@@ -73,6 +75,7 @@ function ManageItem({ entity, link }) {
 							onClick={() => {
 								dispatch(toggleModal(true));
 							}}
+							aria-label="Supprimer"
 						>
 							Supprimer
 						</button>

@@ -12,7 +12,7 @@ export const formGuardian = {
 			{
 				name: "title",
 				type: "radio",
-				label: "Civilité",
+				label: "Civilité*",
 				options: [
 					{ value: "m.", label: "Monsieur" },
 					{ value: "mme", label: "Madame" },
@@ -22,14 +22,14 @@ export const formGuardian = {
 			{
 				name: "firstname",
 				type: "text",
-				label: "Prénom",
+				label: "Prénom*",
 				maxLength: 50,
 				required: true,
 			},
 			{
 				name: "lastname",
 				type: "text",
-				label: "Nom",
+				label: "Nom*",
 				maxLength: 150,
 				required: true,
 			},
@@ -43,14 +43,14 @@ export const formGuardian = {
 			{
 				name: "email",
 				type: "email",
-				label: "Email",
+				label: "Email*",
 				maxLength: 250,
 				required: true,
 			},
 			{
 				name: "relationship",
 				type: "select",
-				label: "Relation",
+				label: "Relation*",
 				options: [
 					{
 						value: "choisir",
@@ -74,7 +74,7 @@ export const formGuardian = {
 			{
 				name: "street",
 				type: "text",
-				label: "Rue",
+				label: "Numéro et rue",
 				maxLength: 150,
 				required: false,
 			},

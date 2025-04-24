@@ -40,12 +40,15 @@ function Care() {
 			{/* Search bar component for searching care */}
 			<SearchBar entityType={"care"} />
 
-			<section className="wrapper">
+			<section className="wrapper" role="list">
 				{datas.length && (
 					<>
-						{datas.map((data) => (
+						{datas.map((data, index) => (
 							<article
+								role="listitem"
 								key={data.care.id}
+								aria-label={`Le ${data.care.type} de ${data.patient.title} ${data.patient.firstname} ${data.patient.lastname}`}
+								tabIndex={index}
 								onClick={() =>
 									navigate(`/patients/${data.patient.id}/soin/${data.care.id}`)
 								}
@@ -72,6 +75,7 @@ function Care() {
 								<Link
 									className="link-desktop"
 									to={`/patients/${data.patient.id}/soin/${data.care.id}`}
+									aria-label={`Consulter le soin`}
 								>
 									Consulter
 								</Link>

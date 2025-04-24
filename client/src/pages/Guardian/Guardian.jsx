@@ -55,11 +55,14 @@ function Guardian() {
 				
 				{datas.length && (
 					<>
-						{datas.map((guardian) => (
+						{datas.map((guardian,index) => (
 						
 							<article
 								key={guardian.id}
 								onClick={() => navigate(`/tuteurs/${guardian.id}`)}
+								role="button"
+								tabIndex={index}
+								aria-label={`Accèder à la fiche de ${guardian.firstname} ${guardian.lastname}`}
 							>
 								<h2>
 									{guardian.title} {guardian.firstname} {guardian.lastname}{" "}

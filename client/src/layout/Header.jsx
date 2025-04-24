@@ -39,7 +39,7 @@ function Header() {
 			method: "POST",
 			credentials: "include",
 		};
-
+		
 		try {
 			// API call to logout endpoint
 			const res = await customFetch("/auth/logout", options);
@@ -81,11 +81,19 @@ function Header() {
 			{/* Only show the menu if the user is logged in */}
 			{isLogged && (
 				<>
-					<div className={`burger-menu`} onClick={handleClick}>
+					<div 
+						className={`burger-menu`} 
+						onClick={handleClick}
+						aria-label="Menu navigation"	
+					>
 						{isMenuOpen ? close : open}
 					</div>
 
-					<nav className={isMenuOpen ? "active" : null}>
+					<nav 
+						className={isMenuOpen ? "active" : null}
+						aria-expanded={isMenuOpen}
+						role="navigation"
+					>
 						<ul>
 							<li>
 								<NavLink to="/" end onClick={handleClick}>
@@ -129,12 +137,15 @@ function Header() {
 						</ul>
 
 						{/* Logout action button */}
-						<button onClick={handleLogout}>
+						<button 
+							onClick={handleLogout}
+							aria-label="Déconnexion"
+						>
 							<FontAwesomeIcon icon={faPowerOff} />
 							<span>Déconnexion</span>
 						</button>
 
-						{error && <p>{error}</p>}
+						{error && <p role="alert">{error}</p>}
 					</nav>
 				</>
 			)}

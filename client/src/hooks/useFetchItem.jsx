@@ -45,7 +45,6 @@ function useFetchItem({url, limit = null, countKey = null, guardian = null, depe
             const options = {
                 credentials: "include",
             };
-            
 
             try {
                 setLoading(true); 
@@ -57,7 +56,6 @@ function useFetchItem({url, limit = null, countKey = null, guardian = null, depe
 
                 if (res.ok) {
                     const { response } = await res.json();
-                    console.log("response", response);
                     setDatas(response);
                     // If a limit is set, calculate the total pages based on countKey
                     if (limit && response[countKey]) {

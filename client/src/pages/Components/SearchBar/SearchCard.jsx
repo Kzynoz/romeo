@@ -35,7 +35,7 @@ function SearchCard({ result, entityType, onSelect }) {
 	}
 
 	return (
-		<article onClick={handleClick}>
+		<article onClick={handleClick} role="button">
 			{result.title && result.firstname && result.lastname && (
 				<h3>
 					{result.title} {result.firstname} {result.lastname}{" "}

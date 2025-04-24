@@ -113,8 +113,9 @@ class Care {
 	 * @returns - A promise that resolves with the result of the SQL query. 
 	 */
 	static async getOne({ patientId, id, guardian_id }) {
-		const SELECT_CARE = `SELECT
+		let SELECT_CARE = `SELECT
                                 c.id, c.title, c.lastname, c.firstname,
+                                rh.id AS retirement_home_id, rh.name,
                                 CASE
                                     WHEN g.id IS NULL THEN
                                         NULL
@@ -164,13 +165,15 @@ class Care {
                                 c.guardian_id = g.customer_id
                             LEFT JOIN customer gc ON
                                 c.guardian_id = gc.id
+                            LEFT JOIN  retirement_home rh ON
+                                c.retirement_home_id = rh.id
                             WHERE
                                 c.id = ? AND c.is_patient = 1 AND care.id = ?`;
                             
         const params = [patientId, id];
 			
 		if (guardian_id) {
-			SELECT_CARE += "AND c.guardian_id = ?";
+			SELECT_CARE += " AND c.guardian_id = ?";
 			params.push(guardian_id);
 		}
 

@@ -55,8 +55,6 @@ export function useFetchData(url,limit = null, guardian = null) {
                     const { response, totalPages } = await res.json();
                     setDatas(response);
                     
-                    console.log(response);
-                    
                     // Update total pages if pagination is active
                     if (limit) {
                         setTotalPages(totalPages);

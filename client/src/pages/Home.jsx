@@ -57,7 +57,12 @@ function Home() {
 
 			{/* Sections for navigating through different entities */}
 			<section className="rubriques">
-				<article onClick={() => handleNavigate("patients")}>
+				<article 
+					onClick={() => handleNavigate("patients")}
+					role="button"
+					tabIndex="0"
+					aria-label="Accéder à la liste des patients"
+				>
 					<FontAwesomeIcon icon={faUser} />
 
 					<h2>Patients</h2>
@@ -70,7 +75,12 @@ function Home() {
 
 				{role && role === "practitioner" && (
 					<>
-						<article onClick={() => handleNavigate("soins")}>
+						<article 
+							onClick={() => handleNavigate("soins")}
+							role="button"
+							tabIndex="1"
+							aria-label="Accéder à la liste des soins"
+						>
 							<FontAwesomeIcon icon={faBriefcaseMedical} />
 
 							<h2>Soins</h2>
@@ -80,7 +90,12 @@ function Home() {
 								Consulter
 							</Link>
 						</article>
-						<article onClick={() => handleNavigate("tuteurs")}>
+						<article 
+							onClick={() => handleNavigate("tuteurs")}
+							role="button"
+							tabIndex="2"
+							aria-label="Accéder à la liste des tuteurs"
+						>
 							<FontAwesomeIcon icon={faHandshakeAngle} />
 
 							<h2>Tuteurs</h2>
@@ -90,7 +105,12 @@ function Home() {
 								Consulter
 							</Link>
 						</article>
-						<article onClick={() => handleNavigate("maisons-retraite")}>
+						<article 
+							onClick={() => handleNavigate("maisons-retraite")}
+							role="button"
+							tabIndex="3"
+							aria-label="Accéder à la liste des maisons de retraite"
+						>
 							<FontAwesomeIcon icon={faHome} />
 
 							<h2>Établissements</h2>
@@ -103,7 +123,12 @@ function Home() {
 	
 						{/* Only show statistics for admin users */}
 						{isAdmin && (
-							<article onClick={() => handleNavigate(`statistiques/${year}`)}>
+							<article 
+								onClick={() => handleNavigate(`statistiques/${year}`)}
+								role="button"
+								tabIndex="4"
+								aria-label="Accéder aux statistiques"
+							>
 								<FontAwesomeIcon icon={faChartPie} />
 
 								<h2>Statistiques</h2>

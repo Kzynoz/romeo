@@ -57,10 +57,13 @@ function Patient() {
 
 				{datas.length && (
 					<>
-						{datas.map((patient) => (
+						{datas.map((patient, index) => (
 							<article
 								key={patient.id}
 								onClick={() => navigate(`/patients/${patient.id}`)}
+								role="button"
+								tabIndex={index}
+								aria-label={`Accèder à la fiche de ${patient.firstname} ${patient.lastname}`}
 							>
 								<h2>
 									{patient.title} {patient.firstname} {patient.lastname}

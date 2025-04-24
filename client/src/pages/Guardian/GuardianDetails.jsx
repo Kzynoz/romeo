@@ -81,10 +81,13 @@ function GuardianDetails() {
 
 									{datas.patients ? (
 										<>
-											{datas.patients.map((patient) => (
+											{datas.patients.map((patient, index) => (
 												<article
 													key={patient.id}
 													onClick={() => navigate(`/patients/${patient.id}`)}
+													role="button"
+													aria-label={`Accèder à la fiche de ${patient.firstname} ${patient.lastname}`}
+													tabIndex={index}
 												>
 													<h3>
 														{patient.title} {patient.firstname}{" "}

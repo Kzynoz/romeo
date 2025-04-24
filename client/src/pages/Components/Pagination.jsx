@@ -23,12 +23,13 @@ function Pagination({ page, totalPages, onPageChange }) {
 				onClick={() => {
 					if (page > 1) onPageChange(page - 1);
 				}}
+				aria-label="Page précédente"
 			>
 				<FontAwesomeIcon icon={faAngleLeft} />
 			</button>
 			
 			{/* Display current page and total pages */}
-			<p>
+			<p aria-live="polite">
 				{page} / {totalPages}
 			</p>
 			<button
@@ -36,6 +37,7 @@ function Pagination({ page, totalPages, onPageChange }) {
 				onClick={() => {
 					if (page < totalPages) onPageChange(page + 1);
 				}}
+				aria-label="Page suivante"
 			>
 				<FontAwesomeIcon icon={faAngleRight} />
 			</button>

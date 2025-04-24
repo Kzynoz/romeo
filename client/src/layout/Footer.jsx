@@ -36,7 +36,7 @@ function Footer() {
 		<footer>
 			{/* Only show the navigation if the user is logged in */}
 			{isLogged && (
-				<nav className={isSubMenuOpen ? "active" : null}>
+				<nav className={isSubMenuOpen ? "active" : null} role="navigation">
 					<ul>
 						<li>
 							<NavLink to="/" end>
@@ -72,11 +72,14 @@ function Footer() {
 						{/* Admin specific links */}
 						{isAdmin && (
 							<li className={`add-menu ${isSubMenuOpen ? "active" : ""}`}>
-								<button onClick={handleClick}>
+								<button 
+									onClick={handleClick}
+									aria-label="Sous-menu pour ajouter une entité"
+								>
 									<FontAwesomeIcon icon={faPlus} />
 								</button>
 
-								<ul>
+								<ul aria-expanded={isSubMenuOpen}>
 									<li>
 										<NavLink to="patients/ajouter" end>
 											<FontAwesomeIcon icon={faUser} />

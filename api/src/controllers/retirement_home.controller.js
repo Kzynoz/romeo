@@ -130,12 +130,9 @@ const update = async (req, res, next) => {
 // Get one retirement home by ID and limit the number of patients living there
 const getOne = async (req, res, next) => {
 	const { id } = req.params;
-	const offset = req.query.offset || "0";
-	const limit = req.query.limit || "10";
 	
 	try {
-		const [[response]] = await RetirementHome.getOne({id,offset,limit});
-
+		const [[response]] = await RetirementHome.getOne(id);
 		if (response) {
 			return res.status(200).json({
 				message: "Maison de retraite trouvé avec succès.",
@@ -147,6 +144,7 @@ const getOne = async (req, res, next) => {
 			message: "La maison de retraute recherchée n'a pas été trouvée.",
 		});
 	} catch (error) {
+		console.log(error);
 		next(error);
 	}
 };
