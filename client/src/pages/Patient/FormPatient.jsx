@@ -63,16 +63,18 @@ function FormPatient({ data }) {
 	// Updates formData when listening to a change in a field
 	function handleChange(e) {
 		const { name, value } = e.target;
+		const fieldValidation = patientValidator({ [name]: value });
 
 		setFormData((prevData) => ({
 			...prevData,
 			[name]: value,
 		}));
-
+		
 		setErrors((prevErrors) => ({
 			...prevErrors,
-			[name]: "",
+			[name]: fieldValidation ? fieldValidation[name] : null,
 		}));
+
 	}
 
 	// Updates formData with ID when listening to a change in a select
@@ -292,7 +294,7 @@ function FormPatient({ data }) {
 		}
 		
 	}, [data]);
-
+	
 	return (
 		
 		<section id={data ? "update-form" : undefined}>

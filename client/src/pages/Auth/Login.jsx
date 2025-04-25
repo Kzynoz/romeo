@@ -5,26 +5,55 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../features/authSlice";
 import { customFetch } from "../../service/api.js";
 
+import useHead from "../../hooks/useHead";
+
 function Login() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
 	// Local state for email, password, and error/message handling
 	const [email, setEmail] = useState("");
+	const [errors,setErrors] = useState({});
 	const [password, setPassword] = useState("");
 	const [message, setMessage] = useState("");
 	const [role, setRole] = useState("practitioner");
 
 	const { isLogged } = useSelector((state) => state.auth);
 	
+	// Set title and meta description
+	useHead("Connexion","Page de connexion");
+	
 	// Handle email input change
 	function onChangeEmail(e) {
-		setEmail(e.target.value);
+		const value = e.target.value;
+		const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		
+		setEmail(value);
+		
+		if (!value) {
+			setErrors((prev) => ({ ...prev, email: "L'email est obligatoire." }));
+		} else if (!regex.test(value)) {
+			setErrors({ email:"L'email doit être au format valide" });
+		} else {
+			setErrors((prev) => ({ ...prev, email: null }));
+		}
+		
+		setMessage("");
 	}
 
 	// Handle password input change
 	function onChangePassword(e) {
+		const value = e.target.value;
+		
 		setPassword(e.target.value);
+		
+		if (!value) {
+			setErrors((prev) => ({ ...prev, password: "Le mot de passe est obligatoire." }));
+		} else {
+			setErrors((prev) => ({ ...prev, password: null }));
+		}
+		
+		setMessage("");
 	}
 
 	// Toggle between "practitioner" and "guardian" roles
@@ -57,6 +86,17 @@ function Login() {
 			if (res.ok) {
 				dispatch(login(resJSON.user));
 				navigate("/");
+			} else if (res.status === 400 && resJSON.errors) {
+				// Accumulator to store express-validator errors in an object with "path": "error"
+				setErrors(
+					resJSON.errors.reduce(
+						(acc, error) => ({
+							...acc, // Spread the previous accumulator 
+							[error.path]: error.msg, // Add the current error path as the key and message as value
+						}),
+						{} // Initial value is an empty object
+					)
+				);
 			} else {
 				setMessage({
 					status: "error",
@@ -75,7 +115,7 @@ function Login() {
 		<>
 			<form onSubmit={handleSubmit}>
 				<h1>Connexion {role === "guardian" ? "tuteur" : "praticien"}</h1>
-				<label htmlFor="email">
+				<label htmlFor="email" className={errors.email ? "error" : undefined}>
 					Email *:
 					<input
 						type="email"
@@ -87,8 +127,11 @@ function Login() {
 						autoComplete="email"
 						aria-required="true"
 					/>
+					
+				{errors.email && <p>{errors.email}</p>}
 				</label>
-				<label htmlFor="password">
+				
+				<label htmlFor="password" className={errors.password ? "error" : undefined}>
 					Mot de passe *:
 					<input
 						type="password"
@@ -100,8 +143,10 @@ function Login() {
 						placeholder="Entrer votre mot de passe"
 						aria-required="true"
 					/>
+				{errors.password && <p>{errors.password}</p>}
 				</label>
-				<button type="submit">Se connecter</button>
+				
+				<button type="submit" disabled={errors.email || errors.password ? true : "" }>Se connecter</button>
 
 				{message && <p className={message.status} role="alert">{message.text}</p>}
 			</form>

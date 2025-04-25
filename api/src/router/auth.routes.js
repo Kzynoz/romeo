@@ -4,6 +4,7 @@ import { Router } from "express";
 import {
 	validatorCreateUser,
 	validatorRegisterGuardian,
+	validatorLogin
 } from "../middlewares/validators/authValidator.js";
 
 import {
@@ -27,7 +28,7 @@ const router = Router();
 router.post("/register", authCheck, isAdmin, validatorCreateUser, register);
 
 // Route to log in a practitioner
-router.post("/login", login);
+router.post("/login", validatorLogin, login);
 
 // Route to log out a user
 router.post("/logout", logout);
@@ -36,7 +37,7 @@ router.post("/logout", logout);
 router.post("/refresh-login", authCheck, refreshLogin);
 
 // Route for a guardian to log in
-router.post("/login-guardian", guardianLogin);
+router.post("/login-guardian", validatorLogin, guardianLogin);
 
 // Route for a guardian to register, requires a token URL for validation
 // (Not yet implemented on the front-end, will be part of v2)

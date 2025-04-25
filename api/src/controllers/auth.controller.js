@@ -2,7 +2,6 @@ import { compare, hash } from "bcrypt";
 import { validationResult } from "express-validator";
 import pool from "../config/db.js";
 
-import Customer from "../models/customer.model.js";
 import Guardian from "../models/guardian.model.js"
 import Practitioner from "../models/practitioner.model.js";
 import createToken from "../utils/token.js";
@@ -44,6 +43,16 @@ const register = async (req, res, next) => {
 // Login for practitioner
 const login = async (req, res, next) => {
 	const { email, password } = req.body;
+	const errors = validationResult(req);
+
+	// Check if there are validation errors from the request body
+	if (!errors.isEmpty()) {
+		return res.status(400).json({
+			message: "Erreur lors de la validation du formulaire.",
+			errors: errors.array(),
+		});
+	}
+
 	try {
 		const [[response]] = await Practitioner.findPractitioner(email);
 
@@ -172,6 +181,15 @@ const guardianRegister = async (req, res, next) => {
 // Guardian login
 const guardianLogin = async (req, res, next) => {
 	const { email, password } = req.body;
+	const errors = validationResult(req);
+
+	// Check if there are validation errors from the request body
+	if (!errors.isEmpty()) {
+		return res.status(400).json({
+			message: "Erreur lors de la validation du formulaire.",
+			errors: errors.array(),
+		});
+	}
 	
 	try {
 		const [[response]] = await Guardian.findGuardianByEmail(email);

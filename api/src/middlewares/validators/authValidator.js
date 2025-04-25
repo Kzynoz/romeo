@@ -17,7 +17,7 @@ const validatorCreateUser = [
 		.withMessage("L'email ne doit pas dépasser 150 caractères.")
 		.isEmail()
 		.withMessage("L'email doit être valide.")
-		.normalizeEmail(),
+		.normalizeEmail({ gmail_remove_dots: false }),
 	body("password")
 		.notEmpty()
 		.withMessage("Le mot de passe est obligatoire.")
@@ -35,6 +35,20 @@ const validatorCreateUser = [
 			"Le mot de passe doit contenir au moins un caractère spécial."
 		),
 ];
+
+// Validator for Login
+const validatorLogin = [
+	body("email")
+		.notEmpty()
+		.withMessage("L'email est obligatoire.")
+		.trim()
+		.isLength({ max: 150 })
+		.withMessage("L'email ne doit pas dépasser 150 caractères.")
+		.isEmail()
+		.withMessage("L'email doit être valide.")
+		.normalizeEmail({ gmail_remove_dots: false }),
+];
+
 
 // Validator for registering Guardian (Not yet implemented on the front-end, will be part of v2)
 const validatorRegisterGuardian = [
@@ -70,4 +84,4 @@ const validatorRegisterGuardian = [
 		),
 ];
 
-export { validatorCreateUser, validatorRegisterGuardian };
+export { validatorCreateUser, validatorRegisterGuardian, validatorLogin };

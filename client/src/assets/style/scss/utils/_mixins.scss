@@ -1,9 +1,7 @@
-@mixin card(
-	$background: $white,
-	$color: $secondary-color,
-	$shadow: $shadow,
-	$title-color: $primary-color
-) {
+@mixin card( $background: $white,
+$color: $secondary-color,
+$shadow: $shadow,
+$title-color: $primary-color) {
 	background-color: $background;
 	color: $color;
 	padding: 2em;
@@ -59,9 +57,10 @@
 	transition: background-color 0.2s ease-in;
 
 	&:hover {
-		@if $background == $primary-color {
+		@if $background==$primary-color {
 			background-color: $secondary-color;
-		} @else {
+		}
+		@else {
 			background-color: $primary-color;
 			color: $white;
 		}
@@ -69,5 +68,10 @@
 
 	@media (min-width: $breakpoint-lg) {
 		padding: 1em;
+	}
+
+	&:disabled {
+		cursor: not-allowed;
+		background: $third-color;
 	}
 }

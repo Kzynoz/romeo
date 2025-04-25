@@ -81,7 +81,20 @@ function ManageItem({ entity, link }) {
 						</button>
 					</div>
 				</>
-			) : null}
+			) : (
+				
+				<div className="actions">
+					<button
+						className="back-button"
+						onClick={() => {
+							handleRedirection();
+						}}
+						aria-label="Retour"
+					>
+						<FontAwesomeIcon icon={faAngleLeft} />
+					</button>
+				</div>
+			)}
 		</>
 	);
 }

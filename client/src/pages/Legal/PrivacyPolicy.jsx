@@ -10,10 +10,7 @@ function PrivacyPolicy() {
 			<h1>Politique de Confidentialité</h1>
 
 			<h2>1. Responsable du traitement</h2>
-			<p>
-				Le responsable du traitement des données est :{" "}
-				<strong>Julien Bellet</strong>, joignable à{" "}
-				<a href="mailto:j.belletofi@gmail.com">j.belletofi@gmail.com</a>.
+			<p>Le responsable du traitement des données est : <strong>Julien Bellet</strong>, joignable à <a href="mailto:j.belletofi@gmail.com">j.belletofi@gmail.com</a>.
 			</p>
 
 			<h2>2. Données collectées</h2>

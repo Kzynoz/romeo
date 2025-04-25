@@ -104,7 +104,7 @@ function CareDetails() {
 			{datas && (
 				<>
 					{/* If the edit mode is open and the user is an admin, show the UpdateEntity component */}
-					{isEditingOpen && isAdmin ? (
+					{isEditingOpen ? (
 						
 						<UpdateEntity data={datas} />
 						

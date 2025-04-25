@@ -49,7 +49,7 @@ function PatientDetails() {
 		<>
 			{datas && (
 				<>
-					{isEditingOpen && isAdmin ? (
+					{isEditingOpen ? (
 						<FormPatient data={datas} />
 					) : (
 						<>
