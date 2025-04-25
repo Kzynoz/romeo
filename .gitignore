@@ -11,3 +11,6 @@ client/.env
 
 # Remove invoices
 api/public/invoices/
+
+# Jury only
+/a-l-attention-du-jury/
