@@ -1,88 +1,86 @@
-### Roméo - votre asssitant facturation
+# Roméo - Votre assistant facturation
 
-Roméo est une application web dédiée aux professionnels de santé paramédicaux (pédicure-podologues, kinés, etc.)
-pour faciliter la gestion des soins, des factures, et des patients, en particulier dans des contextes
-spécifiques comme les EHPAD ou les patients sous tutelle.
+Roméo est une application web dédiée aux professionnels de santé paramédicaux (pédicure-podologues, kinés, etc.) pour faciliter la gestion des soins, des factures et des patients, en particulier dans des contextes spécifiques comme les EHPAD ou les patients sous tutelle.
 
+## Fonctionnalités principales
 
-### FONCTIONNALITÉS PRINCIPALES
+### Ajout d'entités
 
-## Ajout d'entités
+Il est possible d'ajouter des **patients**, **tuteurs**, **EHPAD**, et **soins**.
+- Un **patient** est mis en relation avec un **tuteur** et un **EHPAD**.
+- Chaque **patient** bénéficie d’un suivi des soins reçus, incluant la date du soin, les informations du soin, le type de soin, et le prix.
+- Pour chaque soin, une **facture** est générée en PDF.
 
-Il est possible d'ajouter des 'patients', 'tuteurs', 'EHPAD', 'soin'.
-Le 'patient' est mis en relation avec un tuteur et une EHPAD
-Pour chaque patients, nous pouvons suivre les soins qu'il a réçu avec la date du soin, les informations du soins, le type, le prix
-Pour chaque soin, une facture est générée en PDF
+### Ajout de Patients
 
-# Ajout de Patients
+L'application permet l'ajout de nouveaux **patients**. Lors de l'enregistrement, les informations de base telles que le nom, prénom, et les coordonnées sont saisies. De plus, il est possible d'associer un patient à un **tuteur** et à un **EHPAD**. Cette étape est cruciale pour garantir un suivi optimal des soins et des factures.
 
-L'application permet l'ajout de nouveaux patients. Lors de l'enregistrement d'un patient, les informations de base telles que le nom, le prénom, la les coordonnées sont saisies. De plus, il est possible d'associer un patient à un tuteur et à un EHPAD (Établissement d'Hébergement pour Personnes Âgées Dépendantes). Cette étape est cruciale pour garantir que chaque patient dispose de toutes les informations nécessaires pour le suivi des soins et de la facturation
+### Gestion des Tuteurs
 
-# Gestion des Tuteurs
+Les patients peuvent être liés à un **tuteur** qui en assure la gestion. Les tuteurs peuvent être des membres de la famille, des représentants légaux ou des établissements. Les informations du tuteur, telles que le nom, prénom, relation avec le patient et coordonnées (téléphone, e-mail, adresse), sont enregistrées pour un suivi efficace.
 
-Chaque patient peut être lié à un tuteur qui en assure la gestion, notamment pour des raisons légales ou familiales. Lors de l'ajout d'un patient, le tuteur peut être sélectionné. Un tuteur peut être une personne de la famille, un représentant légal ou encore un établissement. Les informations relatives au tuteur, telles que le nom, le prénom, la relation avec le patient, ainsi que les coordonnées (numéro de téléphone, adresse, e-mail) sont enregistrées pour un suivi optimal.
+### Association à un EHPAD
 
-# Association à un EHPAD
+Les **patients** peuvent être associés à un **EHPAD**, permettant de suivre leur prise en charge dans un établissement spécifique.
 
-Les patients peuvent également être associés à un EHPAD, ce qui permet de suivre leur prise en charge dans un établissement de soins spécifique.
+### Suivi des Soins
 
-# Suivi des Soins
+Chaque patient bénéficie d’un suivi détaillé de ses soins. Pour chaque soin effectué, les informations suivantes sont collectées :
+- **Date du soin** : pour savoir quand le soin a été réalisé.
+- **Type de soin** : par exemple, pédicure ou bilan podologique.
+- **Prix du soin** : coût du soin.
+- **Informations détaillées** : informations complémentaires sur le soin.
 
-Chaque patient bénéficie d’un suivi détaillé de ses soins. Les soins peuvent inclure des actes paramédicaux comme des bilans podologiques, des pédicures. Pour chaque soin effectué, des informations spécifiques sont collectées, telles que : - Date du soin : Permet de connaître quand le soin a été réalisé. - Type de soin : Le type de soin effectué (par exemple, pédicure ou bilan podologique). - Prix du soin : Le coût associé à chaque soin réalisé. - Informations détaillées sur le soin : Des informations complémentaires sur les procédures effectuées, les résultats obtenus, etc.
+### Génération des Factures
 
-# Génération des Factures
+Pour chaque soin effectué, une **facture** est générée automatiquement. Elle comprend :
+- Détails du soin : description complète, type de soin, date.
+- Prix : coût associé au soin.
+- État de la facture : envoyée, payée ou en attente.
+- Téléchargement en PDF : possibilité de télécharger la facture au format PDF.
 
-Pour chaque soin effectué, une facture est générée automatiquement.
-La facture contient les informations suivantes : - Détails du soin : Description complète du soin, y compris le type de soin et la date de réalisation. - Prix : Le coût associé au soin. - État de la facture : Une fois la facture générée, son état est suivi pour savoir si elle a été envoyée, payée ou est encore en attente. - Téléchargement en PDF : La facture peut être téléchargée au format PDF pour une gestion facile et professionnelle.
+### Statistiques (uniquement pour l'admin)
 
-Les factures sont automatiquement créées et peuvent être téléchargées par le tuteur ou le patient, selon les autorisations données, pour faciliter la gestion administrative et financière.
+Les statistiques sont cruciales pour le suivi des activités du praticien. Les statistiques disponibles incluent :
+- Nombre de soins réalisés dans une période donnée (mois ou année).
+- Revenus générés (soins facturés et factures réglées).
 
-# Statistiques (uniquement pour l'admin)
+### Accès Tuteur
 
-Le suivi des statistiques pour le praticien est une fonctionnalité clé dans l'application, permettant de mesurer et analyser l'efficacité et l'activité. Voici un aperçu des principales statistiques disponibles pour un praticien : - Nombre de soins réalisés pour une période donnée (mois ou année) - Revenus générés (soins facturés et factures réglées)
+Les **tuteurs** peuvent gérer et suivre les informations relatives à leurs patients, y compris les soins et factures générées. Un lien de première connexion est envoyé par email aux tuteurs, leur permettant de choisir un mot de passe sécurisé. Une fois le mot de passe défini, le lien devient expiré pour des raisons de sécurité.
 
-# Accès tuteur
+## V2 (Prochaines fonctionnalités)
 
-L’accès pour les tuteurs dans l'application permet de gérer et suivre les informations relatives à leurs patients, tout en ayant une visibilité sur les soins et les factures générées. Pour accèder à la plateforme, un lien de première connexion sera envoyé par email à tuteur, celui-ci à l'aide de son email pour choisir son mot de passe (sécurisé). Une fois le mot de passe choisit, le token dans la BDD est expiré et du coup il ne sera plus possible de s'enregistrer à nouveau.
+### Praticien (Admin)
 
-### V2
+- **Modification des informations personnelles** : Permet aux praticiens (admin) de modifier leurs informations personnelles.
+- **Ajout de nouveaux praticiens** : Les admins peuvent ajouter de nouveaux praticiens pour gérer une équipe de soins.
+- **Ajout de nouveaux types de soin** : Les admins peuvent ajouter des types de soins pour mieux organiser les traitements.
+- **Système de notifications** : Notifications pour les factures non payées après un mois.
 
-Bien que le site soit déjà fonctionnel, une série de petites améliorations et de nouvelles fonctionnalités seront ajoutées dans cette version pour améliorer l'expérience utilisateur et étendre les capacités de l'application.
+### Praticien
 
-# Praticien (admin)
+- **Ajout de patients et soins** : Les praticiens peuvent ajouter leurs patients et définir les soins effectués.
+- **Modification des informations personnelles** : Les praticiens peuvent modifier leurs informations personnelles.
 
-**Modification des informations personnelles :** Le praticien (admin) pourra désormais modifier ses informations personnelles, telles que son nom, son adresse email, etc.
-**Ajout de nouveaux praticiens :** Le rôle admin permettra également l'ajout de nouveaux praticiens, afin de gérer une équipe de soins. Chaque praticien pourra être associé à ses patients et à ses soins.
-**\*Ajout de nouveaux types de soin :** L'admin pourra définir de nouveaux types de soins, afin de mieux catégoriser et organiser les traitements effectués.
-**Système de notifications :** Un système de notification sera mis en place pour alerter les administrateurs (praticiens) lorsque des factures sont envoyées mais non payées depuis plus d'un mois. Cela aidera à garder une trace des paiements en retard.
+### Tuteur
 
-# Praticien
+- **Inscription et gestion du mot de passe** : Les tuteurs peuvent s'inscrire et choisir un mot de passe sécurisé.
+- **Modification des informations personnelles** : Les tuteurs peuvent mettre à jour leurs informations personnelles et leur mot de passe.
 
-**Ajout de patients et soins :** Tout comme les tuteurs, les praticiens auront la possibilité d'ajouter leurs propres patients et de définir les soins qu'ils ont effectués. Cela permettra de personnaliser l'expérience en fonction des soins spécifiques dispensés par chaque praticien.
-**Modification des informations personnelles :** Les praticiens pourront également modifier leurs informations personnelles (alias, email, mot de passe) directement depuis leur profil.
+### Soins
 
-# Tuteur
+- **Filtrage des soins** : Le filtrage des soins permet de trier les soins en fonction de leur statut de paiement (acquittés, impayés, en attente).
 
-**Inscription et gestion du mot de passe :** Le processus d'inscription pour les tuteurs sera simplifié, permettant à ces derniers de s'inscrire, de définir un mot de passe et d'accéder à leur espace personnel.
-**Modification des informations personnelles et du mot de passe :** Les tuteurs pourront mettre à jour leurs informations personnelles, y compris leur mot de passe, en toute sécurité.
+### Statistiques
 
-# Soins
+- **Export des statistiques en CSV** : Les utilisateurs peuvent exporter les statistiques des soins et paiements en format CSV pour une analyse approfondie.
 
-**Filtrage des soins :** Afin de faciliter la gestion des soins, des options de filtrage seront ajoutées pour permettre de trier les soins en fonction de leur statut de paiement :
+### Factures
 
-- Soins "acquittés" (payés)
-- Soins "impayés"
-- Soins "en attente"
+- **Envoi des factures par email** : Lorsqu’un soin est ajouté ou mis à jour, une facture est envoyée par email au tuteur ou patient.
+- **Modification des factures** : La facture est mise à jour automatiquement en cas de modification des soins (par exemple, changement de prix).
 
-# Statistiques
+### Log
 
-**Export des statistiques en CSV :** Un outil d'exportation des données sera disponible, permettant aux utilisateurs (principalement les administrateurs) de télécharger les statistiques des soins et des paiements sous format CSV. Cela aidera à analyser les données et à préparer des rapports.
-
-# Factures
-
-**Envoi des factures par email :** Lorsqu'un soin est ajouté ou mis à jour, une facture sera envoyée automatiquement par email au tuteur ou au patient, selon les besoins. Cela garantit que les informations sont toujours communiquées rapidement.
-**Modification des factures :** En cas de modification d'un soin (par exemple, changement de prix ou d'informations), la facture correspondante sera également mise à jour automatiquement pour refléter ces changements.
-
-# Log
-
-**Table Log :** Bien que la table des logs existe déjà dans la base de données, elle n'est pas encore utilisée. Elle sera prochainement implémentée pour suivre les actions réalisées sur la plateforme, comme l'ajout de patients, la modification de soins, etc. Cela offrira une meilleure traçabilité des opérations effectuées, utile pour la gestion des erreurs et la sécurité.
+- **Table Log** : Bien que la table des logs soit déjà présente, elle sera prochainement utilisée pour suivre les actions effectuées sur la plateforme, comme l'ajout de patients, la modification des soins, etc.
