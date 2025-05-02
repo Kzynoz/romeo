@@ -84,3 +84,21 @@ Les **tuteurs** peuvent gérer et suivre les informations relatives à leurs pat
 ### Log
 
 - **Table Log** : Bien que la table des logs soit déjà présente, elle sera prochainement utilisée pour suivre les actions effectuées sur la plateforme, comme l'ajout de patients, la modification des soins, etc.
+
+## Technologies
+
+### Back End ###
+- Node.js
+- Express.js
+- Bcrypt
+- JWT
+- Morgan
+- Nodemon
+- Express-validator
+- Cors
+- Puppeter (génération de PDF depuis un HTML)
+
+### Front End ###
+- React
+- React Router Dom
+- Redux Toolkit
